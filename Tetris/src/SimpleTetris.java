@@ -134,7 +134,6 @@ public class SimpleTetris extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         moveBlock(0, 1);
-        // 如果已經碰到底部，生成新方塊
         if (!isValidPosition()) {
             moveBlock(0, -1);
             spawnNewShape();
@@ -144,10 +143,13 @@ public class SimpleTetris extends JPanel implements ActionListener {
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Simple Tetris");
+        SimpleTetris tetrisPanel = new SimpleTetris();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(new SimpleTetris());
+        frame.add(tetrisPanel);
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        tetrisPanel.requestFocus();
+       
     }
 }
