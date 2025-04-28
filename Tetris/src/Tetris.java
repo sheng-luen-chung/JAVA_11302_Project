@@ -5,18 +5,18 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
 
-public class Main extends JPanel implements ActionListener {
-    // ®æ½u³]©w¡G10 ¦C ¡Ñ 20 ¦æ
+public class Tetris extends JPanel implements ActionListener {
+    // ï¿½ï¿½uï¿½]ï¿½wï¿½G10 ï¿½C ï¿½ï¿½ 20 ï¿½ï¿½
     private static final int GRID_COLS = 10;
     private static final int GRID_ROWS = 20;
     private static final int BLOCK_SIZE = 30;
     private Timer timer;
-    private Point[] currentShape;    // Tetromino ¤º³¡®y¼Ð
-    private int currentX, currentY, currentS;  // Tetromino ¦b®æ½u¤Wªº¥ª¤W­ìÂI
+    private Point[] currentShape;    // Tetromino ï¿½ï¿½ï¿½ï¿½ï¿½yï¿½ï¿½
+    private int currentX, currentY, currentS;  // Tetromino ï¿½bï¿½ï¿½uï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½I
     private Random rand = new Random();
     private int[][] BGarr = new int[10][20];
     
-    // ¤CºØ Tetromino¡]³æ¤@±ÛÂàª¬ºA¡^
+    // ï¿½Cï¿½ï¿½ Tetrominoï¿½]ï¿½ï¿½@ï¿½ï¿½ï¿½àª¬ï¿½Aï¿½^
     private static final Point[][] SHAPES = {
         { new Point(0,1), new Point(1,1), new Point(2,1), new Point(3,1) }, // I
         { new Point(1,0), new Point(2,0), new Point(1,1), new Point(2,1) }, // O
@@ -27,11 +27,11 @@ public class Main extends JPanel implements ActionListener {
         { new Point(2,0), new Point(0,1), new Point(1,1), new Point(2,1) }, // L
     };
 
-    public Main() {
+    public Tetris() {
         setPreferredSize(new Dimension(GRID_COLS * BLOCK_SIZE, GRID_ROWS * BLOCK_SIZE));
         setBackground(Color.BLACK);
 
-        // ºÊÅ¥Áä½L
+        // ï¿½ï¿½Å¥ï¿½ï¿½L
         setFocusable(true);
         addKeyListener(new KeyAdapter() {
             @Override
@@ -99,18 +99,18 @@ public class Main extends JPanel implements ActionListener {
     }
 
     private void rotate() {
-        // ¥H²Ä¤@­Ó¤è¶ô¬° pivot¡A¶¶®É°w±ÛÂà
+        // ï¿½Hï¿½Ä¤@ï¿½Ó¤ï¿½ï¿½ï¿½ï¿½ pivotï¿½Aï¿½ï¿½ï¿½É°wï¿½ï¿½ï¿½ï¿½
         Point pivot = currentShape[0];
         Point[] rotated = new Point[currentShape.length];
         for (int i = 0; i < currentShape.length; i++) {
             int x = -(currentShape[i].x - pivot.x);
             int y = -(currentShape[i].y - pivot.y);
-            // ±ÛÂà¤½¦¡ (x,y)->(y, -x)
+            // ï¿½ï¿½ï¿½à¤½ï¿½ï¿½ (x,y)->(y, -x)
             rotated[i] = new Point(pivot.x + y, pivot.y - x);
         }
         Point[] backup = currentShape;
         currentShape = rotated;		
-        for (Point p : currentShape) {	//½ðÀð
+        for (Point p : currentShape) {	//ï¿½ï¿½ï¿½ï¿½
             int x = currentX + p.x;
             int y = currentY + p.y;
             
@@ -119,23 +119,23 @@ public class Main extends JPanel implements ActionListener {
             if (y >= GRID_ROWS) currentX = currentX - (x - GRID_ROWS) -1;
         }
         if (!isValidPosition()) {
-            currentShape = backup; // ÁÙ­ì
+            currentShape = backup; // ï¿½Ù­ï¿½
         }
     }
     
     private void rotate_reverse() {
-        // ¥H²Ä¤@­Ó¤è¶ô¬° pivot¡A°f®É°w±ÛÂà
+        // ï¿½Hï¿½Ä¤@ï¿½Ó¤ï¿½ï¿½ï¿½ï¿½ pivotï¿½Aï¿½fï¿½É°wï¿½ï¿½ï¿½ï¿½
         Point pivot = currentShape[0];
         Point[] rotated = new Point[currentShape.length];
         for (int i = 0; i < currentShape.length; i++) {
             int x = -(currentShape[i].x - pivot.x);
             int y = -(currentShape[i].y - pivot.y);
-            // ±ÛÂà¤½¦¡ (x,y)->(-y, x)
+            // ï¿½ï¿½ï¿½à¤½ï¿½ï¿½ (x,y)->(-y, x)
             rotated[i] = new Point(pivot.x - y, pivot.y + x);
         }
         Point[] backup = currentShape;
         currentShape = rotated;
-        for (Point p : currentShape) {	//½ðÀð
+        for (Point p : currentShape) {	//ï¿½ï¿½ï¿½ï¿½
             int x = currentX + p.x;
             int y = currentY + p.y;
             
@@ -144,7 +144,7 @@ public class Main extends JPanel implements ActionListener {
             if (y >= GRID_ROWS) currentX = currentX - (x - GRID_ROWS) -1;
         }
         if (!isValidPosition()) {
-            currentShape = backup; // ÁÙ­ì
+            currentShape = backup; // ï¿½Ù­ï¿½
         }
     }
 
@@ -165,14 +165,14 @@ public class Main extends JPanel implements ActionListener {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // µe®æ½u
+        // ï¿½eï¿½ï¿½u
         g.setColor(Color.DARK_GRAY);
         for (int x = 0; x <= GRID_COLS; x++)
             g.drawLine(x * BLOCK_SIZE, 0, x * BLOCK_SIZE, GRID_ROWS * BLOCK_SIZE);
         for (int y = 0; y <= GRID_ROWS; y++)
             g.drawLine(0, y * BLOCK_SIZE, GRID_COLS * BLOCK_SIZE, y * BLOCK_SIZE);
 
-        // µe·í«e¤è¶ô
+        // ï¿½eï¿½ï¿½ï¿½eï¿½ï¿½ï¿½
         
 
         for (Point p : currentShape) {
@@ -239,7 +239,7 @@ public class Main extends JPanel implements ActionListener {
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Tetris");
-        Main tetrisPanel = new Main();
+        Tetris tetrisPanel = new Tetris();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(tetrisPanel);
         frame.pack();
