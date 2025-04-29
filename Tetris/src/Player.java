@@ -12,13 +12,14 @@ import java.util.Random;
 	    private Point[] currentShape;
 	    private int currentX, currentY, currentS;
 	    private Random rand = new Random();
-
+	    
+	    private int[] nextShape;
 	    private static final Point[][] SHAPES = {
-	            { new Point(0,0), new Point(1,0), new Point(2,0), new Point(3,0) }, // I
-	            { new Point(1,0), new Point(2,0), new Point(1,1), new Point(2,1) }, // O
+	            { new Point(0,1), new Point(1,1), new Point(2,1), new Point(3,1) }, // I
+	            { new Point(0,0), new Point(1,0), new Point(0,1), new Point(1,1) }, // O
 	            { new Point(1,0), new Point(0,1), new Point(1,1), new Point(2,1) }, // T
-	            { new Point(1,1), new Point(2,1), new Point(0,2), new Point(1,2) }, // S
-	            { new Point(0,1), new Point(1,1), new Point(1,2), new Point(2,2) }, // Z
+	            { new Point(1,0), new Point(2,0), new Point(0,1), new Point(1,1) }, // S
+	            { new Point(0,0), new Point(1,0), new Point(1,1), new Point(2,1) }, // Z
 	            { new Point(0,0), new Point(0,1), new Point(1,1), new Point(2,1) }, // J
 	            { new Point(2,0), new Point(0,1), new Point(1,1), new Point(2,1) }, // L
 	     };
@@ -26,6 +27,8 @@ import java.util.Random;
      // constructors
       public Player()     //default constructor
       {
+    	  nextShape = new int[10];
+    	  spawn7bag();
     	  spawnNewShape();
       }
 
@@ -42,12 +45,70 @@ import java.util.Random;
       public void setShape(Point[] s){currentShape = s;} 
       
     //	 instance methods
+      public void spawn7bag() {
+    	  int[] bag = {1, 2, 3, 4, 5, 6, 7};
+    	  for(int i=bag.length-1; i>0; i--) {
+    		  int j = rand.nextInt(i);
+    		  int temp = bag[i];
+    		  bag[i] = bag[j];
+    		  bag[j] = temp;
+    	  }
+    	  //bag[] to nextShape[]
+    	  for(int i=0; i<bag.length; i++) {
+    		  nextShape[i+1] = bag[i];
+    	  }
+    	  if(nextShape[0] == 0) {
+    		  for(int i=0; i<nextShape.length-1; i++) {
+            	  nextShape[i] = nextShape[i+1];
+              }
+    	  }
+      }
+      
       public void spawnNewShape() {
           currentX = GRID_COLS / 2 - 2;
           currentY = 0;
-          currentS = rand.nextInt(SHAPES.length) + 1;
+          currentS = nextShape[0];
           currentShape = SHAPES[currentS-1];
+          for(int i=0; i<nextShape.length-1; i++) {
+        	  nextShape[i] = nextShape[i+1];
+          }
+          if(nextShape[1] == 0) {
+        	  spawn7bag();
+          }
       }
+      
+      public void rotate(int dir) {
+    	  double pivot_x;
+    	  double pivot_y;
+          Point[] rotated = new Point[getShape().length];
+          
+          switch (currentS) {	//尋找基準點
+          case 1:	// I
+        	  pivot_x = 1.5;
+        	  pivot_y = 1.5;
+        	  break;
+        	  
+          case 2:	// O
+        	  pivot_x = 0.5;
+        	  pivot_y = 0.5;
+        	  break;
+          default:	//除了IO的其他形狀
+        	  pivot_x = 1;
+        	  pivot_y = 1;
+          }
+          
+          //旋轉
+          for (int i = 0; i < getShape().length; i++) {
+              double x = -(getShape()[i].x - pivot_x);
+              double y = -(getShape()[i].y - pivot_y);
+              
+              //dir=0逆轉 !=0順轉, 順:(x,y)->(y, -x), 逆:(x,y)->(-y, x)
+              if(dir != 0) rotated[i] = new Point((int)(pivot_x + y), (int)(pivot_y - x));
+              else rotated[i] = new Point((int)(pivot_x - y), (int)(pivot_y + x));    
+          }
+          setShape(rotated);
+      }
+      
       public void draw(Graphics g) {
           for (Point p : currentShape) {
               int drawX = (currentX + p.x) * BLOCK_SIZE;

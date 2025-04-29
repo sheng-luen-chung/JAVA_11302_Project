@@ -30,11 +30,11 @@ public class Tetris extends JPanel{
                     case KeyEvent.VK_DOWN:
                         moveBlock(p1, g1, 0, 1);	break;
                     case KeyEvent.VK_NUMPAD3:
-                    	rotate(p1, g1, 1);	break;
+                    	rotate_and_check(p1, g1, 1);			break;
                     case KeyEvent.VK_NUMPAD2:
-                    	rotate(p1, g1, 0);	break;
+                    	rotate_and_check(p1, g1, 0);			break;
                     case KeyEvent.VK_NUMPAD0:
-                    	instant_drop(p1, g1);      		break;
+                    	hard_drop(p1, g1);      	break;
                 }
                 repaint();
             }
@@ -43,7 +43,7 @@ public class Tetris extends JPanel{
         p1 = new Player();
         g1 = new Grid();
         
-        timer = new Timer(500, new soft_drop());
+        timer = new Timer(500, new gravity());
         timer.start();
     }
     private void putShape(Player p, Grid g) {
@@ -68,7 +68,7 @@ public class Tetris extends JPanel{
         } 
     }
 
-    private void instant_drop(Player p, Grid g) {
+    private void hard_drop(Player p, Grid g) {
         while (true) {
             p.setY(p.getY() + 1);
             if (!isValidPosition(p, g)) {
@@ -79,27 +79,19 @@ public class Tetris extends JPanel{
         }
     }
 
-    private void rotate(Player p, Grid g, int dir) {
-        Point pivot = p.getShape()[0];
-        Point[] rotated = new Point[p.getShape().length];
-        for (int i = 0; i < p.getShape().length; i++) {
-            int x = -(p.getShape()[i].x - pivot.x);
-            int y = -(p.getShape()[i].y - pivot.y);
-            
-            //dir=順逆轉, 順:(x,y)->(y, -x), 逆:(x,y)->(-y, x)
-            if(dir != 0) rotated[i] = new Point(pivot.x + y, pivot.y - x);
-            else rotated[i] = new Point(pivot.x - y, pivot.y + x);
-            
-        }
+    private void rotate_and_check(Player p, Grid g, int dir) {
         Point[] backup = p.getShape();
-        p.setShape(rotated);		
+        //旋轉
+        p.rotate(dir);
+        
+        //踢牆
         for (Point po : p.getShape()) {
             int x = p.getX() + po.x;
             int y = p.getY() + po.y;
             
             if (x < 0) p.setX( p.getX() - x );
             if (x >= GRID_COLS) p.setX(p.getX() - (x - GRID_COLS) -1);
-            if (y >= GRID_ROWS) p.setX(p.getX() - (x - GRID_ROWS) -1);
+            if (y >= GRID_ROWS) p.setY(p.getY() - (y - GRID_ROWS) -1);
         }
         if (!isValidPosition(p, g)) {
         	p.setShape(backup);
@@ -135,7 +127,7 @@ public class Tetris extends JPanel{
         g1.draw(g);
     }
 
-    private class soft_drop implements ActionListener{
+    private class gravity implements ActionListener{
     	public void actionPerformed(ActionEvent e){
     		moveBlock(p1, g1, 0, 1);
     		
