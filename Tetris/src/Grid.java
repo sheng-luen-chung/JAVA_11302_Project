@@ -33,7 +33,7 @@ import java.util.Random;
                   case 2:
                   	g.setColor(Color.YELLOW);	break;	// O
                   case 3:
-                  	g.setColor(new Color(128, 0, 128));	break;	// T
+                  	g.setColor(new Color(192, 0, 192));	break;	// T
                   case 4:
                   	g.setColor(Color.GREEN); break;	// S
                   case 5:

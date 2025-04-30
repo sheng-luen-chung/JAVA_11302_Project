@@ -10,10 +10,18 @@ import java.util.Random;
 	    private static final int GRID_ROWS = 20;
 	    private static final int BLOCK_SIZE = 30;
 	    private Point[] currentShape;
+	    private Point[] nextShape;
+	    private Point[] holdShape;
+	    
 	    private int currentX, currentY, currentS;
+	    private int[] nextS;
+	    private int holdS;
+	    
+	    private boolean hold;
+	    private boolean Tspin;
+	    
 	    private Random rand = new Random();
 	    
-	    private int[] nextShape;
 	    private static final Point[][] SHAPES = {
 	            { new Point(0,1), new Point(1,1), new Point(2,1), new Point(3,1) }, // I
 	            { new Point(0,0), new Point(1,0), new Point(0,1), new Point(1,1) }, // O
@@ -27,7 +35,7 @@ import java.util.Random;
      // constructors
       public Player()     //default constructor
       {
-    	  nextShape = new int[10];
+    	  nextS = new int[10];
     	  spawn7bag();
     	  spawnNewShape();
       }
@@ -55,26 +63,47 @@ import java.util.Random;
     	  }
     	  //bag[] to nextShape[]
     	  for(int i=0; i<bag.length; i++) {
-    		  nextShape[i+1] = bag[i];
+    		  nextS[i+1] = bag[i];
     	  }
-    	  if(nextShape[0] == 0) {
-    		  for(int i=0; i<nextShape.length-1; i++) {
-            	  nextShape[i] = nextShape[i+1];
+    	  if(nextS[0] == 0) {
+    		  for(int i=0; i<nextS.length-1; i++) {
+            	  nextS[i] = nextS[i+1];
               }
     	  }
       }
       
       public void spawnNewShape() {
+    	  //當前塊設定
           currentX = GRID_COLS / 2 - 2;
           currentY = 0;
-          currentS = nextShape[0];
-          currentShape = SHAPES[currentS-1];
-          for(int i=0; i<nextShape.length-1; i++) {
-        	  nextShape[i] = nextShape[i+1];
+          if(hold) {
+        	  currentS = holdS;
+        	  currentShape = holdShape;
+        	  hold = false;
           }
-          if(nextShape[1] == 0) {
+          else {
+        	  currentS = nextS[0];
+              currentShape = SHAPES[currentS-1];
+              for(int i=0; i<nextS.length-1; i++) {
+            	  nextS[i] = nextS[i+1];
+              }
+          }
+          
+          //預覽塊設定
+          nextShape = SHAPES[nextS[0]-1];
+          if(nextS[1] == 0) {
         	  spawn7bag();
           }
+      }
+      
+      public void holdCurrentShape() {
+    	  //暫存塊
+    	  if(!hold) {
+    		  holdS = currentS;
+    		  holdShape = SHAPES[holdS-1];
+    		  spawnNewShape();
+    		  hold = true;
+    	  }
       }
       
       public void rotate(int dir) {
@@ -119,7 +148,7 @@ import java.util.Random;
               case 2:
               	g.setColor(Color.YELLOW);	break;	// O
               case 3:
-              	g.setColor(new Color(128, 0, 128));	break;	// T
+              	g.setColor(new Color(192, 0, 192));	break;	// T
               case 4:
               	g.setColor(Color.GREEN); break;	// S
               case 5:
@@ -132,6 +161,56 @@ import java.util.Random;
               g.fillRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
               g.setColor(Color.BLACK);
               g.drawRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
+          }
+          
+          for (Point p : nextShape) {
+              int drawX = (11 + p.x) * BLOCK_SIZE;
+              int drawY = (1 + p.y) * BLOCK_SIZE;
+              switch (nextS[0]) {
+              case 1:
+              	g.setColor(Color.CYAN); break;	// I
+              case 2:
+              	g.setColor(Color.YELLOW);	break;	// O
+              case 3:
+              	g.setColor(new Color(192, 0, 192));	break;	// T
+              case 4:
+              	g.setColor(Color.GREEN); break;	// S
+              case 5:
+              	g.setColor(Color.RED);	break;	// Z
+              case 6:
+              	g.setColor(Color.BLUE); break;	// J
+              case 7:
+              	g.setColor(Color.ORANGE); break;	// L
+              }
+              g.fillRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
+              g.setColor(Color.BLACK);
+              g.drawRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
+          }
+          
+          if(hold) {
+          for (Point p : holdShape) {
+              int drawX = (11 + p.x) * BLOCK_SIZE;
+              int drawY = (6 + p.y) * BLOCK_SIZE;
+              switch (holdS) {
+              case 1:
+              	g.setColor(Color.CYAN); break;	// I
+              case 2:
+              	g.setColor(Color.YELLOW);	break;	// O
+              case 3:
+              	g.setColor(new Color(192, 0, 192));	break;	// T
+              case 4:
+              	g.setColor(Color.GREEN); break;	// S
+              case 5:
+              	g.setColor(Color.RED);	break;	// Z
+              case 6:
+              	g.setColor(Color.BLUE); break;	// J
+              case 7:
+              	g.setColor(Color.ORANGE); break;	// L
+              }
+              g.fillRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
+              g.setColor(Color.BLACK);
+              g.drawRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
+          }
           }
       }
    }

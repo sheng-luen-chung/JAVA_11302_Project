@@ -14,7 +14,7 @@ public class Tetris extends JPanel{
     private Grid g1;
     
     public Tetris() {
-        setPreferredSize(new Dimension(GRID_COLS * BLOCK_SIZE, GRID_ROWS * BLOCK_SIZE));
+        setPreferredSize(new Dimension((GRID_COLS+5) * BLOCK_SIZE, GRID_ROWS * BLOCK_SIZE));
         setBackground(Color.BLACK);
 
         setFocusable(true);
@@ -30,11 +30,14 @@ public class Tetris extends JPanel{
                     case KeyEvent.VK_DOWN:
                         moveBlock(p1, g1, 0, 1);	break;
                     case KeyEvent.VK_NUMPAD3:
-                    	rotate_and_check(p1, g1, 1);			break;
+                    	rotate_and_check(p1, g1, 1);	break;
                     case KeyEvent.VK_NUMPAD2:
-                    	rotate_and_check(p1, g1, 0);			break;
+                    	rotate_and_check(p1, g1, 0);	break;
+                    case KeyEvent.VK_NUMPAD1:
+                    	p1.holdCurrentShape();		break;
                     case KeyEvent.VK_NUMPAD0:
                     	hard_drop(p1, g1);      	break;
+                    
                 }
                 repaint();
             }
