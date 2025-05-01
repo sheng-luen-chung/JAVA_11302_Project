@@ -1,4 +1,4 @@
-package game;
+package src;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +29,7 @@ public class Tetris extends JPanel{
                         moveBlock(p1, g1, 1, 0);	break;
                     case KeyEvent.VK_DOWN:
                         moveBlock(p1, g1, 0, 1);	break;
-                    case KeyEvent.VK_NUMPAD3:
+                    case KeyEvent.VK_UP:
                     	rotate_and_check(p1, g1, 1);	break;
                     case KeyEvent.VK_NUMPAD2:
                     	rotate_and_check(p1, g1, 0);	break;
@@ -55,7 +55,8 @@ public class Tetris extends JPanel{
             		  	 p.getY() + p.getShape()[i].y,
             		  	 p.getS());
          }
-        p.spawnNewShape();
+      g.clearFullLines();
+      p.spawnNewShape();
     }
     
     private void moveBlock(Player p, Grid g, int dx, int dy) {
@@ -77,17 +78,16 @@ public class Tetris extends JPanel{
             if (!isValidPosition(p, g)) {
             	p.setY(p.getY() - 1);
             	putShape(p, g);
-                break;
+               break;
             }
         }
     }
 
     private void rotate_and_check(Player p, Grid g, int dir) {
         Point[] backup = p.getShape();
-        //旋轉
+        
         p.rotate(dir);
         
-        //踢牆
         for (Point po : p.getShape()) {
             int x = p.getX() + po.x;
             int y = p.getY() + po.y;
@@ -118,16 +118,16 @@ public class Tetris extends JPanel{
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        //劃格線
+        
         g.setColor(Color.DARK_GRAY);
         for (int x = 0; x <= GRID_COLS; x++)
             g.drawLine(x * BLOCK_SIZE, 0, x * BLOCK_SIZE, GRID_ROWS * BLOCK_SIZE);
         for (int y = 0; y <= GRID_ROWS; y++)
             g.drawLine(0, y * BLOCK_SIZE, GRID_COLS * BLOCK_SIZE, y * BLOCK_SIZE);
 
-        //畫玩家/背景方塊
         p1.draw(g);
         g1.draw(g);
+        
     }
 
     private class gravity implements ActionListener{
