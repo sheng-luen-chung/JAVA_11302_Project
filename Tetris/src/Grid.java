@@ -9,11 +9,14 @@ import java.util.Random;
 	    private static final int GRID_COLS = 10;
 	    private static final int GRID_ROWS = 20;
 	    private static final int BLOCK_SIZE = 30;
+	    private int Xoffset, Yoffset;
 	    private int[][] BGarr;
 	    
      // constructors
-      public Grid()     //default constructor
+      public Grid(int x, int y)     //default constructor
       {
+    	 Xoffset = x;
+    	 Yoffset = y;
          BGarr = new int[10][20];
       }
 
@@ -25,6 +28,7 @@ import java.util.Random;
       
     //	 instance methods
       public void draw(Graphics g) {
+    	  int drawX, drawY;
           for(int i=0; i < getBGarr().length; i++) {
           	for(int j=0; j < getBGarr()[i].length; j++) {
           		switch (BGarr[i][j]) {
@@ -45,14 +49,28 @@ import java.util.Random;
           		}
 
               	if(BGarr[i][j] > 0) {
-              		int drawX = i * BLOCK_SIZE;
-                      int drawY = j * BLOCK_SIZE;
+              		  drawX = Xoffset + i * BLOCK_SIZE;
+              		  drawY = Yoffset + j * BLOCK_SIZE;
                       g.fillRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
                       g.setColor(Color.BLACK);
                       g.drawRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
-                      g.setColor(Color.CYAN);
               	}
               }
           }
+          //預覽塊區
+          drawX = Xoffset + 10 * BLOCK_SIZE;
+          drawY = Yoffset + 0 * BLOCK_SIZE;
+          g.setColor(new Color(64, 64, 64));
+          g.fillRect(drawX, drawY, BLOCK_SIZE*5, BLOCK_SIZE*4);
+          g.setColor(Color.BLACK);
+          g.fillRect(drawX+10, drawY+10, BLOCK_SIZE*5-20, BLOCK_SIZE*4-20);
+          
+          //暫存區塊
+          drawX = Xoffset + 10 * BLOCK_SIZE;
+          drawY = Yoffset + 4 * BLOCK_SIZE;
+          g.setColor(new Color(64, 64, 64));
+          g.fillRect(drawX, drawY, BLOCK_SIZE*5, BLOCK_SIZE*4);
+          g.setColor(Color.BLACK);
+          g.fillRect(drawX+10, drawY+10, BLOCK_SIZE*5-20, BLOCK_SIZE*4-20);
       }
    }

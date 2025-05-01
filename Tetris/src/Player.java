@@ -9,11 +9,12 @@ import java.util.Random;
 	    private static final int GRID_COLS = 10;
 	    private static final int GRID_ROWS = 20;
 	    private static final int BLOCK_SIZE = 30;
+	    private int Xoffset, Yoffset;
 	    private Point[] currentShape;
 	    private Point[] nextShape;
 	    private Point[] holdShape;
 	    
-	    private int currentX, currentY, currentS;
+	    private int currentX, currentY, currentS, currentD;
 	    private int[] nextS;
 	    private int holdS;
 	    
@@ -31,10 +32,11 @@ import java.util.Random;
 	            { new Point(0,0), new Point(0,1), new Point(1,1), new Point(2,1) }, // J
 	            { new Point(2,0), new Point(0,1), new Point(1,1), new Point(2,1) }, // L
 	     };
-	    
      // constructors
-      public Player()     //default constructor
+      public Player(int x, int y)     //default constructor
       {
+    	  Xoffset = x;
+    	  Yoffset = y;
     	  nextS = new int[10];
     	  spawn7bag();
     	  spawnNewShape();
@@ -44,13 +46,20 @@ import java.util.Random;
       public int getX(){ return currentX;}
       public int getY(){ return currentY;}
       public int getS(){ return currentS;}
+      public int getD(){ return currentD;}
       public Point[] getShape(){ return currentShape;}
+      public boolean getTspin(){ return Tspin;}
       
    // modifier methods
       public void setX(int x){currentX = x;} 
       public void setY(int y){currentY = y;} 
-      public void setS(int s){currentS = s;} 
+      public void setS(int s){currentS = s;}
+      public void setD(int dir) {
+    	  currentD = dir % 4;
+    	  if(currentD < 0) currentD += 4;
+      }
       public void setShape(Point[] s){currentShape = s;} 
+      public void setTspin(boolean Ts){ Tspin = Ts;}
       
     //	 instance methods
       public void spawn7bag() {
@@ -76,6 +85,7 @@ import java.util.Random;
     	  //當前塊設定
           currentX = GRID_COLS / 2 - 2;
           currentY = 0;
+          currentD = 0;
           if(hold) {
         	  currentS = holdS;
         	  currentShape = holdShape;
@@ -135,13 +145,19 @@ import java.util.Random;
               if(dir != 0) rotated[i] = new Point((int)(pivot_x + y), (int)(pivot_y - x));
               else rotated[i] = new Point((int)(pivot_x - y), (int)(pivot_y + x));    
           }
+          //加減方向(更新當前轉向)
+          if(dir != 0) setD(getD()+1);
+          else setD(getD()-1);
+          
+          if(currentS == 3) Tspin = true;	//T形旋轉
           setShape(rotated);
       }
       
       public void draw(Graphics g) {
+    	  int drawX, drawY;
           for (Point p : currentShape) {
-              int drawX = (currentX + p.x) * BLOCK_SIZE;
-              int drawY = (currentY + p.y) * BLOCK_SIZE;
+              drawX = Xoffset + (currentX + p.x) * BLOCK_SIZE;
+              drawY = Yoffset + (currentY + p.y) * BLOCK_SIZE;
               switch (currentS) {
               case 1:
               	g.setColor(Color.CYAN); break;	// I
@@ -164,13 +180,13 @@ import java.util.Random;
           }
           
           for (Point p : nextShape) {
-              int drawX = (11 + p.x) * BLOCK_SIZE;
-              int drawY = (1 + p.y) * BLOCK_SIZE;
+              drawX = Xoffset + (11 + p.x) * BLOCK_SIZE;
+              drawY = Yoffset + (1 + p.y) * BLOCK_SIZE;
               switch (nextS[0]) {
               case 1:
-              	g.setColor(Color.CYAN); break;	// I
+              	g.setColor(Color.CYAN); drawX -= 15; break;	// I
               case 2:
-              	g.setColor(Color.YELLOW);	break;	// O
+              	g.setColor(Color.YELLOW); drawX += 15;	break;	// O
               case 3:
               	g.setColor(new Color(192, 0, 192));	break;	// T
               case 4:
@@ -189,13 +205,13 @@ import java.util.Random;
           
           if(hold) {
           for (Point p : holdShape) {
-              int drawX = (11 + p.x) * BLOCK_SIZE;
-              int drawY = (6 + p.y) * BLOCK_SIZE;
+              drawX = Xoffset + (11 + p.x) * BLOCK_SIZE;
+              drawY = Yoffset + (5 + p.y) * BLOCK_SIZE;
               switch (holdS) {
               case 1:
-              	g.setColor(Color.CYAN); break;	// I
+              	g.setColor(Color.CYAN); drawX -= 15; break;	// I
               case 2:
-              	g.setColor(Color.YELLOW);	break;	// O
+              	g.setColor(Color.YELLOW); drawX += 15; break;	// O
               case 3:
               	g.setColor(new Color(192, 0, 192));	break;	// T
               case 4:
