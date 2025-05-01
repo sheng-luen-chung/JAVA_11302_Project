@@ -11,6 +11,7 @@ import java.util.Random;
 	    private static final int BLOCK_SIZE = 30;
 	    private int Xoffset, Yoffset;
 	    private int[][] BGarr;
+	    private int score = 0;
 	    
      // constructors
       public Grid(int x, int y)     //default constructor
@@ -27,6 +28,51 @@ import java.util.Random;
       public void setBGarr(int x, int y, int arr){BGarr[x][y] = arr;} 
       
     //	 instance methods
+      public void clearFullLines() {
+          int linesCleared = 0;
+          for (int y = GRID_ROWS - 1; y >= 0; y--) {
+             boolean isFull = true;
+
+         // Check if the row is full
+             for (int x = 0; x < GRID_COLS; x++) {
+                if (BGarr[x][y] == 0) {
+                   isFull = false;
+                   break;
+                }
+             }
+
+             if (isFull) {
+             // Shift all rows above down
+                linesCleared++;
+                for (int yy = y; yy > 0; yy--) {
+                   for (int x = 0; x < GRID_COLS; x++) {
+                      BGarr[x][yy] = BGarr[x][yy - 1];
+                   }
+                }
+             // Clear top row
+                for (int x = 0; x < GRID_COLS; x++) {
+                   BGarr[x][0] = 0;
+                }
+             // Recheck current row since it's now filled with the above row
+                y++;
+             }
+          }
+         int s;
+         switch (linesCleared) {
+         case 1: s=100; break;
+         case 2: s=400; break;
+         case 3: s=800; break;
+         case 4: s=1600; break;
+         case 5: s=2400; break;
+         case 6: s=3200; break;
+         case 7: s=4000; break;
+         case 8: s=4800; break;
+         case 9: s=5600; break;
+         default: s=0; break;
+         };
+         score += s;
+       }
+      
       public void draw(Graphics g) {
     	  int drawX, drawY;
           for(int i=0; i < getBGarr().length; i++) {
@@ -57,20 +103,28 @@ import java.util.Random;
               	}
               }
           }
-          //預覽塊區
-          drawX = Xoffset + 10 * BLOCK_SIZE;
-          drawY = Yoffset + 0 * BLOCK_SIZE;
-          g.setColor(new Color(64, 64, 64));
-          g.fillRect(drawX, drawY, BLOCK_SIZE*5, BLOCK_SIZE*4);
-          g.setColor(Color.BLACK);
-          g.fillRect(drawX+10, drawY+10, BLOCK_SIZE*5-20, BLOCK_SIZE*4-20);
           
-          //暫存區塊
-          drawX = Xoffset + 10 * BLOCK_SIZE;
-          drawY = Yoffset + 4 * BLOCK_SIZE;
-          g.setColor(new Color(64, 64, 64));
-          g.fillRect(drawX, drawY, BLOCK_SIZE*5, BLOCK_SIZE*4);
-          g.setColor(Color.BLACK);
-          g.fillRect(drawX+10, drawY+10, BLOCK_SIZE*5-20, BLOCK_SIZE*4-20);
+          g.setColor(Color.WHITE);
+          //Score:
+          drawX = Xoffset + GRID_COLS * BLOCK_SIZE;
+          drawY = Yoffset + 0 * BLOCK_SIZE;
+          g.setFont(new Font("Arial", Font.BOLD, 20));
+          g.drawString("Score:", drawX, drawY+20);
+          g.drawRect(drawX, drawY+BLOCK_SIZE, 5 * BLOCK_SIZE, 2 * BLOCK_SIZE);
+          //Score
+          g.setFont(new Font("Arial", Font.BOLD, 30));
+          g.drawString(String.valueOf(score), (GRID_COLS + 1) * BLOCK_SIZE, 70);
+          
+          //Next:
+          drawY = Yoffset + 3*BLOCK_SIZE;
+          g.setFont(new Font("Arial", Font.BOLD, 20));
+          g.drawString("Next:", drawX, drawY+20);
+          g.drawRect(drawX, drawY+BLOCK_SIZE , 5*BLOCK_SIZE, 3*BLOCK_SIZE);
+          
+          //Hold:
+          drawY = Yoffset + 7*BLOCK_SIZE;
+          g.setFont(new Font("Arial", Font.BOLD, 20));
+          g.drawString("Hold:", drawX, drawY+20);
+          g.drawRect(drawX, drawY+BLOCK_SIZE, 5*BLOCK_SIZE, 3*BLOCK_SIZE);
       }
    }

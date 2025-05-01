@@ -82,7 +82,7 @@ import java.util.Random;
       }
       
       public void spawnNewShape() {
-    	  //當前塊設定
+    	  //current shape set
           currentX = GRID_COLS / 2 - 2;
           currentY = 0;
           currentD = 0;
@@ -99,7 +99,7 @@ import java.util.Random;
               }
           }
           
-          //預覽塊設定
+          //next shape set
           nextShape = SHAPES[nextS[0]-1];
           if(nextS[1] == 0) {
         	  spawn7bag();
@@ -107,7 +107,7 @@ import java.util.Random;
       }
       
       public void holdCurrentShape() {
-    	  //暫存塊
+    	  //hold shape set
     	  if(!hold) {
     		  holdS = currentS;
     		  holdShape = SHAPES[holdS-1];
@@ -121,7 +121,7 @@ import java.util.Random;
     	  double pivot_y;
           Point[] rotated = new Point[getShape().length];
           
-          switch (currentS) {	//尋找基準點
+          switch (currentS) {	//find pivot
           case 1:	// I
         	  pivot_x = 1.5;
         	  pivot_y = 1.5;
@@ -131,25 +131,25 @@ import java.util.Random;
         	  pivot_x = 0.5;
         	  pivot_y = 0.5;
         	  break;
-          default:	//除了IO的其他形狀
+          default:	//other
         	  pivot_x = 1;
         	  pivot_y = 1;
           }
           
-          //旋轉
+          //rotate
           for (int i = 0; i < getShape().length; i++) {
               double x = -(getShape()[i].x - pivot_x);
               double y = -(getShape()[i].y - pivot_y);
               
-              //dir=0逆轉 !=0順轉, 順:(x,y)->(y, -x), 逆:(x,y)->(-y, x)
+              //dir=0 -> L, dir!=0 -> R, R:(x,y)->(y, -x), L:(x,y)->(-y, x)
               if(dir != 0) rotated[i] = new Point((int)(pivot_x + y), (int)(pivot_y - x));
               else rotated[i] = new Point((int)(pivot_x - y), (int)(pivot_y + x));    
           }
-          //加減方向(更新當前轉向)
+          //update direction
           if(dir != 0) setD(getD()+1);
           else setD(getD()-1);
           
-          if(currentS == 3) Tspin = true;	//T形旋轉
+          if(currentS == 3) Tspin = true;	//T-spin
           setShape(rotated);
       }
       
@@ -181,7 +181,7 @@ import java.util.Random;
           
           for (Point p : nextShape) {
               drawX = Xoffset + (11 + p.x) * BLOCK_SIZE;
-              drawY = Yoffset + (1 + p.y) * BLOCK_SIZE;
+              drawY = Yoffset + (5 + p.y) * BLOCK_SIZE - (BLOCK_SIZE / 2);
               switch (nextS[0]) {
               case 1:
               	g.setColor(Color.CYAN); drawX -= 15; break;	// I
@@ -206,7 +206,7 @@ import java.util.Random;
           if(hold) {
           for (Point p : holdShape) {
               drawX = Xoffset + (11 + p.x) * BLOCK_SIZE;
-              drawY = Yoffset + (5 + p.y) * BLOCK_SIZE;
+              drawY = Yoffset + (9 + p.y) * BLOCK_SIZE - (BLOCK_SIZE / 2);
               switch (holdS) {
               case 1:
               	g.setColor(Color.CYAN); drawX -= 15; break;	// I

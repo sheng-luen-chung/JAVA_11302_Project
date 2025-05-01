@@ -3,36 +3,39 @@ package game;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Random;
+
 
 public class Tetris extends JPanel{
     private static final int GRID_COLS = 10;
     private static final int GRID_ROWS = 20;
     private static final int BLOCK_SIZE = 30;
     private Timer timer;
+    private Timer blinkTimer;
     private Player p1;
     private Grid g1;
+    private boolean gameOver = false;
+    private boolean blink = true;
     
-    //踢牆表(I與O分開處理，其他形狀共用)
+    //kick wall table
     private static final Point[][] KICK = {
-    		//逆
+    		//L
             { new Point(1,0), new Point(1,1), new Point(0,-2), new Point(1,-2) }, 	// 1 to 0
             { new Point(-1,0), new Point(-1,-1), new Point(0,2), new Point(-1,2) },// 2 to 1
             { new Point(-1,0), new Point(-1,1), new Point(0,-2), new Point(-1,-2) }, // 3 to 2
             { new Point(1,0), new Point(1,-1), new Point(0,2), new Point(1,2) },	// 0 to 3
-            //順
+            //R
             { new Point(-1,0), new Point(-1,1), new Point(0,-2), new Point(-1,-2) }, // 3 to 0
             { new Point(-1,0), new Point(-1,-1), new Point(0,2), new Point(-1,2) }, // 0 to 1
             { new Point(1,0), new Point(1,1), new Point(0,-2), new Point(1,-2) },	// 1 to 2
             { new Point(1,0), new Point(1,-1), new Point(0,2), new Point(1,2) },	// 2 to 3
      };
     private static final Point[][] KICK_I = {
-    		//逆
+    		//L
             { new Point(2,0), new Point(-1,0), new Point(2,-1), new Point(-1,2) }, // 1 to 0
             { new Point(1,0), new Point(-2,0), new Point(1,2), new Point(-2,-1) }, // 2 to 1
             { new Point(-2,0), new Point(1,0), new Point(-2,1), new Point(1,-2) }, // 3 to 2
             { new Point(-1,0), new Point(2,0), new Point(-1,-2), new Point(2,1) }, // 0 to 3
-            //順
+            //R
             { new Point(1,0), new Point(-2,0), new Point(1,2), new Point(-2,-1) }, // 3 to 0
             { new Point(-2,0), new Point(1,0), new Point(-2,1), new Point(1,-2) }, // 0 to 1
             { new Point(-1,0), new Point(2,0), new Point(-1,-2), new Point(2,1) }, // 1 to 2
@@ -66,8 +69,17 @@ public class Tetris extends JPanel{
                     	p1.holdCurrentShape();		break;
                     case KeyEvent.VK_NUMPAD0:
                     	hard_drop(p1, g1);      	break;
-                    
-                }
+                    case KeyEvent.VK_R:
+                        if (gameOver) {
+                           p1 = new Player(0,0);
+                           g1 = new Grid(0,0);
+                           gameOver = false;
+                           timer.start();
+                        }
+                        break;
+                       
+                  }
+
                 repaint();
             }
         });
@@ -77,14 +89,30 @@ public class Tetris extends JPanel{
         
         timer = new Timer(500, new gravity());
         timer.start();
+        blinkTimer = new Timer(500, new blink());
+        blinkTimer.start();
     }
     private void putShape(Player p, Grid g) {
   		for (int i = 0; i < p.getShape().length; i++) {
-              g.setBGarr(p.getX() + p.getShape()[i].x,
-            		  	 p.getY() + p.getShape()[i].y,
-            		  	 p.getS());
+         int x = p.getX() + p.getShape()[i].x;
+         int y = p.getY() + p.getShape()[i].y;
+         if (y < 0) {
+            // Game over condition: shape locks above the visible grid
+            timer.stop();
+            gameOver = true;
+            repaint();
+            return;
          }
-        p.spawnNewShape();
+         g.setBGarr(x,y,p.getS());
+      }
+      g.clearFullLines();
+      p.spawnNewShape();
+      if (!isValidPosition(p, g)) {
+        // New piece can't be placed
+        timer.stop();
+        gameOver = true;
+        repaint();
+      }
     }
     
     private void moveBlock(Player p, Grid g, int dx, int dy) {
@@ -113,16 +141,15 @@ public class Tetris extends JPanel{
     }
 
     private void rotate_and_check(Player p, Grid g, int dir) {
-        Point[] backupS = p.getShape();  //旋轉前備份
+        Point[] backupS = p.getShape();  //before rotation
         int backupX = p.getX();
         int backupY = p.getY();
-        p.rotate(dir);					//旋轉
+        p.rotate(dir);					//rotate
         
-        /*踢牆偵測，持續測試踢牆表中的偏移量直到成功
-        或無法成功踢牆時復原*/
-        if (!isValidPosition(p, g)) {			//第一次無偏移，成功則略過踢牆判定
+        //kick wall ckeck
+        if (!isValidPosition(p, g)) {			//success, not needed kick wall
         	
-            //判斷並套用哪個踢牆表
+            //select kick wall table
             Point[][] kick_table;
             switch(p.getS()) {
             	case 1: kick_table = KICK_I; break;
@@ -130,19 +157,19 @@ public class Tetris extends JPanel{
             	default:kick_table = KICK;	 break;
             }
             
-            //開始測試踢牆表中的偏移量
+            //start test
         	for(Point k : kick_table[p.getD()+dir*4]) {
             	p.setX(p.getX() + k.x);
             	p.setY(p.getY() + k.y);
             	
-            	if (!isValidPosition(p, g)) {	//踢牆失敗，還原
+            	if (!isValidPosition(p, g)) {	//fail, restore
                 	p.setX(backupX);
                 	p.setY(backupY);
                 }
-            	else break;						//踢牆成功，跳出迴圈
+            	else break;						//success, break the loop
             }
         	
-        	//如果測試完結果是無效位置，踢牆失敗:還原到旋轉前
+        	//if all kick wall fail, restore
             if (!isValidPosition(p, g)) {
             	p.setShape(backupS);
             	if(dir != 0) p.setD(p.getD()+1);
@@ -168,22 +195,37 @@ public class Tetris extends JPanel{
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        //劃格線
-        g.setColor(Color.DARK_GRAY);
-        for (int x = 0; x <= GRID_COLS; x++)
-            g.drawLine(x * BLOCK_SIZE, 0, x * BLOCK_SIZE, GRID_ROWS * BLOCK_SIZE);
-        for (int y = 0; y <= GRID_ROWS; y++)
-            g.drawLine(0, y * BLOCK_SIZE, GRID_COLS * BLOCK_SIZE, y * BLOCK_SIZE);
+        if(!gameOver){
+            g.setColor(Color.DARK_GRAY);
+            for (int x = 0; x <= GRID_COLS; x++)
+               g.drawLine(x * BLOCK_SIZE, 0, x * BLOCK_SIZE, GRID_ROWS * BLOCK_SIZE);
+            for (int y = 0; y <= GRID_ROWS; y++)
+               g.drawLine(0, y * BLOCK_SIZE, GRID_COLS * BLOCK_SIZE, y * BLOCK_SIZE);
 
-        //畫玩家/背景方塊
-        g1.draw(g);
-        p1.draw(g);
+            p1.draw(g);
+            g1.draw(g);
+        }
+        else {
+            g.setColor(Color.RED);
+            g.setFont(new Font("Arial", Font.BOLD, 40));
+            g.drawString("GAME   OVER", 3 * BLOCK_SIZE + 5, GRID_ROWS * BLOCK_SIZE / 2);
+            if(blink){
+               g.setFont(new Font("Arial", Font.BOLD, 20));
+               g.drawString("press \"R\" to restart", 4 * BLOCK_SIZE + 15, (GRID_ROWS+2) * BLOCK_SIZE / 2 + 30);
+            }
+        }
     }
 
     private class gravity implements ActionListener{
     	public void actionPerformed(ActionEvent e){
     		moveBlock(p1, g1, 0, 1);
     		
+            repaint();
+        }  
+    }
+    private class blink implements ActionListener{
+    	public void actionPerformed(ActionEvent e){
+            if (gameOver) blink = !blink;
             repaint();
         }  
     }
