@@ -10,8 +10,11 @@ public class Tetris extends JPanel{
     private static final int GRID_ROWS = 20;
     private static final int BLOCK_SIZE = 30;
     private Timer timer;
+    private Timer blinkTimer;
     private Player p1;
     private Grid g1;
+    private boolean gameOver = false;
+    private boolean blink = true;
     
     public Tetris() {
         setPreferredSize(new Dimension((GRID_COLS+5) * BLOCK_SIZE, GRID_ROWS * BLOCK_SIZE));
@@ -37,6 +40,14 @@ public class Tetris extends JPanel{
                     	p1.holdCurrentShape();		break;
                     case KeyEvent.VK_NUMPAD0:
                     	hard_drop(p1, g1);      	break;
+                    case KeyEvent.VK_R:
+                     if (gameOver) {
+                        p1 = new Player();
+                        g1 = new Grid();
+                        gameOver = false;
+                        timer.start();
+                     }
+                     break;
                     
                 }
                 repaint();
@@ -48,15 +59,35 @@ public class Tetris extends JPanel{
         
         timer = new Timer(500, new gravity());
         timer.start();
+        blinkTimer = new Timer(500, e -> {
+            if (gameOver) {
+            blink = !blink;
+            repaint();
+            }
+        });
+        blinkTimer.start();
     }
     private void putShape(Player p, Grid g) {
   		for (int i = 0; i < p.getShape().length; i++) {
-              g.setBGarr(p.getX() + p.getShape()[i].x,
-            		  	 p.getY() + p.getShape()[i].y,
-            		  	 p.getS());
+         int x = p.getX() + p.getShape()[i].x;
+         int y = p.getY() + p.getShape()[i].y;
+         if (y < 0) {
+            // Game over condition: shape locks above the visible grid
+            timer.stop();
+            gameOver = true;
+            repaint();
+            return;
          }
+         g.setBGarr(x,y,p.getS());
+      }
       g.clearFullLines();
       p.spawnNewShape();
+      if (!isValidPosition(p, g)) {
+        // New piece can't be placed
+        timer.stop();
+        gameOver = true;
+        repaint();
+      }
     }
     
     private void moveBlock(Player p, Grid g, int dx, int dy) {
@@ -118,16 +149,25 @@ public class Tetris extends JPanel{
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        
-        g.setColor(Color.DARK_GRAY);
-        for (int x = 0; x <= GRID_COLS; x++)
-            g.drawLine(x * BLOCK_SIZE, 0, x * BLOCK_SIZE, GRID_ROWS * BLOCK_SIZE);
-        for (int y = 0; y <= GRID_ROWS; y++)
-            g.drawLine(0, y * BLOCK_SIZE, GRID_COLS * BLOCK_SIZE, y * BLOCK_SIZE);
+        if(!gameOver){
+            g.setColor(Color.DARK_GRAY);
+            for (int x = 0; x <= GRID_COLS; x++)
+               g.drawLine(x * BLOCK_SIZE, 0, x * BLOCK_SIZE, GRID_ROWS * BLOCK_SIZE);
+            for (int y = 0; y <= GRID_ROWS; y++)
+               g.drawLine(0, y * BLOCK_SIZE, GRID_COLS * BLOCK_SIZE, y * BLOCK_SIZE);
 
-        p1.draw(g);
-        g1.draw(g);
-        
+            p1.draw(g);
+            g1.draw(g);
+        }
+        else {
+            g.setColor(Color.RED);
+            g.setFont(new Font("Arial", Font.BOLD, 40));
+            g.drawString("GAME   OVER", 3 * BLOCK_SIZE + 5, GRID_ROWS * BLOCK_SIZE / 2);
+            if(blink){
+               g.setFont(new Font("Arial", Font.BOLD, 20));
+               g.drawString("press \"R\" to restart", 4 * BLOCK_SIZE + 15, (GRID_ROWS+2) * BLOCK_SIZE / 2 + 30);
+            }
+        }
     }
 
     private class gravity implements ActionListener{
