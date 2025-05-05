@@ -22,10 +22,12 @@ import java.util.Random;
       }
 
     // accessor methods
+      public int getScore(){ return score;}
       public int[][] getBGarr(){ return BGarr;}
       
    // modifier methods
-      public void setBGarr(int x, int y, int arr){BGarr[x][y] = arr;} 
+      public void setScore(int s){ score = s;}
+      public void setBGarr(int x, int y, int arr){ BGarr[x][y] = arr;} 
       
     //	 instance methods
       public void clearFullLines() {
@@ -109,7 +111,7 @@ import java.util.Random;
           drawX = Xoffset + GRID_COLS * BLOCK_SIZE;
           drawY = Yoffset + 0 * BLOCK_SIZE;
           g.setFont(new Font("Arial", Font.BOLD, 20));
-          g.drawString("Score:", drawX, drawY+20);
+          g.drawString("Score:", drawX+5, drawY+20);
           g.drawRect(drawX, drawY+BLOCK_SIZE, 5 * BLOCK_SIZE, 2 * BLOCK_SIZE);
           //Score
           g.setFont(new Font("Arial", Font.BOLD, 30));
@@ -118,13 +120,13 @@ import java.util.Random;
           //Next:
           drawY = Yoffset + 3*BLOCK_SIZE;
           g.setFont(new Font("Arial", Font.BOLD, 20));
-          g.drawString("Next:", drawX, drawY+20);
+          g.drawString("Next:", drawX+5, drawY+20);
           g.drawRect(drawX, drawY+BLOCK_SIZE , 5*BLOCK_SIZE, 3*BLOCK_SIZE);
           
           //Hold:
           drawY = Yoffset + 7*BLOCK_SIZE;
           g.setFont(new Font("Arial", Font.BOLD, 20));
-          g.drawString("Hold:", drawX, drawY+20);
+          g.drawString("Hold:", drawX+5, drawY+20);
           g.drawRect(drawX, drawY+BLOCK_SIZE, 5*BLOCK_SIZE, 3*BLOCK_SIZE);
       }
    }

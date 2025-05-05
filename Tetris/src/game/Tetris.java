@@ -9,12 +9,22 @@ public class Tetris extends JPanel{
     private static final int GRID_COLS = 10;
     private static final int GRID_ROWS = 20;
     private static final int BLOCK_SIZE = 30;
+    
+    private static final int PAGE_MENU = 0;
+    private static final int PAGE_GAME = 1;
+    private static final int PAGE_GAMEOVER = 2;
+    
+    private int gamePage;
     private Timer timer;
     private Timer blinkTimer;
     private Player p1;
     private Grid g1;
     private boolean gameOver = false;
     private boolean blink = true;
+    
+    private boolean Key_A, Key_D, Key_S, Key_BLANK, Key_C, Key_V, Key_B;
+    private boolean Key_RIGHT, Key_LEFT, Key_DOWN, Key_NUM_0, Key_NUM_1, Key_NUM_2, Key_NUM_3;
+    private boolean Key_R;
     
     //kick wall table
     private static final Point[][] KICK = {
@@ -56,38 +66,53 @@ public class Tetris extends JPanel{
                 int code = e.getKeyCode();
                 switch (code) {
                     case KeyEvent.VK_LEFT:
-                        moveBlock(p1, g1, -1, 0); 	break;
+                        Key_LEFT = true; 	break;
                     case KeyEvent.VK_RIGHT:
-                        moveBlock(p1, g1, 1, 0);	break;
+                    	Key_RIGHT = true;	break;
                     case KeyEvent.VK_DOWN:
-                        moveBlock(p1, g1, 0, 1);	break;
+                    	Key_DOWN = true;	break;
                     case KeyEvent.VK_NUMPAD3:
-                    	rotate_and_check(p1, g1, 1);	break;
+                    	Key_NUM_3 = true;	break;
                     case KeyEvent.VK_NUMPAD2:
-                    	rotate_and_check(p1, g1, 0);	break;
+                    	Key_NUM_2 = true;	break;
                     case KeyEvent.VK_NUMPAD1:
-                    	p1.holdCurrentShape();		break;
+                    	Key_NUM_1 = true;	break;
                     case KeyEvent.VK_NUMPAD0:
-                    	hard_drop(p1, g1);      	break;
+                    	Key_NUM_0 = true;   break;
                     case KeyEvent.VK_R:
-                        if (gameOver) {
-                           p1 = new Player(0,0);
-                           g1 = new Grid(0,0);
-                           gameOver = false;
-                           timer.start();
-                        }
-                        break;
-                       
+                        Key_R = true;	 	break;  
                   }
 
                 repaint();
+            }
+            public void keyReleased (KeyEvent e) {
+            	int code = e.getKeyCode();
+            	switch (code) {
+			        case KeyEvent.VK_LEFT:
+			            Key_LEFT = false; 	break;
+			        case KeyEvent.VK_RIGHT:
+			        	Key_RIGHT = false;	break;
+			        case KeyEvent.VK_DOWN:
+			        	Key_DOWN = false;	break;
+			        case KeyEvent.VK_NUMPAD3:
+			        	Key_NUM_3 = false;	break;
+			        case KeyEvent.VK_NUMPAD2:
+			        	Key_NUM_2 = false;	break;
+			        case KeyEvent.VK_NUMPAD1:
+			        	Key_NUM_1 = false;	break;
+			        case KeyEvent.VK_NUMPAD0:
+			        	Key_NUM_0 = false;   break;
+			        case KeyEvent.VK_R:
+			            Key_R = false;	 	break; 
+            	}
             }
         });
         
         p1 = new Player(0,0);
         g1 = new Grid(0,0);
+        gamePage = 1;
         
-        timer = new Timer(500, new gravity());
+        timer = new Timer(1/60, new gravity());
         timer.start();
         blinkTimer = new Timer(500, new blink());
         blinkTimer.start();
@@ -99,7 +124,7 @@ public class Tetris extends JPanel{
          if (y < 0) {
             // Game over condition: shape locks above the visible grid
             timer.stop();
-            gameOver = true;
+            setPage(PAGE_GAMEOVER);
             repaint();
             return;
          }
@@ -110,23 +135,23 @@ public class Tetris extends JPanel{
       if (!isValidPosition(p, g)) {
         // New piece can't be placed
         timer.stop();
-        gameOver = true;
+        setPage(PAGE_GAMEOVER);
         repaint();
       }
     }
     
     private void moveBlock(Player p, Grid g, int dx, int dy) {
         p.setX(p.getX() + dx);
-        if (!isValidPosition(p, g)) {
-        	p.setX(p.getX() - dx);
-        }
-        
         p.setY(p.getY() + dy);
         if (!isValidPosition(p, g)) {
+        	p.setX(p.getX() - dx);
         	p.setY(p.getY() - dy);
-            putShape(p1, g1);
+        	if(dy > 0 && p.getLD() == 0) putShape(p1, g1);
         }
-        else p.setTspin(false);
+        else {
+        	p.setLD(p.getLDS());
+        	p.setTspin(false);
+        }
     }
 
     private void hard_drop(Player p, Grid g) {
@@ -134,7 +159,7 @@ public class Tetris extends JPanel{
             p.setY(p.getY() + 1);
             if (!isValidPosition(p, g)) {
             	p.setY(p.getY() - 1);
-            	putShape(p, g);
+            	putShape(p1, g1);
                 break;
             }
         }
@@ -175,9 +200,25 @@ public class Tetris extends JPanel{
             	if(dir != 0) p.setD(p.getD()+1);
             	else p.setD(p.getD()-1);
             }
+            else {						//success
+            	p.setLD(p.getLDS());
+            }
+        }
+        else {							//success
+        	p.setLD(p.getLDS());
         }
     }
-
+    private void gravity_drop(Player p, Grid g) {
+    	if(p.getDF() > 0) {
+			p.setDF(p.getDF() - 1);
+		}
+		if(p.getDF() == 0 || p.getSpeedUP()){
+			moveBlock(p, g, 0, 1);
+			p.setDF(p.getDFS());
+		}
+		if(p.getLD() > 0) p.setLD(p.getLD() - 1);
+    }
+    
     private boolean isValidPosition(Player p, Grid g) {
         for (Point po : p.getShape()) {
             int x = p.getX() + po.x;
@@ -191,34 +232,77 @@ public class Tetris extends JPanel{
         }
         return true;
     }
+    
+    private void setPage(int p) {
+    	gamePage = p;
+    	resetKey();
+    }
+    
+    private void resetKey() {
+    	Key_LEFT = false;
+    	Key_RIGHT = false;
+    	Key_DOWN = false;
+    	Key_NUM_0 = false;
+    	Key_NUM_1 = false;
+    	Key_NUM_2 = false;
+    	Key_NUM_3 = false;
+    	Key_R = false;
+    }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if(!gameOver){
-            g.setColor(Color.DARK_GRAY);
-            for (int x = 0; x <= GRID_COLS; x++)
-               g.drawLine(x * BLOCK_SIZE, 0, x * BLOCK_SIZE, GRID_ROWS * BLOCK_SIZE);
-            for (int y = 0; y <= GRID_ROWS; y++)
-               g.drawLine(0, y * BLOCK_SIZE, GRID_COLS * BLOCK_SIZE, y * BLOCK_SIZE);
+        switch(gamePage) {
+        
+        	case PAGE_GAME:	
+        		if(Key_LEFT) moveBlock(p1, g1, -1, 0); Key_LEFT = false;
+            	if(Key_RIGHT) moveBlock(p1, g1, 1, 0); Key_RIGHT = false;
+            	if(Key_DOWN) p1.setSpeedUP(true); else p1.setSpeedUP(false);
+            	if(Key_NUM_3) rotate_and_check(p1, g1, 1); Key_NUM_3 = false;
+            	if(Key_NUM_2) rotate_and_check(p1, g1, 0); Key_NUM_2 = false;
+            	if(Key_NUM_1) p1.holdCurrentShape(); Key_NUM_1 = false;
+            	if(Key_NUM_0) hard_drop(p1, g1); Key_NUM_0 = false;
+            	
+                g.setColor(Color.DARK_GRAY);
+                for (int x = 0; x <= GRID_COLS; x++)
+                   g.drawLine(x * BLOCK_SIZE, 0, x * BLOCK_SIZE, GRID_ROWS * BLOCK_SIZE);
+                for (int y = 0; y <= GRID_ROWS; y++)
+                   g.drawLine(0, y * BLOCK_SIZE, GRID_COLS * BLOCK_SIZE, y * BLOCK_SIZE);
 
-            p1.draw(g);
-            g1.draw(g);
-        }
-        else {
-            g.setColor(Color.RED);
-            g.setFont(new Font("Arial", Font.BOLD, 40));
-            g.drawString("GAME   OVER", 3 * BLOCK_SIZE + 5, GRID_ROWS * BLOCK_SIZE / 2);
-            if(blink){
-               g.setFont(new Font("Arial", Font.BOLD, 20));
-               g.drawString("press \"R\" to restart", 4 * BLOCK_SIZE + 15, (GRID_ROWS+2) * BLOCK_SIZE / 2 + 30);
-            }
+                p1.draw(g);
+                g1.draw(g);
+                break;
+                
+        	case PAGE_GAMEOVER:
+        		if(Key_LEFT) Key_LEFT = false;
+            	if(Key_RIGHT) Key_RIGHT = false;
+            	if(Key_DOWN) Key_DOWN = false;
+            	if(Key_NUM_3) Key_NUM_3 = false;
+            	if(Key_NUM_2) Key_NUM_2 = false;
+            	if(Key_NUM_1) Key_NUM_1 = false;
+            	if(Key_NUM_0) Key_NUM_0 = false;
+            	if(Key_R) {
+                    p1 = new Player(0,0);
+                    g1 = new Grid(0,0);
+                    setPage(PAGE_GAME);
+                    timer.start();
+                    Key_R = false;
+            	}
+            	
+                g.setColor(Color.RED);
+                g.setFont(new Font("Arial", Font.BOLD, 40));
+                g.drawString("GAME   OVER", 3 * BLOCK_SIZE + 5, GRID_ROWS * BLOCK_SIZE / 2);
+                if(blink){
+                   g.setFont(new Font("Arial", Font.BOLD, 20));
+                   g.drawString("press \"R\" to restart", 4 * BLOCK_SIZE + 15, (GRID_ROWS+2) * BLOCK_SIZE / 2 + 30);
+                }
+                break;
         }
     }
 
     private class gravity implements ActionListener{
     	public void actionPerformed(ActionEvent e){
-    		moveBlock(p1, g1, 0, 1);
+    		gravity_drop(p1, g1);
     		
             repaint();
         }  
@@ -239,6 +323,7 @@ public class Tetris extends JPanel{
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         tetrisPanel.requestFocus();  
+        tetrisPanel.enableInputMethods(false);
     }
 
 }

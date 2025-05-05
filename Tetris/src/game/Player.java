@@ -17,9 +17,12 @@ import java.util.Random;
 	    private int currentX, currentY, currentS, currentD;
 	    private int[] nextS;
 	    private int holdS;
+	    private int dropFarmes, dropFarmesSet;
+	    private int lockDelay, lockDelaySet;
 	    
 	    private boolean hold;
 	    private boolean Tspin;
+	    private boolean speedUP;
 	    
 	    private Random rand = new Random();
 	    
@@ -38,6 +41,10 @@ import java.util.Random;
     	  Xoffset = x;
     	  Yoffset = y;
     	  nextS = new int[10];
+    	  dropFarmesSet = 30;
+    	  lockDelaySet = 30;
+    	  dropFarmes = dropFarmesSet;
+    	  lockDelay = lockDelaySet;
     	  spawn7bag();
     	  spawnNewShape();
       }
@@ -47,8 +54,16 @@ import java.util.Random;
       public int getY(){ return currentY;}
       public int getS(){ return currentS;}
       public int getD(){ return currentD;}
+      
+      public int getDF(){ return dropFarmes;}
+      public int getDFS(){ return dropFarmesSet;}
+      
+      public int getLD(){ return lockDelay;}
+      public int getLDS(){ return lockDelaySet;}
+      
       public Point[] getShape(){ return currentShape;}
       public boolean getTspin(){ return Tspin;}
+      public boolean getSpeedUP(){ return speedUP;}
       
    // modifier methods
       public void setX(int x){currentX = x;} 
@@ -58,8 +73,15 @@ import java.util.Random;
     	  currentD = dir % 4;
     	  if(currentD < 0) currentD += 4;
       }
+      
+      public void setDF(int d){dropFarmes = d;}
+      public void setDFS(int d){dropFarmesSet = d;}
+      public void setLD(int l){lockDelay = l;}
+      public void setLDS(int l){lockDelaySet = l;}
+      
       public void setShape(Point[] s){currentShape = s;} 
-      public void setTspin(boolean Ts){ Tspin = Ts;}
+      public void setTspin(boolean Ts){Tspin = Ts;}
+      public void setSpeedUP(boolean Sp){speedUP = Sp;}
       
     //	 instance methods
       public void spawn7bag() {
@@ -86,6 +108,7 @@ import java.util.Random;
           currentX = GRID_COLS / 2 - 2;
           currentY = 0;
           currentD = 0;
+          lockDelay = 0;
           if(hold) {
         	  currentS = holdS;
         	  currentShape = holdShape;
