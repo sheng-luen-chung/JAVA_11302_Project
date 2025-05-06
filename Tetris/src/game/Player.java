@@ -108,7 +108,7 @@ import java.util.Random;
           currentX = GRID_COLS / 2 - 2;
           currentY = 0;
           currentD = 0;
-          lockDelay = 0;
+          lockDelay = lockDelaySet;
           if(hold) {
         	  currentS = holdS;
         	  currentShape = holdShape;
@@ -176,27 +176,31 @@ import java.util.Random;
           setShape(rotated);
       }
       
+      private void switchColor(Graphics g, int c, int r) {
+    	  switch (c) {
+	          case 1:
+	          	g.setColor(new Color(0, 255, 255, r)); break;	// I, CYAN
+	          case 2:
+	          	g.setColor(new Color(255, 255, 0, r));	break;	// O, YELLOW
+	          case 3:
+	          	g.setColor(new Color(255, 0, 255, r));	break;	// T, PURPLE
+	          case 4:
+	          	g.setColor(new Color(0, 255, 0, r)); break;	// S, GREEB
+	          case 5:
+	          	g.setColor(new Color(255, 0, 0, r));	break;	// Z, RED
+	          case 6:
+	          	g.setColor(new Color(0, 0, 255, r)); break;	// J, BLUE
+	          case 7:
+	          	g.setColor(new Color(255, 200, 0, r)); break;	// L, ORANGE
+    	  }
+      }
+      
       public void draw(Graphics g) {
     	  int drawX, drawY;
           for (Point p : currentShape) {
               drawX = Xoffset + (currentX + p.x) * BLOCK_SIZE;
               drawY = Yoffset + (currentY + p.y) * BLOCK_SIZE;
-              switch (currentS) {
-              case 1:
-              	g.setColor(Color.CYAN); break;	// I
-              case 2:
-              	g.setColor(Color.YELLOW);	break;	// O
-              case 3:
-              	g.setColor(new Color(192, 0, 192));	break;	// T
-              case 4:
-              	g.setColor(Color.GREEN); break;	// S
-              case 5:
-              	g.setColor(Color.RED);	break;	// Z
-              case 6:
-              	g.setColor(Color.BLUE); break;	// J
-              case 7:
-              	g.setColor(Color.ORANGE); break;	// L
-              }
+              switchColor(g, currentS, 105+(int)(150*((double)lockDelay/(double)lockDelaySet)));
               g.fillRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
               g.setColor(Color.BLACK);
               g.drawRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
@@ -205,22 +209,7 @@ import java.util.Random;
           for (Point p : nextShape) {
               drawX = Xoffset + (11 + p.x) * BLOCK_SIZE;
               drawY = Yoffset + (5 + p.y) * BLOCK_SIZE - (BLOCK_SIZE / 2);
-              switch (nextS[0]) {
-              case 1:
-              	g.setColor(Color.CYAN); drawX -= 15; break;	// I
-              case 2:
-              	g.setColor(Color.YELLOW); drawX += 15;	break;	// O
-              case 3:
-              	g.setColor(new Color(192, 0, 192));	break;	// T
-              case 4:
-              	g.setColor(Color.GREEN); break;	// S
-              case 5:
-              	g.setColor(Color.RED);	break;	// Z
-              case 6:
-              	g.setColor(Color.BLUE); break;	// J
-              case 7:
-              	g.setColor(Color.ORANGE); break;	// L
-              }
+              switchColor(g, nextS[0], 255);
               g.fillRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
               g.setColor(Color.BLACK);
               g.drawRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
@@ -230,26 +219,23 @@ import java.util.Random;
           for (Point p : holdShape) {
               drawX = Xoffset + (11 + p.x) * BLOCK_SIZE;
               drawY = Yoffset + (9 + p.y) * BLOCK_SIZE - (BLOCK_SIZE / 2);
-              switch (holdS) {
-              case 1:
-              	g.setColor(Color.CYAN); drawX -= 15; break;	// I
-              case 2:
-              	g.setColor(Color.YELLOW); drawX += 15; break;	// O
-              case 3:
-              	g.setColor(new Color(192, 0, 192));	break;	// T
-              case 4:
-              	g.setColor(Color.GREEN); break;	// S
-              case 5:
-              	g.setColor(Color.RED);	break;	// Z
-              case 6:
-              	g.setColor(Color.BLUE); break;	// J
-              case 7:
-              	g.setColor(Color.ORANGE); break;	// L
-              }
+              switchColor(g, holdS, 255);
               g.fillRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
               g.setColor(Color.BLACK);
               g.drawRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
           }
+          }
+      }
+      
+      public void drawShadow(Graphics g, int y) {
+    	  int drawX, drawY;
+          for (Point p : currentShape) {
+              drawX = Xoffset + (currentX + p.x) * BLOCK_SIZE;
+              drawY = Yoffset + (currentY + p.y + y) * BLOCK_SIZE;
+              switchColor(g, currentS, 150);
+              g.fillRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
+              g.setColor(Color.BLACK);
+              g.drawRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
           }
       }
    }

@@ -75,26 +75,36 @@ import java.util.Random;
          score += s;
        }
       
+      private void switchColor(Graphics g, int c, int r) {
+    	  switch (c) {
+	          case 1:
+	          	g.setColor(new Color(0, 255, 255, r)); break;	// I, CYAN
+	          case 2:
+	          	g.setColor(new Color(255, 255, 0, r));	break;	// O, YELLOW
+	          case 3:
+	          	g.setColor(new Color(255, 0, 255, r));	break;	// T, PURPLE
+	          case 4:
+	          	g.setColor(new Color(0, 255, 0, r)); break;	// S, GREEB
+	          case 5:
+	          	g.setColor(new Color(255, 0, 0, r));	break;	// Z, RED
+	          case 6:
+	          	g.setColor(new Color(0, 0, 255, r)); break;	// J, BLUE
+	          case 7:
+	          	g.setColor(new Color(255, 200, 0, r)); break;	// L, ORANGE
+    	  }
+      }
+      
       public void draw(Graphics g) {
-    	  int drawX, drawY;
+          g.setColor(Color.DARK_GRAY);
+          for (int x = 0; x <= GRID_COLS; x++)
+             g.drawLine(x * BLOCK_SIZE, 0, x * BLOCK_SIZE, GRID_ROWS * BLOCK_SIZE);
+          for (int y = 0; y <= GRID_ROWS; y++)
+             g.drawLine(0, y * BLOCK_SIZE, GRID_COLS * BLOCK_SIZE, y * BLOCK_SIZE);
+          
+          int drawX, drawY;
           for(int i=0; i < getBGarr().length; i++) {
           	for(int j=0; j < getBGarr()[i].length; j++) {
-          		switch (BGarr[i][j]) {
-                  case 1:
-                  	g.setColor(Color.CYAN); break;	// I
-                  case 2:
-                  	g.setColor(Color.YELLOW);	break;	// O
-                  case 3:
-                  	g.setColor(new Color(192, 0, 192));	break;	// T
-                  case 4:
-                  	g.setColor(Color.GREEN); break;	// S
-                  case 5:
-                  	g.setColor(Color.RED);	break;	// Z
-                  case 6:
-                  	g.setColor(Color.BLUE); break;	// J
-                  case 7:
-                  	g.setColor(Color.ORANGE); break;	// L
-          		}
+                switchColor(g, BGarr[i][j], 255);
 
               	if(BGarr[i][j] > 0) {
               		  drawX = Xoffset + i * BLOCK_SIZE;

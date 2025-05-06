@@ -112,11 +112,12 @@ public class Tetris extends JPanel{
         g1 = new Grid(0,0);
         gamePage = 1;
         
-        timer = new Timer(1/60, new gravity());
+        timer = new Timer(15, new gravity());
         timer.start();
         blinkTimer = new Timer(500, new blink());
         blinkTimer.start();
     }
+    
     private void putShape(Player p, Grid g) {
   		for (int i = 0; i < p.getShape().length; i++) {
          int x = p.getX() + p.getShape()[i].x;
@@ -146,7 +147,7 @@ public class Tetris extends JPanel{
         if (!isValidPosition(p, g)) {
         	p.setX(p.getX() - dx);
         	p.setY(p.getY() - dy);
-        	if(dy > 0 && p.getLD() == 0) putShape(p1, g1);
+        	if(dy > 0 && p.getLD() == 0) putShape(p, g);
         }
         else {
         	p.setLD(p.getLDS());
@@ -159,7 +160,7 @@ public class Tetris extends JPanel{
             p.setY(p.getY() + 1);
             if (!isValidPosition(p, g)) {
             	p.setY(p.getY() - 1);
-            	putShape(p1, g1);
+            	putShape(p, g);
                 break;
             }
         }
@@ -208,6 +209,7 @@ public class Tetris extends JPanel{
         	p.setLD(p.getLDS());
         }
     }
+    
     private void gravity_drop(Player p, Grid g) {
     	if(p.getDF() > 0) {
 			p.setDF(p.getDF() - 1);
@@ -216,7 +218,24 @@ public class Tetris extends JPanel{
 			moveBlock(p, g, 0, 1);
 			p.setDF(p.getDFS());
 		}
-		if(p.getLD() > 0) p.setLD(p.getLD() - 1);
+		p.setY(p.getY()+1);
+		if(p.getLD() > 0 && !isValidPosition(p, g)) p.setLD(p.getLD() - 1);
+		p.setY(p.getY()-1);
+    }
+    
+    private void findShadowAndDraw(Graphics g, Player p, Grid gr) {
+    	
+    	int testY = 0;
+    	while (true) {
+            p.setY(p.getY() + 1);
+            if (!isValidPosition(p, gr)) {
+            	p.setY(p.getY() - 1);
+                break;
+            }
+            else testY++;
+        }
+    	p.setY(p.getY() - testY);
+    	p.drawShadow(g, testY);
     }
     
     private boolean isValidPosition(Player p, Grid g) {
@@ -262,25 +281,13 @@ public class Tetris extends JPanel{
             	if(Key_NUM_2) rotate_and_check(p1, g1, 0); Key_NUM_2 = false;
             	if(Key_NUM_1) p1.holdCurrentShape(); Key_NUM_1 = false;
             	if(Key_NUM_0) hard_drop(p1, g1); Key_NUM_0 = false;
-            	
-                g.setColor(Color.DARK_GRAY);
-                for (int x = 0; x <= GRID_COLS; x++)
-                   g.drawLine(x * BLOCK_SIZE, 0, x * BLOCK_SIZE, GRID_ROWS * BLOCK_SIZE);
-                for (int y = 0; y <= GRID_ROWS; y++)
-                   g.drawLine(0, y * BLOCK_SIZE, GRID_COLS * BLOCK_SIZE, y * BLOCK_SIZE);
 
-                p1.draw(g);
                 g1.draw(g);
+                p1.draw(g);
+                findShadowAndDraw(g, p1, g1);
                 break;
                 
         	case PAGE_GAMEOVER:
-        		if(Key_LEFT) Key_LEFT = false;
-            	if(Key_RIGHT) Key_RIGHT = false;
-            	if(Key_DOWN) Key_DOWN = false;
-            	if(Key_NUM_3) Key_NUM_3 = false;
-            	if(Key_NUM_2) Key_NUM_2 = false;
-            	if(Key_NUM_1) Key_NUM_1 = false;
-            	if(Key_NUM_0) Key_NUM_0 = false;
             	if(Key_R) {
                     p1 = new Player(0,0);
                     g1 = new Grid(0,0);
@@ -309,7 +316,7 @@ public class Tetris extends JPanel{
     }
     private class blink implements ActionListener{
     	public void actionPerformed(ActionEvent e){
-            if (gameOver) blink = !blink;
+            if (gamePage == PAGE_GAMEOVER) blink = !blink;
             repaint();
         }  
     }
