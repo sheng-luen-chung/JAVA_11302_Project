@@ -1,33 +1,51 @@
 package game;
 
 import javax.swing.*;
+import page.*;
 import java.awt.*;
 import java.awt.event.*;
 
 
 public class Tetris extends JPanel{
-    private static final int GRID_COLS = 10;
-    private static final int GRID_ROWS = 20;
-    private static final int BLOCK_SIZE = 30;
+    public static final int GRID_COLS = 10;
+    public static final int GRID_ROWS = 20;
+    public static final int BLOCK_SIZE = 30;
     
-    private static final int PAGE_MENU = 0;
-    private static final int PAGE_GAME = 1;
-    private static final int PAGE_GAMEOVER = 2;
+    public static final int PAGE_MENU = 0;
+    public static final int PAGE_INGAME = 1;
+    public static final int PAGE_GAMEOVER = 2;
     
-    private int gamePage;
-    private Timer timer;
-    private Timer blinkTimer;
-    private Player p1;
-    private Grid g1;
-    private boolean gameOver = false;
-    private boolean blink = true;
+    private static CardLayout cardLayout = new CardLayout();
+    private static JPanel mainPanel = new JPanel(cardLayout);
     
-    private boolean Key_A, Key_D, Key_S, Key_BLANK, Key_C, Key_V, Key_B;
-    private boolean Key_RIGHT, Key_LEFT, Key_DOWN, Key_NUM_0, Key_NUM_1, Key_NUM_2, Key_NUM_3;
-    private boolean Key_R;
+    //page
+    private static menu menuPanel;
+    private static ingame ingamePanel;
+    private static gameover gameoverPanel;
+    
+    public static int gamePage;
+    public static int score;
+    
+    public static boolean Key_A;
+    public static boolean Key_D;
+    public static boolean Key_S;
+    public static boolean Key_BLANK;
+    public static boolean Key_C;
+    public static boolean Key_V;
+    public static boolean Key_B;
+    
+    public static boolean Key_RIGHT;
+	public static boolean Key_LEFT;
+	public static boolean Key_DOWN;
+	public static boolean Key_NUM_0;
+	public static boolean Key_NUM_1;
+	public static boolean Key_NUM_2;
+	public static boolean Key_NUM_3;
+	
+    public static boolean Key_R;
     
     //kick wall table
-    private static final Point[][] KICK = {
+    public static final Point[][] KICK = {
     		//L
             { new Point(1,0), new Point(1,1), new Point(0,-2), new Point(1,-2) }, 	// 1 to 0
             { new Point(-1,0), new Point(-1,-1), new Point(0,2), new Point(-1,2) },// 2 to 1
@@ -39,7 +57,7 @@ public class Tetris extends JPanel{
             { new Point(1,0), new Point(1,1), new Point(0,-2), new Point(1,-2) },	// 1 to 2
             { new Point(1,0), new Point(1,-1), new Point(0,2), new Point(1,2) },	// 2 to 3
      };
-    private static final Point[][] KICK_I = {
+    public static final Point[][] KICK_I = {
     		//L
             { new Point(2,0), new Point(-1,0), new Point(2,-1), new Point(-1,2) }, // 1 to 0
             { new Point(1,0), new Point(-2,0), new Point(1,2), new Point(-2,-1) }, // 2 to 1
@@ -51,15 +69,13 @@ public class Tetris extends JPanel{
             { new Point(-1,0), new Point(2,0), new Point(-1,-2), new Point(2,1) }, // 1 to 2
             { new Point(2,0), new Point(-1,0), new Point(2,-1), new Point(-1,2) },	// 2 to 3
      };
-    private static final Point[][] KICK_O = {
+    public static final Point[][] KICK_O = {
             {}
      };
     
     public Tetris() {
         setPreferredSize(new Dimension((GRID_COLS+5) * BLOCK_SIZE, GRID_ROWS * BLOCK_SIZE));
-        setBackground(Color.BLACK);
-
-        setFocusable(true);
+        setFocusable(true); 
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -107,26 +123,27 @@ public class Tetris extends JPanel{
             	}
             }
         });
-        
-        p1 = new Player(0,0);
-        g1 = new Grid(0,0);
-        gamePage = 1;
-        
-        timer = new Timer(15, new gravity());
-        timer.start();
-        blinkTimer = new Timer(500, new blink());
-        blinkTimer.start();
+	        menuPanel = new menu();
+	        mainPanel.add(menuPanel, "MENU");
+	        
+			ingamePanel = new ingame();
+			mainPanel.add(ingamePanel, "INGAME");
+			
+			gameoverPanel = new gameover();
+			mainPanel.add(gameoverPanel, "GAMEOVER");
+		
+    	add(mainPanel);
+        setLayout(new CardLayout());
+        setPage(PAGE_MENU);   
     }
     
-    private void putShape(Player p, Grid g) {
+    public static void putShape(Player p, Grid g) {
   		for (int i = 0; i < p.getShape().length; i++) {
          int x = p.getX() + p.getShape()[i].x;
          int y = p.getY() + p.getShape()[i].y;
          if (y < 0) {
             // Game over condition: shape locks above the visible grid
-            timer.stop();
             setPage(PAGE_GAMEOVER);
-            repaint();
             return;
          }
          g.setBGarr(x,y,p.getS());
@@ -135,13 +152,11 @@ public class Tetris extends JPanel{
       p.spawnNewShape();
       if (!isValidPosition(p, g)) {
         // New piece can't be placed
-        timer.stop();
         setPage(PAGE_GAMEOVER);
-        repaint();
       }
     }
     
-    private void moveBlock(Player p, Grid g, int dx, int dy) {
+    public static void moveBlock(Player p, Grid g, int dx, int dy) {
         p.setX(p.getX() + dx);
         p.setY(p.getY() + dy);
         if (!isValidPosition(p, g)) {
@@ -155,7 +170,7 @@ public class Tetris extends JPanel{
         }
     }
 
-    private void hard_drop(Player p, Grid g) {
+    public static void hard_drop(Player p, Grid g) {
         while (true) {
             p.setY(p.getY() + 1);
             if (!isValidPosition(p, g)) {
@@ -166,7 +181,7 @@ public class Tetris extends JPanel{
         }
     }
 
-    private void rotate_and_check(Player p, Grid g, int dir) {
+    public static void rotate_and_check(Player p, Grid g, int dir) {
         Point[] backupS = p.getShape();  //before rotation
         int backupX = p.getX();
         int backupY = p.getY();
@@ -210,7 +225,7 @@ public class Tetris extends JPanel{
         }
     }
     
-    private void gravity_drop(Player p, Grid g) {
+    public static void gravity_drop(Player p, Grid g) {
     	if(p.getDF() > 0) {
 			p.setDF(p.getDF() - 1);
 		}
@@ -223,8 +238,7 @@ public class Tetris extends JPanel{
 		p.setY(p.getY()-1);
     }
     
-    private void findShadowAndDraw(Graphics g, Player p, Grid gr) {
-    	
+    public static void findShadowAndDraw(Graphics g, Player p, Grid gr) {	
     	int testY = 0;
     	while (true) {
             p.setY(p.getY() + 1);
@@ -238,7 +252,7 @@ public class Tetris extends JPanel{
     	p.drawShadow(g, testY);
     }
     
-    private boolean isValidPosition(Player p, Grid g) {
+    public static boolean isValidPosition(Player p, Grid g) {
         for (Point po : p.getShape()) {
             int x = p.getX() + po.x;
             int y = p.getY() + po.y;
@@ -252,12 +266,39 @@ public class Tetris extends JPanel{
         return true;
     }
     
-    private void setPage(int p) {
+    public static void setPage(int p) {
+    	switch(gamePage) {
+    		case PAGE_MENU:
+    			menuPanel.stopPanel();
+    			break;
+			case PAGE_INGAME:
+				ingamePanel.stopPanel();
+				break;
+			case PAGE_GAMEOVER:
+				gameoverPanel.stopPanel();
+				break;
+    	} 
+    	
+    	switch(p) {
+    		case PAGE_MENU:
+    			cardLayout.show(mainPanel, "MENU");
+				menuPanel.startPanel();
+				break;
+    		case PAGE_INGAME:
+    			cardLayout.show(mainPanel, "INGAME");
+    			ingamePanel.startPanel();
+    			break;
+    		case PAGE_GAMEOVER:
+    			cardLayout.show(mainPanel, "GAMEOVER");
+    			gameoverPanel.startPanel();
+    			break;
+    	}
+    	mainPanel.revalidate();
     	gamePage = p;
     	resetKey();
     }
     
-    private void resetKey() {
+    private static void resetKey() {
     	Key_LEFT = false;
     	Key_RIGHT = false;
     	Key_DOWN = false;
@@ -266,59 +307,6 @@ public class Tetris extends JPanel{
     	Key_NUM_2 = false;
     	Key_NUM_3 = false;
     	Key_R = false;
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        switch(gamePage) {
-        
-        	case PAGE_GAME:	
-        		if(Key_LEFT) moveBlock(p1, g1, -1, 0); Key_LEFT = false;
-            	if(Key_RIGHT) moveBlock(p1, g1, 1, 0); Key_RIGHT = false;
-            	if(Key_DOWN) p1.setSpeedUP(true); else p1.setSpeedUP(false);
-            	if(Key_NUM_3) rotate_and_check(p1, g1, 1); Key_NUM_3 = false;
-            	if(Key_NUM_2) rotate_and_check(p1, g1, 0); Key_NUM_2 = false;
-            	if(Key_NUM_1) p1.holdCurrentShape(); Key_NUM_1 = false;
-            	if(Key_NUM_0) hard_drop(p1, g1); Key_NUM_0 = false;
-
-                g1.draw(g);
-                p1.draw(g);
-                findShadowAndDraw(g, p1, g1);
-                break;
-                
-        	case PAGE_GAMEOVER:
-            	if(Key_R) {
-                    p1 = new Player(0,0);
-                    g1 = new Grid(0,0);
-                    setPage(PAGE_GAME);
-                    timer.start();
-                    Key_R = false;
-            	}
-            	
-                g.setColor(Color.RED);
-                g.setFont(new Font("Arial", Font.BOLD, 40));
-                g.drawString("GAME   OVER", 3 * BLOCK_SIZE + 5, GRID_ROWS * BLOCK_SIZE / 2);
-                if(blink){
-                   g.setFont(new Font("Arial", Font.BOLD, 20));
-                   g.drawString("press \"R\" to restart", 4 * BLOCK_SIZE + 15, (GRID_ROWS+2) * BLOCK_SIZE / 2 + 30);
-                }
-                break;
-        }
-    }
-
-    private class gravity implements ActionListener{
-    	public void actionPerformed(ActionEvent e){
-    		gravity_drop(p1, g1);
-    		
-            repaint();
-        }  
-    }
-    private class blink implements ActionListener{
-    	public void actionPerformed(ActionEvent e){
-            if (gamePage == PAGE_GAMEOVER) blink = !blink;
-            repaint();
-        }  
     }
 
     public static void main(String[] args) {

@@ -1,8 +1,7 @@
 package game;
 
    import java.awt.*;
-import java.util.ArrayList;
-import java.util.Random;
+   import java.util.Random;
    
    public class Player
    {
@@ -232,7 +231,7 @@ import java.util.Random;
           for (Point p : currentShape) {
               drawX = Xoffset + (currentX + p.x) * BLOCK_SIZE;
               drawY = Yoffset + (currentY + p.y + y) * BLOCK_SIZE;
-              switchColor(g, currentS, 150);
+              switchColor(g, currentS, 125);
               g.fillRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
               g.setColor(Color.BLACK);
               g.drawRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
