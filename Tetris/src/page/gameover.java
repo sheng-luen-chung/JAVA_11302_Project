@@ -6,7 +6,6 @@ import java.awt.event.*;
 import game.*;
 
 public class gameover extends JPanel{
-    private Timer timer;
     private Timer blinkTimer;
     private boolean BK;
     
@@ -27,17 +26,21 @@ public class gameover extends JPanel{
 			Tetris.setPage(Tetris.PAGE_INGAME);
             Tetris.Key_R = false;
     	}
+		if(Tetris.Key_S) {
+			Tetris.setPage(Tetris.PAGE_MENU);
+    	}
     	
         g.setColor(Color.RED);
         g.setFont(new Font("Arial", Font.BOLD, 40));
-        g.drawString("GAME  OVER", 3 * Tetris.BLOCK_SIZE + 5, Tetris.GRID_ROWS * Tetris.BLOCK_SIZE / 2);
+        g.drawString("GAME  OVER", 12 * Tetris.BLOCK_SIZE, Tetris.TOTAL_SIZE_Y / 2);
         
         g.setFont(new Font("Arial", Font.BOLD, 20));
-        g.drawString("Your Score: "+String.valueOf(Tetris.score), 4 * Tetris.BLOCK_SIZE + 15, Tetris.GRID_ROWS * Tetris.BLOCK_SIZE / 2 + 30);
+        g.drawString("Your Score: "+String.valueOf(Tetris.score), 13 * Tetris.BLOCK_SIZE, Tetris.TOTAL_SIZE_Y / 2 + 60);
         
         if(BK){
            g.setFont(new Font("Arial", Font.BOLD, 20));
-           g.drawString("press \"R\" to restart", 4 * Tetris.BLOCK_SIZE + 15, (Tetris.GRID_ROWS+2) * Tetris.BLOCK_SIZE / 2 + 50);
+           g.drawString("press \"R\" to restart", 13 * Tetris.BLOCK_SIZE, Tetris.TOTAL_SIZE_Y / 2 + 80);
+           g.drawString("press \"S\" to menu", 13 * Tetris.BLOCK_SIZE, Tetris.TOTAL_SIZE_Y / 2 + 100);
         }
     }
     

@@ -19,12 +19,16 @@ public class menu extends JPanel{
 			Tetris.setPage(Tetris.PAGE_INGAME);
             Tetris.Key_R = false;
     	}
+		if(Tetris.Key_S) {
+			System.exit(0);
+    	}
     	
         g.setColor(Color.orange);
         g.setFont(new Font("Arial", Font.BOLD, 40));
-        g.drawString("MENU", 5 * Tetris.BLOCK_SIZE, Tetris.GRID_ROWS * Tetris.BLOCK_SIZE / 2);
+        g.drawString("Tetris", 14 * Tetris.BLOCK_SIZE, Tetris.TOTAL_SIZE_Y / 2);
 
         g.setFont(new Font("Arial", Font.BOLD, 20));
-        g.drawString("press \"R\" to start", 4 * Tetris.BLOCK_SIZE + 15, (Tetris.GRID_ROWS+2) * Tetris.BLOCK_SIZE / 2 + 30);
+        g.drawString("press \"R\" to start", 13 * Tetris.BLOCK_SIZE, Tetris.TOTAL_SIZE_Y / 2 + 120);
+        g.drawString("press \"S\" to exit", 13 * Tetris.BLOCK_SIZE, Tetris.TOTAL_SIZE_Y / 2 + 140);
     }
 }

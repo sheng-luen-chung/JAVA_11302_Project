@@ -18,10 +18,12 @@ package game;
 	    private int holdS;
 	    private int dropFarmes, dropFarmesSet;
 	    private int lockDelay, lockDelaySet;
+	    private int ARE, AREset;
 	    
 	    private boolean hold;
 	    private boolean Tspin;
 	    private boolean speedUP;
+	    private boolean lastKick;
 	    
 	    private Random rand = new Random();
 	    
@@ -40,10 +42,12 @@ package game;
     	  Xoffset = x;
     	  Yoffset = y;
     	  nextS = new int[10];
-    	  dropFarmesSet = 30;
+    	  dropFarmesSet = 48;
     	  lockDelaySet = 30;
+    	  AREset = 8;
     	  dropFarmes = dropFarmesSet;
     	  lockDelay = lockDelaySet;
+    	  ARE = AREset;
     	  spawn7bag();
     	  spawnNewShape();
       }
@@ -60,9 +64,13 @@ package game;
       public int getLD(){ return lockDelay;}
       public int getLDS(){ return lockDelaySet;}
       
+      public int getARE(){ return ARE;}
+      public int getARES(){ return AREset;}
+      
       public Point[] getShape(){ return currentShape;}
       public boolean getTspin(){ return Tspin;}
       public boolean getSpeedUP(){ return speedUP;}
+      public boolean getLK(){ return lastKick;}
       
    // modifier methods
       public void setX(int x){currentX = x;} 
@@ -75,12 +83,17 @@ package game;
       
       public void setDF(int d){dropFarmes = d;}
       public void setDFS(int d){dropFarmesSet = d;}
+      
       public void setLD(int l){lockDelay = l;}
       public void setLDS(int l){lockDelaySet = l;}
+      
+      public void setARE(int a){ARE = a;}
+      public void setARES(int a){AREset = a;}
       
       public void setShape(Point[] s){currentShape = s;} 
       public void setTspin(boolean Ts){Tspin = Ts;}
       public void setSpeedUP(boolean Sp){speedUP = Sp;}
+      public void setLK(boolean Lk){lastKick = Lk;}
       
     //	 instance methods
       public void spawn7bag() {
@@ -108,6 +121,7 @@ package game;
           currentY = 0;
           currentD = 0;
           lockDelay = lockDelaySet;
+          ARE = AREset;
           if(hold) {
         	  currentS = holdS;
         	  currentShape = holdShape;
@@ -171,7 +185,6 @@ package game;
           if(dir != 0) setD(getD()+1);
           else setD(getD()-1);
           
-          if(currentS == 3) Tspin = true;	//T-spin
           setShape(rotated);
       }
       
@@ -208,6 +221,15 @@ package game;
           for (Point p : nextShape) {
               drawX = Xoffset + (11 + p.x) * BLOCK_SIZE;
               drawY = Yoffset + (5 + p.y) * BLOCK_SIZE - (BLOCK_SIZE / 2);
+        	  switch(nextS[0]) {
+    	  	  case 1:
+    	  		  drawX -= BLOCK_SIZE / 2;
+    	  		  drawY -= BLOCK_SIZE / 2;
+    	  		  break;
+    	  	  case 2:
+    	  		  drawX += BLOCK_SIZE / 2;
+    	  		  break;
+        	  }
               switchColor(g, nextS[0], 255);
               g.fillRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
               g.setColor(Color.BLACK);
@@ -218,6 +240,15 @@ package game;
           for (Point p : holdShape) {
               drawX = Xoffset + (11 + p.x) * BLOCK_SIZE;
               drawY = Yoffset + (9 + p.y) * BLOCK_SIZE - (BLOCK_SIZE / 2);
+        	  switch(holdS) {
+        	  	  case 1:
+        	  		  drawX -= BLOCK_SIZE / 2;
+        	  		  drawY -= BLOCK_SIZE / 2;
+        	  		  break;
+        	  	  case 2:
+        	  		  drawX += BLOCK_SIZE / 2;
+        	  		  break;
+        	  }
               switchColor(g, holdS, 255);
               g.fillRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
               g.setColor(Color.BLACK);
