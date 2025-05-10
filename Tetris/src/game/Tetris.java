@@ -42,7 +42,9 @@ public class Tetris extends JPanel{
 	public static boolean Key_NUM_2;
 	public static boolean Key_NUM_3;
 	
-    public static boolean Key_R;
+   public static boolean Key_R;
+   //Back Ground Music
+   private static MusicPlayer bgMusic;
     
     //kick wall table
     public static final Point[][] KICK = {
@@ -287,10 +289,15 @@ public class Tetris extends JPanel{
     		case PAGE_INGAME:
     			cardLayout.show(mainPanel, "INGAME");
     			ingamePanel.startPanel();
+            //start playing music
+            bgMusic = new MusicPlayer();
+            bgMusic.play("music/BGM.wav", true);
     			break;
     		case PAGE_GAMEOVER:
     			cardLayout.show(mainPanel, "GAMEOVER");
     			gameoverPanel.startPanel();
+            //stop music
+            bgMusic.stop();
     			break;
     	}
     	mainPanel.revalidate();
@@ -319,6 +326,7 @@ public class Tetris extends JPanel{
         frame.setVisible(true);
         tetrisPanel.requestFocus();  
         tetrisPanel.enableInputMethods(false);
+
     }
 
 }

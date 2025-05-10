@@ -10,6 +10,8 @@ package game;
 	    private int Xoffset, Yoffset;
 	    private int[][] BGarr;
 	    private int score = 0;
+       
+       private static MusicPlayer claerLine_effect;
 	    
      // constructors
       public Grid(int x, int y)     //default constructor
@@ -42,6 +44,9 @@ package game;
              }
 
              if (isFull) {
+             //start playing music
+               claerLine_effect = new MusicPlayer();
+               claerLine_effect.play("music/claerLine_effect.wav", false);
              // Shift all rows above down
                 linesCleared++;
                 for (int yy = y; yy > 0; yy--) {
