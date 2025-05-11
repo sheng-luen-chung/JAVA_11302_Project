@@ -224,6 +224,19 @@ package game;
       
       public void draw(Graphics g) {
     	  int drawX, drawY;
+    	  //edge
+    	  g.setColor(Color.LIGHT_GRAY);
+	      g.fillRect(Xoffset-10,
+	    		  	 Yoffset-10,
+	    		  	 GRID_COLS * BLOCK_SIZE + 20,
+	    		  	 GRID_ROWS * BLOCK_SIZE + 20);
+	      g.setColor(Color.BLACK);
+	      g.fillRect(Xoffset,
+	    		  	 Yoffset,
+	    		  	 GRID_COLS * BLOCK_SIZE,
+	    		  	 GRID_ROWS * BLOCK_SIZE);
+	      
+      	  //line
           g.setColor(Color.DARK_GRAY);
           drawX = Xoffset;
           drawY = Yoffset;
@@ -234,6 +247,7 @@ package game;
              g.drawLine(drawX + 0, drawY + y * BLOCK_SIZE,
             		 	drawX + GRID_COLS * BLOCK_SIZE, drawY + y * BLOCK_SIZE);
           
+          //shape
           for(int i=0; i < getBGarr().length; i++) {
           	for(int j=0; j < getBGarr()[i].length; j++) {
                 switchColor(g, BGarr[i][j], 255);
@@ -249,8 +263,8 @@ package game;
           }
           
           g.setColor(Color.WHITE);
+          drawX = Xoffset + 10 + GRID_COLS * BLOCK_SIZE;
           //Score:
-          drawX = Xoffset + GRID_COLS * BLOCK_SIZE;
           drawY = Yoffset + 0 * BLOCK_SIZE;
           g.setFont(new Font("Arial", Font.BOLD, 20));
           g.drawString("Score:", drawX+5, drawY+20);
@@ -274,14 +288,12 @@ package game;
           //level
 	      drawY = Yoffset + 11 * BLOCK_SIZE;
     	  g.setFont(new Font("Arial", Font.BOLD, 20));
-          g.drawString("Level:", drawX+5, drawY+20);
-          g.drawString(String.valueOf(level), drawX+70, drawY+20);
+          g.drawString("Level: " + level, drawX+5, drawY+20);
           
           //lines cleared
           drawY = Yoffset + 12 * BLOCK_SIZE;
     	  g.setFont(new Font("Arial", Font.BOLD, 20));
-          g.drawString("Lines:", drawX+5, drawY+20);
-          g.drawString(String.valueOf(lines_cleared), drawX+70, drawY+20);
+          g.drawString("Lines: " + lines_cleared, drawX+5, drawY+20);
           
           //action:
           if(SS > 0) {

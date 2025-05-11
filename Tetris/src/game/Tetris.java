@@ -150,6 +150,7 @@ public class Tetris extends JPanel{
 		
     	add(mainPanel);
         setLayout(new CardLayout());
+
         setPage(PAGE_MENU);   
     }
     
@@ -393,6 +394,40 @@ public class Tetris extends JPanel{
     	Key_NUM_2 = false;
     	Key_NUM_3 = false;
     	Key_R = false;
+    }
+    
+    // Method to create buttons
+    public static JButton setAndPutButton(JPanel panel, String text, ActionListener e, int x, int y) {
+    	JButton B;
+    	B = Tetris.createButton(text); // Create Start button
+        B.addActionListener(e);
+        B.setBounds(x, y, 200, 60); // x, y, width, height
+        panel.add(B);
+		return B;
+    }
+    
+    public static JButton createButton(final String text) {
+        final JButton button = new JButton("<html><div style='border:2px solid white; padding:5px; color:white;'>" + text + "</div></html>");
+        button.setFont(new Font("Arial", Font.BOLD, 32));
+        button.setForeground(Color.WHITE);
+        button.setOpaque(false);
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
+        button.setFocusable(false);
+
+        // Mouse listener to change text and border color on hover
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setText("<html><div style='border:2px solid #00FF00; padding:5px; color:#00FF00;'>" + text + "</div></html>");
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setText("<html><div style='border:2px solid white; padding:5px; color:white;'>" + text + "</div></html>");
+            }
+        });
+        return button;
     }
 
     public static void main(String[] args) {
