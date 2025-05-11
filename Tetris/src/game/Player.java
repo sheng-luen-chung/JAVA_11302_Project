@@ -1,8 +1,8 @@
-package game;
+package src;
 
    import java.awt.*;
    import java.util.Random;
-   
+
    public class Player
    {
 	    private static final int GRID_COLS = 10;
@@ -116,6 +116,7 @@ package game;
       }
       
       public void spawnNewShape() {
+
     	  //current shape set
           currentX = GRID_COLS / 2 - 2;
           currentY = 0;
@@ -217,7 +218,16 @@ package game;
               g.setColor(Color.BLACK);
               g.drawRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
           }
-          
+         
+          int previewX = (GRID_COLS) * BLOCK_SIZE;
+          int previewY = 120; // Y-coordinate to move it lower
+          g.setColor(Color.WHITE);
+          g.setFont(new Font("Arial", Font.BOLD, 20));
+          g.drawString("Next:", previewX, previewY - 10); // Label just above the preview
+
+          // Draw preview box border
+          g.drawRect(previewX, previewY, 5 * BLOCK_SIZE, 4 * BLOCK_SIZE);
+         
           for (Point p : nextShape) {
               drawX = Xoffset + (11 + p.x) * BLOCK_SIZE;
               drawY = Yoffset + (5 + p.y) * BLOCK_SIZE - (BLOCK_SIZE / 2);
@@ -231,6 +241,7 @@ package game;
     	  		  break;
         	  }
               switchColor(g, nextS[0], 255);
+
               g.fillRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
               g.setColor(Color.BLACK);
               g.drawRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
