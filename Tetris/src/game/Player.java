@@ -16,7 +16,7 @@ package game;
 	    private int currentX, currentY, currentS, currentD;
 	    private int[] nextS;
 	    private int holdS;
-	    private int dropFarmes, dropFarmesSet;
+	    private double dropFarmes, dropFarmesSet;
 	    private int lockDelay, lockDelaySet;
 	    private int ARE, AREset;
 	    
@@ -44,7 +44,7 @@ package game;
     	  nextS = new int[10];
     	  dropFarmesSet = 48;
     	  lockDelaySet = 30;
-    	  AREset = 8;
+    	  AREset = 20;
     	  dropFarmes = dropFarmesSet;
     	  lockDelay = lockDelaySet;
     	  ARE = AREset;
@@ -58,8 +58,8 @@ package game;
       public int getS(){ return currentS;}
       public int getD(){ return currentD;}
       
-      public int getDF(){ return dropFarmes;}
-      public int getDFS(){ return dropFarmesSet;}
+      public double getDF(){ return dropFarmes;}
+      public double getDFS(){ return dropFarmesSet;}
       
       public int getLD(){ return lockDelay;}
       public int getLDS(){ return lockDelaySet;}
@@ -81,8 +81,8 @@ package game;
     	  if(currentD < 0) currentD += 4;
       }
       
-      public void setDF(int d){dropFarmes = d;}
-      public void setDFS(int d){dropFarmesSet = d;}
+      public void setDF(double d){dropFarmes = d;}
+      public void setDFS(double d){dropFarmesSet = d;}
       
       public void setLD(int l){lockDelay = l;}
       public void setLDS(int l){lockDelaySet = l;}

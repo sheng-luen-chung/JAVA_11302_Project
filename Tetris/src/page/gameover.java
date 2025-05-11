@@ -8,6 +8,7 @@ import game.*;
 public class gameover extends JPanel{
 	private JButton restartButton, menuButton;
     public void startPanel() {
+    	Tetris.cardLayout.show(Tetris.mainPanel, "GAMEOVER");
     	setBackground(Color.BLACK);
         
         setLayout(null);
@@ -15,13 +16,13 @@ public class gameover extends JPanel{
         restartButton = Tetris.setAndPutButton(this,
     						   				   "ReStart",
     						   				   new BReStart(),
-    						   				   Tetris.TOTAL_SIZE_X / 2 - 130,
+    						   				   Tetris.TOTAL_SIZE_X / 2 - 150,
     						   				   Tetris.TOTAL_SIZE_Y / 2 + 80);
     	// Menu button
     	menuButton = Tetris.setAndPutButton(this,
     					 	  			    "Menu",
     					 	  			    new BMenu(),
-    					 	  			    Tetris.TOTAL_SIZE_X / 2 - 130,
+    					 	  			    Tetris.TOTAL_SIZE_X / 2 - 150,
     					 	  			    Tetris.TOTAL_SIZE_Y / 2 + 160);
     }
     public void stopPanel() {
@@ -41,7 +42,7 @@ public class gameover extends JPanel{
     
     private class BReStart implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            Tetris.setPage(Tetris.PAGE_INGAME);
+            Tetris.setPage(Tetris.overReturn);
         }
     }
     private class BMenu implements ActionListener {

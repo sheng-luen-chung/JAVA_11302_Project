@@ -14,19 +14,31 @@ public class Tetris extends JPanel{
     public static final int GRID_ROWS = 20;
     
     public static final int PAGE_MENU = 0;
-    public static final int PAGE_INGAME = 1;
-    public static final int PAGE_GAMEOVER = 2;
+    public static final int PAGE_MODE = 1;
+    public static final int PAGE_CLASSIC = 2;
     
-    private static CardLayout cardLayout = new CardLayout();
-    private static JPanel mainPanel = new JPanel(cardLayout);
+    public static final int PAGE_GRAVITY = 4;
+    public static final int PAGE_GAMEOVER = 5;
+    
+    public static final int PAGE_INSTRUCTIONS = 7;
+    
+    public static CardLayout cardLayout = new CardLayout();
+    public static JPanel mainPanel = new JPanel(cardLayout);
     
     //page
-    private static menu menuPanel;
-    private static ingame ingamePanel;
-    private static gameover gameoverPanel;
+    public static menu menuPanel;
+    public static mode modePanel;
+    public static classic classicPanel;
+    
+    public static gravity gravityPanel;
+    public static gameover gameoverPanel;
+    
+    public static instructions instructionsPanel;
+
     
     public static int gamePage;
     public static int score;
+    public static int overReturn;
     
     //key
     public static boolean Key_A;
@@ -139,19 +151,31 @@ public class Tetris extends JPanel{
             	}
             }
         });
-	        menuPanel = new menu();
-	        mainPanel.add(menuPanel, "MENU");
-	        
-			ingamePanel = new ingame();
-			mainPanel.add(ingamePanel, "INGAME");
-			
-			gameoverPanel = new gameover();
-			mainPanel.add(gameoverPanel, "GAMEOVER");
-		
-    	add(mainPanel);
-        setLayout(new CardLayout());
-
+        createPages();
         setPage(PAGE_MENU);   
+    }
+    
+    private void createPages() {
+        menuPanel = new menu();
+        mainPanel.add(menuPanel, "MENU");
+        
+        modePanel = new mode();
+		mainPanel.add(modePanel, "MODE");
+		
+		classicPanel = new classic();
+		mainPanel.add(classicPanel, "CLASSIC");
+		
+		gravityPanel = new gravity();
+		mainPanel.add(gravityPanel, "GRAVITY");
+		
+		gameoverPanel = new gameover();
+		mainPanel.add(gameoverPanel, "GAMEOVER");
+		
+		instructionsPanel = new instructions();
+		mainPanel.add(instructionsPanel, "INSTRUCTIONS");
+
+		this.add(mainPanel);
+	    setLayout(new CardLayout());
     }
     
     public static void putShape(Player p, Grid g) {
@@ -307,12 +331,24 @@ public class Tetris extends JPanel{
     
     public static void gravity_drop(Player p, Grid g) {
     	if(p.getARE() > 0) p.setARE(p.getARE() - 1);
-    	else if(p.getDF() > 0) p.setDF(p.getDF() - 1);
+    	else if(p.getDF() >= 1) p.setDF(p.getDF() - 1);
     	
-		if((p.getDF() == 0 && p.getARE() == 0) || p.getSpeedUP()){
-			moveBlock(p, g, 0, 1);
+		if((p.getDF() < 1 || p.getSpeedUP()) && p.getARE() == 0){
+			if(p.getDF() < 1 && p.getDF() != 0) {
+				p.setY(p.getY() + 1);
+	            if (isValidPosition(p, g)) {
+	            	p.setY(p.getY() - 1);
+	            	for(int i=0; i < (int)(1/p.getDF())-1; i++) {
+						moveBlock(p, g, 0, 1);
+					}
+	            }
+	            else p.setY(p.getY() - 1);
+	            moveBlock(p, g, 0, 1);
+			}
+			else moveBlock(p, g, 0, 1);
 			p.setDF(p.getDFS());
 		}
+    	
 		p.setY(p.getY()+1);
 		if(p.getLD() > 0 && !isValidPosition(p, g)) p.setLD(p.getLD() - 1);
 		p.setY(p.getY()-1);
@@ -346,32 +382,40 @@ public class Tetris extends JPanel{
         return true;
     }
     
+    public int putGarbageLines(Player p, Grid g, int l) {
+    	p.setY(p.getY() - 1);
+  	    for(int y = 0; y < GRID_ROWS - 1; y++) {
+  	    	for(int x = 0; x < GRID_COLS; x++) {
+  	    	    g.setBGarr(x, y, g.getBGarr()[x][y+1]);
+  		    }
+	    }
+  	    for(int x = 0; x < GRID_COLS; x++) {
+  		    g.setBGarr(x, 19, 8);
+  	    }
+  	    return l-1;
+    }
+    
     public static void setPage(int p) {
     	switch(gamePage) {
-    		case PAGE_MENU:
-    			menuPanel.stopPanel();
-    			break;
-			case PAGE_INGAME:
-				ingamePanel.stopPanel();
-				break;
-			case PAGE_GAMEOVER:
-				gameoverPanel.stopPanel();
-				break;
+    		case PAGE_MENU: menuPanel.stopPanel(); break;
+    		case PAGE_MODE: modePanel.stopPanel(); break;
+			case PAGE_CLASSIC: classicPanel.stopPanel(); break;
+			
+			case PAGE_GRAVITY: gravityPanel.stopPanel(); break;
+			case PAGE_GAMEOVER: gameoverPanel.stopPanel(); break;
+			
+			case PAGE_INSTRUCTIONS: instructionsPanel.stopPanel(); break;
     	} 
     	
     	switch(p) {
-    		case PAGE_MENU:
-    			cardLayout.show(mainPanel, "MENU");
-				menuPanel.startPanel();
-				break;
-    		case PAGE_INGAME:
-    			cardLayout.show(mainPanel, "INGAME");
-    			ingamePanel.startPanel();
-    			break;
-    		case PAGE_GAMEOVER:
-    			cardLayout.show(mainPanel, "GAMEOVER");
-    			gameoverPanel.startPanel();
-    			break;
+    		case PAGE_MENU: menuPanel.startPanel(); break;
+    		case PAGE_MODE: modePanel.startPanel(); break;
+    		case PAGE_CLASSIC: classicPanel.startPanel(); break;
+    		
+    		case PAGE_GRAVITY: gravityPanel.startPanel(); break;
+    		case PAGE_GAMEOVER: gameoverPanel.startPanel(); break;
+    		
+    		case PAGE_INSTRUCTIONS: instructionsPanel.startPanel(); break;
     	}
     	mainPanel.revalidate();
     	gamePage = p;
@@ -401,7 +445,7 @@ public class Tetris extends JPanel{
     	JButton B;
     	B = Tetris.createButton(text); // Create Start button
         B.addActionListener(e);
-        B.setBounds(x, y, 200, 60); // x, y, width, height
+        B.setBounds(x, y, 250, 60); // x, y, width, height
         panel.add(B);
 		return B;
     }

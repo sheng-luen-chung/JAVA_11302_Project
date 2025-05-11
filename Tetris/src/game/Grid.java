@@ -20,15 +20,14 @@ package game;
 	    private int lines_cleared=0;
 	    private int combo = 0;
 	    private int level = 0;
-	    private int mod = 0;
+	    private int attack = 0;
 	    private boolean B2B;
 	    
      // constructors
-      public Grid(int x, int y, int m)     //default constructor
+      public Grid(int x, int y)     //default constructor
       {
     	 Xoffset = x;
     	 Yoffset = y;
-    	 mod = m;
          BGarr = new int[10][20];
       }
 
