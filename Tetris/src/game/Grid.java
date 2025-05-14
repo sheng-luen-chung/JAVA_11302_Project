@@ -8,6 +8,7 @@ package game;
 	    private static final int GRID_ROWS = 20;
 	    private static final int BLOCK_SIZE = 30;
 	    private int Xoffset, Yoffset;
+	    private int Xshock = 0, Yshock = 0;
 	    private int[][] BGarr;
 	    private int action = 0;
 	    private int score = 0;
@@ -32,15 +33,25 @@ package game;
       }
 
     // accessor methods
+      public int getXO(){ return Xoffset;}
+      public int getYO(){ return Yoffset;}
+      public int getXS(){ return Xshock;}
+      public int getYS(){ return Yshock;}
+      public int getA(){ return attack;}
       public int getLinesC(){ return lines_cleared;}
       public int getScore(){ return score;}
       public int[][] getBGarr(){ return BGarr;}
       public boolean getB2B(){ return B2B;}
       
    // modifier methods
-      public void setLinesC(int lc){ lines_cleared = lc;}
-      public void setScore(int s){ score = s;}
-      public void setBGarr(int x, int y, int arr){ BGarr[x][y] = arr;} 
+      public void setXO(int xo){Xoffset = xo;}
+      public void setYO(int yo){Xoffset = yo;}
+      public void setXS(int xs){Xshock = xs;}
+      public void setYS(int ys){Yshock = ys;}
+      public void setA(int a){attack = a;}
+      public void setLinesC(int lc){lines_cleared = lc;}
+      public void setScore(int s){score = s;}
+      public void setBGarr(int x, int y, int arr){BGarr[x][y] = arr;} 
       public void setB2B(boolean b){ B2B = b;}
       
     //	 instance methods
@@ -91,18 +102,21 @@ package game;
 	      		  break;
 	      	  case "2,0":				//Double
 	      		  action = 2;
+	      		  attack += 1;
 	      		  SS = 300;
 	      		  B2B_buffer = false;
 	      		  break;
 	      	  case "3,0":				//Triple
 	      		  action = 3;
+	      		  attack += 2;
 	      		  SS = 500;
 	      		  B2B_buffer = false;
 	      		  break;
 	      	  case "4,0":				//Quadruple
 	      		  action = 4;
+	      		  attack += 4;
 	      		  SS = 800;
-	      		  if(B2B) BS = 800/2;	//Back to Back *1.5
+	      		  if(B2B){ BS = 800/2; attack++;}	//Back to Back *1.5
 	      		  B2B_buffer = true;
 	      		  //clearAll();//for test all cleared
 	      		  break;
@@ -118,34 +132,39 @@ package game;
 	      		  
 	      	  case "1,1":				//Mini T-Spin Single
 	      		  action = 7;
+	      		  attack += 1;
 	      		  SS = 200;
-	      		  if(B2B) BS = 200/2;	//Back to Back *1.5
+	      		  if(B2B){ BS = 200/2; attack++;}	//Back to Back *1.5
 	      		  B2B_buffer = true;
 	      		  break;
 	      	  case "1,2":				//T-Spin Single
 	      		  action = 8;
+	      		  attack += 2;
 	      		  SS = 800;
-	      		  if(B2B) BS = 800/2;	//Back to Back *1.5
+	      		  if(B2B){ BS = 800/2; attack++;}	//Back to Back *1.5
 	      		  B2B_buffer = true;
 	      		  break;
 	      		  
 	      	  case "2,1":				//Mini T-Spin Double
 	      		  action = 9;
+	      		  attack += 2;
 	      		  SS = 1200;
-	      		  if(B2B) BS = 1200/2;	//Back to Back *1.5
+	      		  if(B2B){ BS = 1200/2; attack++;}	//Back to Back *1.5
 	      		  B2B_buffer = true;
 	      		  break;
 	      	  case "2,2":				//T-Spin Double
 	      		  action = 10;
+	      		  attack += 3;
 	      		  SS = 1200;
-	      		  if(B2B) BS = 1200/2;	//Back to Back *1.5
+	      		  if(B2B){ BS = 1200/2; attack++;}	//Back to Back *1.5
 	      		  B2B_buffer = true;
 	      		  break;
 	      		  
 	      	  case "3,2":				//T-Spin Triple
 	      		  action = 11;
+	      		  attack += 6;
 	      		  SS = 1600;
-	      		  if(B2B) BS = 1600/2;	//Back to Back *1.5
+	      		  if(B2B){ BS = 1600/2; attack++;}	//Back to Back *1.5
 	      		  B2B_buffer = true;
 	      		  break;
 	      	  default:
@@ -218,11 +237,15 @@ package game;
 	          	g.setColor(new Color(0, 0, 255, r)); break;	// J, BLUE
 	          case 7:
 	          	g.setColor(new Color(255, 200, 0, r)); break;	// L, ORANGE
+	          case 8:
+			    g.setColor(new Color(64, 64, 64, r)); break;	// GarbageLines
     	  }
       }
       
       public void draw(Graphics g) {
     	  int drawX, drawY;
+    	  Xoffset += Xshock;
+    	  Yoffset += Yshock;
     	  //edge
     	  g.setColor(Color.LIGHT_GRAY);
 	      g.fillRect(Xoffset-10,
@@ -262,7 +285,7 @@ package game;
           }
           
           g.setColor(Color.WHITE);
-          drawX = Xoffset + 10 + GRID_COLS * BLOCK_SIZE;
+          drawX = Xoffset + 15 + GRID_COLS * BLOCK_SIZE;
           //Score:
           drawY = Yoffset + 0 * BLOCK_SIZE;
           g.setFont(new Font("Arial", Font.BOLD, 20));
@@ -354,5 +377,7 @@ package game;
                   g.drawString("+" + CS * (level+1), drawX+5, drawY+40);
               }
           }
+          Xoffset -= Xshock;
+    	  Yoffset -= Yshock;
       }
    }

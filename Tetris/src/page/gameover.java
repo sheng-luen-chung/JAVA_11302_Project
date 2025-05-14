@@ -34,10 +34,10 @@ public class gameover extends JPanel{
         super.paintComponent(g);
         g.setColor(Color.RED);
         g.setFont(new Font("Arial", Font.BOLD, 40));
-        g.drawString("GAME  OVER", 12 * Tetris.BLOCK_SIZE, Tetris.TOTAL_SIZE_Y / 2);
+        g.drawString("GAME  OVER", Tetris.TOTAL_SIZE_X / 2 - 160, Tetris.TOTAL_SIZE_Y / 2);
         
         g.setFont(new Font("Arial", Font.BOLD, 20));
-        g.drawString("Your Score: "+String.valueOf(Tetris.score), 13 * Tetris.BLOCK_SIZE, Tetris.TOTAL_SIZE_Y / 2 + 30);
+        g.drawString("Your Score: "+String.valueOf(Tetris.score), Tetris.TOTAL_SIZE_X / 2 - 130, Tetris.TOTAL_SIZE_Y / 2 + 30);
     }
     
     private class BReStart implements ActionListener {

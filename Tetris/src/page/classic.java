@@ -6,7 +6,7 @@ import java.awt.event.*;
 import game.*;
 
 public class classic extends JPanel{
-	private JButton pauseButton, continueButton, menuButton;
+	private JButton pauseButton, continueButton, restartButton, menuButton;
 	private Timer timer, blinkTimer;
     private boolean BK;
     private Player p1;
@@ -17,8 +17,8 @@ public class classic extends JPanel{
     	Tetris.cardLayout.show(Tetris.mainPanel, "CLASSIC");
     	setBackground(Color.BLACK);
     	
-        p1 = new Player(300,60);
-        g1 = new Grid(300,60);
+        p1 = new Player(300,90);
+        g1 = new Grid(300,90);
         pause = false;
         
         timer = new Timer(15, new gravity_timer());
@@ -47,13 +47,14 @@ public class classic extends JPanel{
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if(!pause) {
-    		if(Tetris.Key_LEFT) Tetris.moveBlock(p1, g1, -1, 0); Tetris.Key_LEFT = false;
-        	if(Tetris.Key_RIGHT) Tetris.moveBlock(p1, g1, 1, 0); Tetris.Key_RIGHT = false;
-        	if(Tetris.Key_DOWN) p1.setSpeedUP(true); else p1.setSpeedUP(false);
-        	if(Tetris.Key_NUM_3) Tetris.rotate_and_check(p1, g1, 1); Tetris.Key_NUM_3 = false;
-        	if(Tetris.Key_NUM_2) Tetris.rotate_and_check(p1, g1, 0); Tetris.Key_NUM_2 = false;
-        	if(Tetris.Key_NUM_1) p1.holdCurrentShape(); Tetris.Key_NUM_1 = false;
-        	if(Tetris.Key_NUM_0) Tetris.hard_drop(p1, g1); Tetris.Key_NUM_0 = false;
+    		if(Tetris.Key_A || Tetris.Key_LEFT) Tetris.moveBlock(p1, g1, -1, 0); Tetris.Key_A = false; Tetris.Key_LEFT = false;
+        	if(Tetris.Key_D || Tetris.Key_RIGHT) Tetris.moveBlock(p1, g1, 1, 0); Tetris.Key_D = false; Tetris.Key_RIGHT = false;
+        	if(Tetris.Key_S || Tetris.Key_DOWN) p1.setSpeedUP(true); else p1.setSpeedUP(false);
+        	if(Tetris.Key_B || Tetris.Key_NUM_3) Tetris.rotate_and_check(p1, g1, 1); Tetris.Key_B = false; Tetris.Key_NUM_3 = false;
+        	if(Tetris.Key_V || Tetris.Key_NUM_2) Tetris.rotate_and_check(p1, g1, 0); Tetris.Key_V = false; Tetris.Key_NUM_2 = false;
+        	if(Tetris.Key_C || Tetris.Key_NUM_1) p1.holdCurrentShape(); Tetris.Key_C = false; Tetris.Key_NUM_1 = false;
+        	if(Tetris.Key_SPACE || Tetris.Key_NUM_0) Tetris.hard_drop(p1, g1); Tetris.Key_SPACE = false; Tetris.Key_NUM_0 = false;
+        	if(Tetris.Key_ESC || Tetris.Key_NUM_9) pauseGame(); Tetris.Key_ESC = false; Tetris.Key_NUM_9 = false;
 
         	switch(g1.getLinesC()/10) {		//level up speed
         		case 0: p1.setDFS(48); break;
@@ -68,6 +69,9 @@ public class classic extends JPanel{
         		case 9: p1.setDFS(6); break;
         		default:p1.setDFS(1);  break;
         	}
+        }
+        else {
+        	if(Tetris.Key_ESC || Tetris.Key_NUM_9) continueGame(); Tetris.Key_ESC = false; Tetris.Key_NUM_9 = false;
         }
         
         
@@ -96,25 +100,25 @@ public class classic extends JPanel{
     
     private void drawPause(Graphics g) {
     	g.setColor(Color.BLACK);
-    	g.fillRect(Tetris.TOTAL_SIZE_X / 2 - 135,
-    			   Tetris.TOTAL_SIZE_Y / 2 - 180,
-    			   210,
-    			   310);
+    	g.fillRect(Tetris.TOTAL_SIZE_X / 2 - 155,
+    			   Tetris.TOTAL_SIZE_Y / 2 - 230,
+    			   260,
+    			   420);
     	g.setColor(Color.ORANGE);
-    	g.fillRect(Tetris.TOTAL_SIZE_X / 2 - 130,
-    			   Tetris.TOTAL_SIZE_Y / 2 - 175,
-    			   200,
-    			   300);
+    	g.fillRect(Tetris.TOTAL_SIZE_X / 2 - 150,
+    			   Tetris.TOTAL_SIZE_Y / 2 - 225,
+    			   250,
+    			   410);
     	g.setColor(Color.BLACK);
-    	g.fillRect(Tetris.TOTAL_SIZE_X / 2 - 120,
-    			   Tetris.TOTAL_SIZE_Y / 2 - 165,
-    			   180,
-    			   280);
+    	g.fillRect(Tetris.TOTAL_SIZE_X / 2 - 140,
+    			   Tetris.TOTAL_SIZE_Y / 2 - 215,
+    			   230,
+    			   390);
     	
     	if(!BK) {
     		g.setColor(Color.RED);
             g.setFont(new Font("Arial", Font.BOLD, 40));
-            g.drawString("PAUSE", Tetris.TOTAL_SIZE_X / 2 - 95, Tetris.TOTAL_SIZE_Y / 2 - 90);
+            g.drawString("PAUSE", Tetris.TOTAL_SIZE_X / 2 - 95, Tetris.TOTAL_SIZE_Y / 2 - 120);
     	}
     }
     
@@ -122,6 +126,7 @@ public class classic extends JPanel{
     	pause = true;
     	timer.stop();
         blinkTimer.start();
+        BK = false;
     	remove(pauseButton);
     	
     	// Continue button
@@ -129,13 +134,20 @@ public class classic extends JPanel{
 				 								"Continue",
 				 								new BContinue(),
 				 								Tetris.TOTAL_SIZE_X / 2 - 150,
-				 								Tetris.TOTAL_SIZE_Y / 2 -50);
+				 								Tetris.TOTAL_SIZE_Y / 2 -80);
+    	// Restart button
+    	restartButton = Tetris.setAndPutButton(this,
+											   "Restart",
+											   new BRestart(),
+											   Tetris.TOTAL_SIZE_X / 2 - 150,
+											   Tetris.TOTAL_SIZE_Y / 2);
+    	
     	// Menu button
     	menuButton = Tetris.setAndPutButton(this,
 			    							"Menu",
 			    							new BMenu(),
 			    							Tetris.TOTAL_SIZE_X / 2 - 150,
-			    							Tetris.TOTAL_SIZE_Y / 2 + 30);
+			    							Tetris.TOTAL_SIZE_Y / 2 + 80);
     }
     
     private void continueGame() {
@@ -150,6 +162,7 @@ public class classic extends JPanel{
 				 							 0);
     	
     	remove(continueButton);
+    	remove(restartButton);
     	remove(menuButton);
     }
     
@@ -165,10 +178,20 @@ public class classic extends JPanel{
         }
     }
     
+    private class BRestart implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+        	remove(continueButton);
+        	remove(menuButton);
+        	remove(restartButton);
+        	Tetris.setPage(Tetris.PAGE_CLASSIC);
+        }
+    }
+    
     private class BMenu implements ActionListener {
         public void actionPerformed(ActionEvent e) {
         	remove(continueButton);
         	remove(menuButton);
+        	remove(restartButton);
         	Tetris.setPage(Tetris.PAGE_MENU);
         }
     }
