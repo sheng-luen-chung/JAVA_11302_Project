@@ -538,10 +538,12 @@ public class Tetris extends JPanel{
     	}
   	    
   	    // clear top
-  	    for(int x = 0; x < GRID_COLS; x++) {
-    	    g.setBGarr(x, 0, 0);
-	    }
-  	    
+    	if(l > 0) {
+    		for(int x = 0; x < GRID_COLS; x++) {
+        	    g.setBGarr(x, 0, 0);
+    	    }
+    	}
+
   	    return clearedLine;
     }
     

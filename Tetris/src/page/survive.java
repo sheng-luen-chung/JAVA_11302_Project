@@ -127,7 +127,7 @@ public class survive extends JPanel{
     		Tetris.clearGarbageLines(p1, g1, g1.getA());
     		Tetris.clearGarbageLines(p2, g2, g1.getA() / 2);
     		Tetris.clearGarbageLines(p2, g2, g2.getA());
-    		Tetris.clearGarbageLines(p1, g1, g1.getA() / 2);
+    		Tetris.clearGarbageLines(p1, g1, g2.getA() / 2);
     		g1.setA(0);
     		g2.setA(0);
     		
