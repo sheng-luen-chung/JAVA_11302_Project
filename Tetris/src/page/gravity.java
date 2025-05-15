@@ -37,8 +37,10 @@ public class gravity extends JPanel{
         p1.setDFS(0.05);
     }  
     public void stopPanel() {
-    	Tetris.score = g1.getScore();
+    	Tetris.score1 = g1.getScore();
+    	Tetris.lines1 = g1.getLinesC();
     	Tetris.overReturn = Tetris.PAGE_GRAVITY;
+    	
     	timer.stop();
     	blinkTimer.stop();
     	Tetris.TWG_bgMusic.stop();
@@ -61,6 +63,10 @@ public class gravity extends JPanel{
         	if(Tetris.Key_ESC || Tetris.Key_NUM_9) continueGame(); Tetris.Key_ESC = false; Tetris.Key_NUM_9 = false;
         }
         
+        //show current mode
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.BOLD, 20));
+        g.drawString("Mode : 20 Gravity", 5, Tetris.TOTAL_SIZE_Y-20);
         
         g1.draw(g);
         p1.draw(g);
@@ -156,24 +162,18 @@ public class gravity extends JPanel{
     
     private class BPause implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-        Tetris.click_effect = new MusicPlayer();
-        Tetris.click_effect.play(Tetris.click_effect_path, false);
         	pauseGame();
         }
     }
     
     private class BContinue implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-        Tetris.click_effect = new MusicPlayer();
-        Tetris.click_effect.play(Tetris.click_effect_path, false);
         	continueGame();
         }
     }
     
     private class BRestart implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-        Tetris.click_effect = new MusicPlayer();
-        Tetris.click_effect.play(Tetris.click_effect_path, false);
         	remove(continueButton);
         	remove(menuButton);
         	remove(restartButton);
@@ -183,11 +183,11 @@ public class gravity extends JPanel{
     
     private class BMenu implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-        Tetris.click_effect = new MusicPlayer();
-        Tetris.click_effect.play(Tetris.click_effect_path, false);
         	remove(continueButton);
         	remove(menuButton);
         	remove(restartButton);
+        	Tetris.menu_bgMusic = new MusicPlayer();
+            Tetris.menu_bgMusic.play(Tetris.menu_bgMusic_path, true);
         	Tetris.setPage(Tetris.PAGE_MENU);
         }
     }

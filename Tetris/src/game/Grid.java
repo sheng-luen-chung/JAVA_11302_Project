@@ -23,12 +23,21 @@ package game;
 	    private int level = 0;
 	    private int attack = 0;
 	    private boolean B2B;
+	    private boolean winner = true;
+	    private ClearEffects[] ClearEffects;
 	    
      // constructors
       public Grid(int x, int y)     //default constructor
       {
     	 Xoffset = x;
     	 Yoffset = y;
+    	 
+    	 ClearEffects = new ClearEffects[GRID_ROWS];
+    	 for(int yy = 0; yy < GRID_ROWS; yy++) {
+    		 ClearEffects[yy] = new ClearEffects(Xoffset + 15,
+    				 							 Yoffset + 15 + yy * BLOCK_SIZE);
+    	 }
+    	 
          BGarr = new int[10][20];
       }
 
@@ -42,6 +51,7 @@ package game;
       public int getScore(){ return score;}
       public int[][] getBGarr(){ return BGarr;}
       public boolean getB2B(){ return B2B;}
+      public boolean getWin(){ return winner;}
       
    // modifier methods
       public void setXO(int xo){Xoffset = xo;}
@@ -53,25 +63,32 @@ package game;
       public void setScore(int s){score = s;}
       public void setBGarr(int x, int y, int arr){BGarr[x][y] = arr;} 
       public void setB2B(boolean b){ B2B = b;}
+      public void setWin(boolean w){ winner = w;}
       
     //	 instance methods
       public int clearFullLines() {
           int linesCleared = 0;
           for (int y = GRID_ROWS - 1; y >= 0; y--) {
              boolean isFull = true;
-
+             boolean normalBlock = false;
              // Check if the row is full
              for (int x = 0; x < GRID_COLS; x++) {
                 if (BGarr[x][y] == 0) {
                    isFull = false;
                    break;
                 }
+                if (BGarr[x][y] > 0 && BGarr[x][y] < 8) {
+                	normalBlock = true;
+                }
              }
 
-             if (isFull) {
+             if (isFull && normalBlock) {
             	 //start playing music
                  Tetris.clearLine_effect = new MusicPlayer();
                  Tetris.clearLine_effect.play(Tetris.clearLine_effect_path, false);
+                 
+                 // clear effects
+                 ClearEffects[y-linesCleared].setTimer20();
                  
                  // Shift all rows above down
                 linesCleared++;
@@ -196,6 +213,8 @@ package game;
 	      if(linesCleared > 0) {	//Combo Score
 	    	  CS = 50 * combo;
 	    	  combo++;
+	    	  if(combo/2 <= 5)attack += combo/2;
+	    	  else attack += 5;
 	      }
 	      else combo = 0;
 	      
@@ -213,12 +232,19 @@ package game;
           return true;
       }
       
-      public void clearAll() {
+      public void clearAll() {	// for test
           for (int y = GRID_ROWS - 1; y >= 0; y--) {
               for (int x = 0; x < GRID_COLS; x++) {
                  BGarr[x][y]  = 0;
               }
            }
+      }
+      public void clearEffectssTimerDecrease() {
+    	  for(int y = 0; y < GRID_ROWS; y++) {
+      		  if(ClearEffects[y].getT() > 0) {
+      			  ClearEffects[y].setT( ClearEffects[y].getT() - 1);
+      		  }
+      	  }
       }
       
       private void switchColor(Graphics g, int c, int r) {
@@ -379,5 +405,10 @@ package game;
           }
           Xoffset -= Xshock;
     	  Yoffset -= Yshock;
+    	  
+    	  //clear effects
+    	  for(int y = 0; y < GRID_ROWS; y++) {
+    		  ClearEffects[y].draw(g);
+    	  }
       }
    }

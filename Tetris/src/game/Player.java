@@ -233,7 +233,7 @@ package game;
           }
           
           for (Point p : nextShape) {
-              drawX = Xoffset + (11 + p.x) * BLOCK_SIZE;
+              drawX = Xoffset + (11 + p.x) * BLOCK_SIZE + 15;
               drawY = Yoffset + (5 + p.y) * BLOCK_SIZE - (BLOCK_SIZE / 2);
         	  switch(nextS[0]) {
     	  	  case 1:
@@ -252,7 +252,7 @@ package game;
           
           if(hold) {
           for (Point p : holdShape) {
-              drawX = Xoffset + (11 + p.x) * BLOCK_SIZE;
+              drawX = Xoffset + (11 + p.x) * BLOCK_SIZE + 15;
               drawY = Yoffset + (9 + p.y) * BLOCK_SIZE - (BLOCK_SIZE / 2);
         	  switch(holdS) {
         	  	  case 1:

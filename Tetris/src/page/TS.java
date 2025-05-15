@@ -7,10 +7,11 @@ import game.*;
 
 public class TS extends JPanel{
 	private JButton ReturnButton, NextButton, BackButton;
-	private Timer reTimer, timer , controlTimer;
+	private Timer reTimer, timer;
     private Player p1;
     private Grid g1;
-    private final int page = 2;
+    private final int page = 4;
+    private int controlTimer;
     
     public void startPanel() {
     	Tetris.cardLayout.show(Tetris.mainPanel, "TS");
@@ -46,7 +47,6 @@ public class TS extends JPanel{
     public void stopPanel() {
     	reTimer.stop();
     	timer.stop();
-    	controlTimer.stop();
     }
     
     private void initial() {
@@ -56,12 +56,10 @@ public class TS extends JPanel{
         Point[] pp = {new Point(1,0), new Point(0,1), new Point(1,1), new Point(2,1)};
         p1.setShape(pp);
         p1.setS(3);
-        p1.setX(p1.getX() + 0);
+        p1.setX(p1.getX() + 1);
         p1.setY(p1.getY() + 8);
-        Tetris.rotate_and_check(p1, g1, 0);
         
-        controlTimer = new Timer(4000, new control());
-        controlTimer.start();
+        controlTimer = 240;
         
         int[][] resetG = {{0,0,0,0,0,0,0,0,0,0},
         				  {0,0,0,0,0,0,0,0,0,0},
@@ -79,10 +77,10 @@ public class TS extends JPanel{
         				  {0,0,0,0,0,0,0,0,0,0},
         				  {0,0,0,0,0,0,0,0,0,0},
         				  {0,0,0,0,0,0,0,0,0,0},
-        				  {0,0,0,0,0,4,0,0,0,0},
-        				  {0,0,0,0,0,4,4,0,0,0},
-        				  {0,5,5,0,0,0,4,0,0,0},
-        				  {0,0,5,5,0,1,1,1,1,0},
+        				  {0,0,0,0,0,0,4,0,0,0},
+        				  {0,0,0,0,0,0,4,4,0,0},
+        				  {0,0,5,5,0,0,0,4,0,0},
+        				  {0,0,0,5,5,0,1,1,1,1},
         				};
         
         for(int x = 0; x < Tetris.GRID_COLS; x++) {
@@ -90,6 +88,7 @@ public class TS extends JPanel{
             	g1.setBGarr(x,  y, resetG[y][x]);
             }
         }
+        p1.rotate(0);
     }
     
     @Override
@@ -101,7 +100,7 @@ public class TS extends JPanel{
         
 		g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 40));
-        g.drawString("T-Spin", Tetris.TOTAL_SIZE_X / 2 - 130, 40);
+        g.drawString("T-Spin", Tetris.TOTAL_SIZE_X / 2 - 110, 40);
         
         //instructions pages
         for(int p = 0; p < Tetris.INS_TOTAL_PAGES; p++) {
@@ -115,43 +114,37 @@ public class TS extends JPanel{
     private class gravity_timer implements ActionListener{
     	public void actionPerformed(ActionEvent e){
     		Tetris.gravity_drop(p1, g1);
+    		
+    		// auto control
+    		if(controlTimer > 0) {
+    			controlTimer--;
+    			if(controlTimer == 0) {
+    				Tetris.rotate_and_check(p1, g1, 0);
+    		}}
         }  
     }
     
     private class reShow implements ActionListener{
     	public void actionPerformed(ActionEvent e){
-    		controlTimer.stop();
     		initial();
-        } 
-    }
-    
-    private class control implements ActionListener{
-    	public void actionPerformed(ActionEvent e){
-    		Tetris.rotate_and_check(p1, g1, 0);
         } 
     }
 
     private class BReturn implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-         Tetris.click_effect = new MusicPlayer();
-         Tetris.click_effect.play(Tetris.click_effect_path, false);
         	Tetris.setPage(Tetris.PAGE_MENU);
         }
     }
     
     private class BNext implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-        Tetris.click_effect = new MusicPlayer();
-        Tetris.click_effect.play(Tetris.click_effect_path, false);
-        	Tetris.setPage(Tetris.PAGE_INSTRUCTIONS);
+        	Tetris.setPage(Tetris.PAGE_TST1);
         }
     }
     
     private class BBack implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-        Tetris.click_effect = new MusicPlayer();
-        Tetris.click_effect.play(Tetris.click_effect_path, false);
-        Tetris.setPage(Tetris.PAGE_MTS);
+        	Tetris.setPage(Tetris.PAGE_MTST2);
         }
     }
 }

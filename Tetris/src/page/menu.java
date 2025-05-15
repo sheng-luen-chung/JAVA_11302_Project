@@ -10,8 +10,7 @@ public class menu extends JPanel{
     public void startPanel() {
     	Tetris.cardLayout.show(Tetris.mainPanel, "MENU");
     	setBackground(Color.BLACK);
-    	Tetris.menu_bgMusic = new MusicPlayer();
-      Tetris.menu_bgMusic.play(Tetris.menu_bgMusic_path, true);
+    	
     	setLayout(null);
     	// Start buttons
     	startButton = Tetris.setAndPutButton(this,
@@ -47,24 +46,18 @@ public class menu extends JPanel{
     
     private class BStart implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            Tetris.click_effect = new MusicPlayer();
-            Tetris.click_effect.play(Tetris.click_effect_path, false);
             Tetris.setPage(Tetris.PAGE_MODE);
         }
     }
     
     private class BInstructions implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            Tetris.click_effect = new MusicPlayer();
-            Tetris.click_effect.play(Tetris.click_effect_path, false);
             Tetris.setPage(Tetris.PAGE_INSTRUCTIONS);
         }
     }
     
     private class BExit implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            Tetris.click_effect = new MusicPlayer();
-            Tetris.click_effect.play(Tetris.click_effect_path, false);
             System.exit(0);
         }
     }

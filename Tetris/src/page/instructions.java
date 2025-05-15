@@ -6,7 +6,7 @@ import java.awt.event.*;
 import game.*;
 
 public class instructions extends JPanel{ 
-	private JButton ReturnButton, NextButton;
+	private JButton ReturnButton, NextButton, BackButton;
 	private final int page = 0;
 	private String[] Controls1 = {"",
 								  "Move Left",
@@ -60,7 +60,7 @@ public class instructions extends JPanel{
 								 "T-Spin Triple",
 								 
 								 "Back To Back",
-								 "Combo",
+								 "Combo (C)",
 								 "Soft drop",
 								 "Hard drop",
 								 "",
@@ -88,7 +88,7 @@ public class instructions extends JPanel{
 								 "1600 x Level",
 								 
 								 "x 1.5",
-								 "50 x C x Level",
+								 "50 x C xLevel",
 								 "1 Grid / Per",
 								 "2 Grid / Per",
 								 "",
@@ -99,13 +99,13 @@ public class instructions extends JPanel{
 								 "3200 x Level",
 								 };
 	
-	private String[] scoring3 = {"none",
+	private String[] scoring3 = {"None",
 								 "+1",
 								 "+2",
 								 "+4",
 			
-								 "none",
-								 "none",
+								 "None",
+								 "None",
 			
 								 "+1",
 								 "+2",
@@ -117,8 +117,8 @@ public class instructions extends JPanel{
 			 
 								 "+1",
 								 "+C/2 (+5 max)",
-								 "none",
-								 "none",
+								 "None",
+								 "None",
 								 "",
 								 "+6",
 								 "+7",
@@ -144,6 +144,12 @@ public class instructions extends JPanel{
 				    						new BNext(),
 				    						-50,
 				    						Tetris.TOTAL_SIZE_Y - 130);
+    	// Back button
+    	BackButton = Tetris.setAndPutButton(this,
+				    					    "Back",
+				    					    new BBack(),
+				    					    -50,
+				    					    Tetris.TOTAL_SIZE_Y - 70);
     }
     
     public void stopPanel() {
@@ -192,6 +198,8 @@ public class instructions extends JPanel{
      		   	   25 * Tetris.BLOCK_SIZE - 15, 23 * Tetris.BLOCK_SIZE + 15);
         g.drawLine(30 * Tetris.BLOCK_SIZE - 5, 2 * Tetris.BLOCK_SIZE + 15,
   		   	       30 * Tetris.BLOCK_SIZE - 5, 23 * Tetris.BLOCK_SIZE + 15);
+        g.drawLine(15 * Tetris.BLOCK_SIZE - 15, 14 * Tetris.BLOCK_SIZE - 22,
+		   	       34 * Tetris.BLOCK_SIZE + 15, 14 * Tetris.BLOCK_SIZE - 22);
         
         //instructions pages
         for(int p = 0; p < Tetris.INS_TOTAL_PAGES; p++) {
@@ -202,18 +210,19 @@ public class instructions extends JPanel{
     
     private class BReturn implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-        Tetris.menu_bgMusic.stop();
-        Tetris.click_effect = new MusicPlayer();
-        Tetris.click_effect.play(Tetris.click_effect_path, false);
             Tetris.setPage(Tetris.PAGE_MENU);
         }
     }
     
     private class BNext implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-        Tetris.click_effect = new MusicPlayer();
-        Tetris.click_effect.play(Tetris.click_effect_path, false);
             Tetris.setPage(Tetris.PAGE_MTS);
+        }
+    }
+    
+    private class BBack implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+        	Tetris.setPage(Tetris.PAGE_TST3);
         }
     }
 }

@@ -7,10 +7,11 @@ import game.*;
 
 public class MTS extends JPanel{
 	private JButton ReturnButton, NextButton, BackButton;
-	private Timer reTimer, timer , controlTimer;
+	private Timer reTimer, timer;
     private Player p1;
     private Grid g1;
     private final int page = 1;
+    private int controlTimer;
     
     public void startPanel() {
     	Tetris.cardLayout.show(Tetris.mainPanel, "MTS");
@@ -46,7 +47,6 @@ public class MTS extends JPanel{
     public void stopPanel() {
     	reTimer.stop();
     	timer.stop();
-    	controlTimer.stop();
     }
     
     private void initial() {
@@ -57,10 +57,9 @@ public class MTS extends JPanel{
         p1.setShape(pp);
         p1.setS(3);
         p1.setX(p1.getX() + 4);
-        p1.setY(p1.getY() + 6);
+        p1.setY(p1.getY() + 8);
         
-        controlTimer = new Timer(4000, new control());
-        controlTimer.start();
+        controlTimer = 220;
         
         int[][] resetG = {{0,0,0,0,0,0,0,0,0,0},
         				  {0,0,0,0,0,0,0,0,0,0},
@@ -114,12 +113,18 @@ public class MTS extends JPanel{
     private class gravity_timer implements ActionListener{
     	public void actionPerformed(ActionEvent e){
     		Tetris.gravity_drop(p1, g1);
+    		
+    		// auto control
+    		if(controlTimer > 0) {
+    			controlTimer--;
+    			if(controlTimer == 0) {
+    				Tetris.rotate_and_check(p1, g1, 0);
+    		}}
         }  
     }
     
     private class reShow implements ActionListener{
     	public void actionPerformed(ActionEvent e){
-    		controlTimer.stop();
     		initial();
         } 
     }
@@ -132,24 +137,18 @@ public class MTS extends JPanel{
 
     private class BReturn implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-        Tetris.click_effect = new MusicPlayer();
-        Tetris.click_effect.play(Tetris.click_effect_path, false);
         	Tetris.setPage(Tetris.PAGE_MENU);
         }
     }
     
     private class BNext implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-        Tetris.click_effect = new MusicPlayer();
-        Tetris.click_effect.play(Tetris.click_effect_path, false);
-        	Tetris.setPage(Tetris.PAGE_TS);
+        	Tetris.setPage(Tetris.PAGE_MTST1);
         }
     }
     
     private class BBack implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-        Tetris.click_effect = new MusicPlayer();
-        Tetris.click_effect.play(Tetris.click_effect_path, false);
         	Tetris.setPage(Tetris.PAGE_INSTRUCTIONS);
         }
     }

@@ -16,18 +16,23 @@ public class Tetris extends JPanel{
     
     public static final int PAGE_MENU = 0;
     public static final int PAGE_MODE = 1;
+    
     public static final int PAGE_CLASSIC = 2;
     public static final int PAGE_GRAVITY = 3;
     public static final int PAGE_GAP = 4;
-//  public static final int PAGE_PURGE = 5; 
-//  public static final int PAGE_SURVIVE = 6;
+    public static final int PAGE_PURGE = 5; 
+    public static final int PAGE_SURVIVE = 6;
     public static final int PAGE_GAMEOVER = 7;
     
     public static final int PAGE_INSTRUCTIONS = 8;
     public static final int PAGE_MTS = 9;
-    public static final int PAGE_TS = 10;
-    
-    public static final int INS_TOTAL_PAGES = 3;
+    public static final int PAGE_MTST1 = 10;
+    public static final int PAGE_MTST2 = 11;
+    public static final int PAGE_TS = 12;
+    public static final int PAGE_TST1 = 13;
+    public static final int PAGE_TST2 = 14;
+    public static final int PAGE_TST3 = 15;
+    public static final int INS_TOTAL_PAGES = 8;
     
     public static CardLayout cardLayout = new CardLayout();
     public static JPanel mainPanel = new JPanel(cardLayout);
@@ -35,24 +40,32 @@ public class Tetris extends JPanel{
     //page
     public static menu menuPanel;
     public static mode modePanel;
+    
     public static classic classicPanel;
     public static gravity gravityPanel;
-    
     public static gap gapPanel;
-//  public static purge purgePanel;
-//  public static survive survivePanel;
-    
+    public static purge purgePanel;
+    public static survive survivePanel;
     public static gameover gameoverPanel;
+    
     public static instructions instructionsPanel;
     public static MTS MTSPanel;
+    public static MTST1 MTST1Panel;
+    public static MTST2 MTST2Panel;
     public static TS TSPanel;
+    public static TST1 TST1Panel;
+    public static TST2 TST2Panel;
+    public static TST3 TST3Panel;
 
-    
+    // state
     public static int gamePage;
-    public static int score;
+    public static int score1, score2;
+    public static int lines1, lines2;
+    public static boolean winner1, winner2;	// in battle mode
+    public static int round;	// in team mode
     public static int overReturn;
     
-    //key
+    // key
     public static boolean Key_A;
     public static boolean Key_D;
     public static boolean Key_S;
@@ -116,15 +129,15 @@ public class Tetris extends JPanel{
     public static MusicPlayer rotate_effect;
     
     //Music Path
-    public static final String menu_bgMusic_path = "/resources/menu_BGM.wav";
-    public static final String classic_bgMusic_path = "/resources/classic_BGM.wav";
-    public static final String TWG_bgMusic_path = "/resources/20G_BGM.wav";
-    public static final String battle_bgMusic_path = "/resources/battle_BGM.wav";
-    public static final String clearLine_effect_path = "/resources/clearLine_effect.wav";
-    public static final String gameOver_effect_path = "/resources/gameOver_effect.wav";
-    public static final String putShape_effect_path = "/resources/putShape_effect.wav";
-    public static final String click_effect_path = "/resources/click_effect.wav";
-    public static final String rotate_effect_path = "/resources/rotate_effect.wav";
+    public static final String menu_bgMusic_path = "resources/menu_BGM.wav";
+    public static final String classic_bgMusic_path = "resources/classic_BGM.wav";
+    public static final String TWG_bgMusic_path = "resources/20G_BGM.wav";
+    public static final String battle_bgMusic_path = "resources/battle_BGM.wav";
+    public static final String clearLine_effect_path = "resources/clearLine_effect.wav";
+    public static final String gameOver_effect_path = "resources/gameOver_effect.wav";
+    public static final String putShape_effect_path = "resources/putShape_effect.wav";
+    public static final String click_effect_path = "resources/click_effect.wav";
+    public static final String rotate_effect_path = "resources/rotate_effect.wav";
     
 //---------------------------------------------------------------------------------------//
     public Tetris() {
@@ -178,55 +191,61 @@ public class Tetris extends JPanel{
             }
         });
         createPages();
-        setPage(PAGE_MENU);   
+        
+        menu_bgMusic = new MusicPlayer();
+        menu_bgMusic.play(Tetris.menu_bgMusic_path, true);
+        setPage(PAGE_MENU);
     }
     
     private void createPages() {
         menuPanel = new menu();
         mainPanel.add(menuPanel, "MENU");
-        
         modePanel = new mode();
 		mainPanel.add(modePanel, "MODE");
 		
 		classicPanel = new classic();
 		mainPanel.add(classicPanel, "CLASSIC");
-		
 		gravityPanel = new gravity();
 		mainPanel.add(gravityPanel, "GRAVITY");
-		
 		gapPanel = new gap();
 		mainPanel.add(gapPanel, "GAP");
-		
-//		purgePanel = new purge();
-//		mainPanel.add(purgePanel, "PURGE");
-		
-//		survivePanel = new survive();
-//		mainPanel.add(survivePanel, "SURVIVE");
-		
+		purgePanel = new purge();
+		mainPanel.add(purgePanel, "PURGE");
+		survivePanel = new survive();
+		mainPanel.add(survivePanel, "SURVIVE");
 		gameoverPanel = new gameover();
 		mainPanel.add(gameoverPanel, "GAMEOVER");
 		
 		instructionsPanel = new instructions();
 		mainPanel.add(instructionsPanel, "INSTRUCTIONS");
-		
 		MTSPanel = new MTS();
 		mainPanel.add(MTSPanel, "MTS");
-
+		MTST1Panel = new MTST1();
+		mainPanel.add(MTST1Panel, "MTST1");
+		MTST2Panel = new MTST2();
+		mainPanel.add(MTST2Panel, "MTST2");
 		TSPanel = new TS();
 		mainPanel.add(TSPanel, "TS");
+		TST1Panel = new TST1();
+		mainPanel.add(TST1Panel, "TST1");
+		TST2Panel = new TST2();
+		mainPanel.add(TST2Panel, "TST2");
+		TST3Panel = new TST3();
+		mainPanel.add(TST3Panel, "TST3");
 		
 		this.add(mainPanel);
 	    setLayout(new CardLayout());
     }
     
     public static void putShape(Player p, Grid g) {
-      Tetris.putShape_effect = new MusicPlayer();
-      Tetris.putShape_effect.play(Tetris.putShape_effect_path, false);
+         putShape_effect = new MusicPlayer();
+         putShape_effect.play(putShape_effect_path, false);
   		 for (int i = 0; i < p.getShape().length; i++) {
 	         int x = p.getX() + p.getShape()[i].x;
 	         int y = p.getY() + p.getShape()[i].y;
 	         if (y < 0) {
 	            // Game over condition: shape locks above the visible grid
+	        	g.setWin(false);
 	            setPage(PAGE_GAMEOVER);
 	            return;
 	         }
@@ -322,8 +341,6 @@ public class Tetris extends JPanel{
     }
 
     public static void rotate_and_check(Player p, Grid g, int dir) {
-        Tetris.rotate_effect = new MusicPlayer();
-        Tetris.rotate_effect.play(Tetris.rotate_effect_path, false);
         Point[] backupS = p.getShape();  //before rotation
         int backupX = p.getX();
         int backupY = p.getY();
@@ -360,16 +377,20 @@ public class Tetris extends JPanel{
             	if(dir != 0) p.setD(p.getD()+1);
             	else p.setD(p.getD()-1);
             }
-            else {						//success
+            else {						//success rotate
+            	rotate_effect = new MusicPlayer();
+                rotate_effect.play(Tetris.rotate_effect_path, false);
             	p.setLD(p.getLDS());
             	if(p.getS() == 3) p.setTspin(true);	//T-spin
             }
         }
-        else {							//success
+        else {							//success rotate
+        	rotate_effect = new MusicPlayer();
+            rotate_effect.play(Tetris.rotate_effect_path, false);
         	p.setLD(p.getLDS());
         	if(p.getS() == 3) p.setTspin(true);	//T-spin
         }
-        if(kick_count == 3) p.setLK(true);
+        if(kick_count == 4) p.setLK(true);
     }
     
     public static void gravity_drop(Player p, Grid g) {
@@ -425,8 +446,12 @@ public class Tetris extends JPanel{
 		
 		// overlap pieces in any way
 		if (!isValidPosition(p, g)) {
-	        setPage(PAGE_GAMEOVER);
+			g.setWin(false);
+	        setPage(PAGE_GAMEOVER);	
 	    }
+		
+		// clear effects timer decrease
+		g.clearEffectssTimerDecrease();
     }
     
     public static void findShadowAndDraw(Graphics g, Player p, Grid gr) {	
@@ -464,6 +489,7 @@ public class Tetris extends JPanel{
     	// if top not empty
     	for(int x = 0; x < GRID_COLS; x++) {
     	    if(g.getBGarr()[x][0] != 0) {
+    	    	g.setWin(false);
     	    	setPage(PAGE_GAMEOVER);
     	    	break;
     	    }
@@ -485,7 +511,7 @@ public class Tetris extends JPanel{
   	    return l-1;
     }
     
-    public static void clearGarbageLines(Player p, Grid g, int l) {
+    public static int clearGarbageLines(Player p, Grid g, int l) {
     	int clearedLine=0;
     	boolean isGarbageLine = false;
     	
@@ -515,6 +541,8 @@ public class Tetris extends JPanel{
   	    for(int x = 0; x < GRID_COLS; x++) {
     	    g.setBGarr(x, 0, 0);
 	    }
+  	    
+  	    return clearedLine;
     }
     
     public static void setPage(int p) {
@@ -525,13 +553,19 @@ public class Tetris extends JPanel{
 			case PAGE_GRAVITY: gravityPanel.stopPanel(); break;
 			
 			case PAGE_GAP: gapPanel.stopPanel(); break;
-//			case PAGE_PURGE: purgePanel.stopPanel(); break;
-//			case PAGE_survive: survivePanel.stopPanel(); break;
+			case PAGE_PURGE: purgePanel.stopPanel(); break;
+			case PAGE_SURVIVE: survivePanel.stopPanel(); break;
 			
 			case PAGE_GAMEOVER: gameoverPanel.stopPanel(); break;
+			
 			case PAGE_INSTRUCTIONS: instructionsPanel.stopPanel(); break;
 			case PAGE_MTS: MTSPanel.stopPanel(); break;
+			case PAGE_MTST1: MTST1Panel.stopPanel(); break;
+			case PAGE_MTST2: MTST2Panel.stopPanel(); break;
 			case PAGE_TS: TSPanel.stopPanel(); break;
+			case PAGE_TST1: TST1Panel.stopPanel(); break;
+			case PAGE_TST2: TST2Panel.stopPanel(); break;
+			case PAGE_TST3: TST3Panel.stopPanel(); break;
     	} 
     	
     	switch(p) {
@@ -541,13 +575,19 @@ public class Tetris extends JPanel{
     		case PAGE_GRAVITY: gravityPanel.startPanel(); break;
     		
     		case PAGE_GAP: gapPanel.startPanel(); break;
-//			case PAGE_PURGE: purgePanel.startPanel(); break;
-//			case PAGE_survive: survivePanel.startPanel(); break;
+			case PAGE_PURGE: purgePanel.startPanel(); break;
+			case PAGE_SURVIVE: survivePanel.startPanel(); break;
     		
     		case PAGE_GAMEOVER: gameoverPanel.startPanel(); break;
+    		
     		case PAGE_INSTRUCTIONS: instructionsPanel.startPanel(); break;
     		case PAGE_MTS: MTSPanel.startPanel(); break;
+    		case PAGE_MTST1: MTST1Panel.startPanel(); break;
+    		case PAGE_MTST2: MTST2Panel.startPanel(); break;
     		case PAGE_TS: TSPanel.startPanel(); break;
+    		case PAGE_TST1: TST1Panel.startPanel(); break;
+    		case PAGE_TST2: TST2Panel.startPanel(); break;
+    		case PAGE_TST3: TST3Panel.startPanel(); break;
     	}
     	mainPanel.revalidate();
     	gamePage = p;
@@ -611,6 +651,12 @@ public class Tetris extends JPanel{
             @Override
             public void mouseExited(MouseEvent e) {
                 button.setText("<html><div style='border:2px solid white; padding:5px; color:white;'>" + text + "</div></html>");
+            }
+            
+            @Override
+            public void mousePressed(MouseEvent e) {
+            	click_effect = new MusicPlayer();
+                click_effect.play(Tetris.click_effect_path, false);
             }
         });
         return button;

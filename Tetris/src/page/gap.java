@@ -49,11 +49,20 @@ public class gap extends JPanel{
 				   							 0);
     }  
     public void stopPanel() {
-    	Tetris.score = g1.getScore();
+    	Tetris.score1 = g1.getScore();
+    	Tetris.lines1 = g1.getLinesC();
+    	Tetris.score2 = g2.getScore();
+    	Tetris.lines2 = g2.getLinesC();
+    	if(g1.getWin()) Tetris.winner1 = true;
+    	else Tetris.winner1 = false;
+    	if(g2.getWin()) Tetris.winner2 = true;
+    	else Tetris.winner2 = false;
     	Tetris.overReturn = Tetris.PAGE_GAP;
+    	
+
     	timer.stop();
     	blinkTimer.stop();
-      Tetris.battle_bgMusic.stop();
+    	Tetris.battle_bgMusic.stop();
     }
     
     @Override
@@ -77,24 +86,15 @@ public class gap extends JPanel{
         	if(Tetris.Key_NUM_1) p2.holdCurrentShape(); Tetris.Key_NUM_1 = false;
         	if(Tetris.Key_NUM_0) Tetris.hard_drop(p2, g2); Tetris.Key_NUM_0 = false;
         	if(Tetris.Key_NUM_9) pauseGame(); Tetris.Key_NUM_9 = false;
-
-        	switch(g1.getLinesC()/10) {		//level up speed
-        		case 0: p1.setDFS(48); break;
-        		case 1: p1.setDFS(43); break;
-        		case 2: p1.setDFS(38); break;
-        		case 3: p1.setDFS(33); break;
-        		case 4: p1.setDFS(28); break;
-        		case 5: p1.setDFS(23); break;
-        		case 6: p1.setDFS(18); break;
-        		case 7: p1.setDFS(13); break;
-        		case 8: p1.setDFS(8); break;
-        		case 9: p1.setDFS(6); break;
-        		default:p1.setDFS(1);  break;
-        	}
         }
         else {
         	if(Tetris.Key_ESC || Tetris.Key_NUM_9) continueGame(); Tetris.Key_ESC = false; Tetris.Key_NUM_9 = false;
         }
+        
+        //show current mode
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.BOLD, 20));
+        g.drawString("Mode : Gap", 5, Tetris.TOTAL_SIZE_Y-20);
         
         g1.draw(g);
         p1.draw(g);
@@ -137,11 +137,11 @@ public class gap extends JPanel{
     		Tetris.gravity_drop(p1, g1);
     		Tetris.gravity_drop(p2, g2);
     		
-    		// send Garbage
+    		// Send Garbage
     		if(sendGarbageTo2 > 0) sendGarbageTo2 = Tetris.spawnGarbageLines(p2, g2, sendGarbageTo2, true);
     		if(sendGarbageTo1 > 0) sendGarbageTo1 = Tetris.spawnGarbageLines(p1, g1, sendGarbageTo1, true);
     		
-    		// 
+    		// Phase Control
     		if(cooldownTimer > 0) {
     			cooldownTimer--;
     		}
@@ -236,24 +236,18 @@ public class gap extends JPanel{
     
     private class BPause implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-        Tetris.click_effect = new MusicPlayer();
-        Tetris.click_effect.play(Tetris.click_effect_path, false);
         	pauseGame();
         }
     }
     
     private class BContinue implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-        Tetris.click_effect = new MusicPlayer();
-        Tetris.click_effect.play(Tetris.click_effect_path, false);
         	continueGame();
         }
     }
     
     private class BRestart implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-        Tetris.click_effect = new MusicPlayer();
-        Tetris.click_effect.play(Tetris.click_effect_path, false);
         	remove(continueButton);
         	remove(menuButton);
         	remove(restartButton);
@@ -263,11 +257,11 @@ public class gap extends JPanel{
     
     private class BMenu implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-        Tetris.click_effect = new MusicPlayer();
-        Tetris.click_effect.play(Tetris.click_effect_path, false);
         	remove(continueButton);
         	remove(menuButton);
         	remove(restartButton);
+        	Tetris.menu_bgMusic = new MusicPlayer();
+            Tetris.menu_bgMusic.play(Tetris.menu_bgMusic_path, true);
         	Tetris.setPage(Tetris.PAGE_MENU);
         }
     }
