@@ -18,11 +18,9 @@ public class Tetris extends JPanel{
     public static final int PAGE_MODE = 1;
     public static final int PAGE_CLASSIC = 2;
     public static final int PAGE_GRAVITY = 3;
-    
     public static final int PAGE_GAP = 4;
 //  public static final int PAGE_PURGE = 5; 
 //  public static final int PAGE_SURVIVE = 6;
-    
     public static final int PAGE_GAMEOVER = 7;
     
     public static final int PAGE_INSTRUCTIONS = 8;
@@ -106,13 +104,27 @@ public class Tetris extends JPanel{
     public static final int[] clearLineShock = {20, -20, 15 -15, 10, 0};
     
     //Back Ground Music
-    public static MusicPlayer bgMusic;
-    //Effects
-    public static MusicPlayer claerLine_effect;
+    public static MusicPlayer menu_bgMusic;
+    public static MusicPlayer classic_bgMusic;
+    public static MusicPlayer TWG_bgMusic;
+    public static MusicPlayer battle_bgMusic;
+    //Sound Effect
+    public static MusicPlayer clearLine_effect;
+    public static MusicPlayer gameOver_effect;
+    public static MusicPlayer putShape_effect;
+    public static MusicPlayer click_effect;
+    public static MusicPlayer rotate_effect;
     
-    //Path
-    public static final String bgMusic_path = "resources/BGM.wav";
-    public static final String claerLine_effect_path = "resources/claerLine_effect.wav";
+    //Music Path
+    public static final String menu_bgMusic_path = "/resources/menu_BGM.wav";
+    public static final String classic_bgMusic_path = "/resources/classic_BGM.wav";
+    public static final String TWG_bgMusic_path = "/resources/20G_BGM.wav";
+    public static final String battle_bgMusic_path = "/resources/battle_BGM.wav";
+    public static final String clearLine_effect_path = "/resources/clearLine_effect.wav";
+    public static final String gameOver_effect_path = "/resources/gameOver_effect.wav";
+    public static final String putShape_effect_path = "/resources/putShape_effect.wav";
+    public static final String click_effect_path = "/resources/click_effect.wav";
+    public static final String rotate_effect_path = "/resources/rotate_effect.wav";
     
 //---------------------------------------------------------------------------------------//
     public Tetris() {
@@ -208,6 +220,8 @@ public class Tetris extends JPanel{
     }
     
     public static void putShape(Player p, Grid g) {
+      Tetris.putShape_effect = new MusicPlayer();
+      Tetris.putShape_effect.play(Tetris.putShape_effect_path, false);
   		 for (int i = 0; i < p.getShape().length; i++) {
 	         int x = p.getX() + p.getShape()[i].x;
 	         int y = p.getY() + p.getShape()[i].y;
@@ -308,6 +322,8 @@ public class Tetris extends JPanel{
     }
 
     public static void rotate_and_check(Player p, Grid g, int dir) {
+        Tetris.rotate_effect = new MusicPlayer();
+        Tetris.rotate_effect.play(Tetris.rotate_effect_path, false);
         Point[] backupS = p.getShape();  //before rotation
         int backupX = p.getX();
         int backupY = p.getY();

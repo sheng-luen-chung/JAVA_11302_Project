@@ -24,8 +24,8 @@ public class gravity extends JPanel{
         timer = new Timer(15, new gravity_timer());
         timer.start();
         blinkTimer = new Timer(500, new blink());
-        Tetris.bgMusic = new MusicPlayer();
-        Tetris.bgMusic.play(Tetris.bgMusic_path, true);
+        Tetris.TWG_bgMusic = new MusicPlayer();
+        Tetris.TWG_bgMusic.play(Tetris.TWG_bgMusic_path, true);
         
         setLayout(null);
      	// Pause button
@@ -41,7 +41,7 @@ public class gravity extends JPanel{
     	Tetris.overReturn = Tetris.PAGE_GRAVITY;
     	timer.stop();
     	blinkTimer.stop();
-    	Tetris.bgMusic.stop();
+    	Tetris.TWG_bgMusic.stop();
     }
     
     @Override
@@ -156,18 +156,24 @@ public class gravity extends JPanel{
     
     private class BPause implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+        Tetris.click_effect = new MusicPlayer();
+        Tetris.click_effect.play(Tetris.click_effect_path, false);
         	pauseGame();
         }
     }
     
     private class BContinue implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+        Tetris.click_effect = new MusicPlayer();
+        Tetris.click_effect.play(Tetris.click_effect_path, false);
         	continueGame();
         }
     }
     
     private class BRestart implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+        Tetris.click_effect = new MusicPlayer();
+        Tetris.click_effect.play(Tetris.click_effect_path, false);
         	remove(continueButton);
         	remove(menuButton);
         	remove(restartButton);
@@ -177,6 +183,8 @@ public class gravity extends JPanel{
     
     private class BMenu implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+        Tetris.click_effect = new MusicPlayer();
+        Tetris.click_effect.play(Tetris.click_effect_path, false);
         	remove(continueButton);
         	remove(menuButton);
         	remove(restartButton);

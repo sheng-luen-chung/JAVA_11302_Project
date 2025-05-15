@@ -10,7 +10,8 @@ public class menu extends JPanel{
     public void startPanel() {
     	Tetris.cardLayout.show(Tetris.mainPanel, "MENU");
     	setBackground(Color.BLACK);
-    	
+    	Tetris.menu_bgMusic = new MusicPlayer();
+      Tetris.menu_bgMusic.play(Tetris.menu_bgMusic_path, true);
     	setLayout(null);
     	// Start buttons
     	startButton = Tetris.setAndPutButton(this,
@@ -40,24 +41,30 @@ public class menu extends JPanel{
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(Color.orange);
-        g.setFont(new Font("Arial", Font.BOLD, 40));
-        g.drawString("Tetris", Tetris.TOTAL_SIZE_X / 2 - 80, Tetris.TOTAL_SIZE_Y / 2);
+        g.setFont(new Font("Arial", Font.BOLD, 80));
+        g.drawString("Tetris", Tetris.TOTAL_SIZE_X / 2 -130, Tetris.TOTAL_SIZE_Y / 2-80);
     }
     
     private class BStart implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+            Tetris.click_effect = new MusicPlayer();
+            Tetris.click_effect.play(Tetris.click_effect_path, false);
             Tetris.setPage(Tetris.PAGE_MODE);
         }
     }
     
     private class BInstructions implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+            Tetris.click_effect = new MusicPlayer();
+            Tetris.click_effect.play(Tetris.click_effect_path, false);
             Tetris.setPage(Tetris.PAGE_INSTRUCTIONS);
         }
     }
     
     private class BExit implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+            Tetris.click_effect = new MusicPlayer();
+            Tetris.click_effect.play(Tetris.click_effect_path, false);
             System.exit(0);
         }
     }

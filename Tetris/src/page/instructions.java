@@ -202,12 +202,17 @@ public class instructions extends JPanel{
     
     private class BReturn implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+        Tetris.menu_bgMusic.stop();
+        Tetris.click_effect = new MusicPlayer();
+        Tetris.click_effect.play(Tetris.click_effect_path, false);
             Tetris.setPage(Tetris.PAGE_MENU);
         }
     }
     
     private class BNext implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+        Tetris.click_effect = new MusicPlayer();
+        Tetris.click_effect.play(Tetris.click_effect_path, false);
             Tetris.setPage(Tetris.PAGE_MTS);
         }
     }

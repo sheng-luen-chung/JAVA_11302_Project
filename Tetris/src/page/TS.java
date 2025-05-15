@@ -133,19 +133,25 @@ public class TS extends JPanel{
 
     private class BReturn implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+         Tetris.click_effect = new MusicPlayer();
+         Tetris.click_effect.play(Tetris.click_effect_path, false);
         	Tetris.setPage(Tetris.PAGE_MENU);
         }
     }
     
     private class BNext implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+        Tetris.click_effect = new MusicPlayer();
+        Tetris.click_effect.play(Tetris.click_effect_path, false);
         	Tetris.setPage(Tetris.PAGE_INSTRUCTIONS);
         }
     }
     
     private class BBack implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-        	Tetris.setPage(Tetris.PAGE_MTS);
+        Tetris.click_effect = new MusicPlayer();
+        Tetris.click_effect.play(Tetris.click_effect_path, false);
+        Tetris.setPage(Tetris.PAGE_MTS);
         }
     }
 }

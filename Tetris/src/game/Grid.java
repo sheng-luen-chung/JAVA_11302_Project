@@ -70,8 +70,8 @@ package game;
 
              if (isFull) {
             	 //start playing music
-                 Tetris.claerLine_effect = new MusicPlayer();
-                 Tetris.claerLine_effect.play(Tetris.claerLine_effect_path, false);
+                 Tetris.clearLine_effect = new MusicPlayer();
+                 Tetris.clearLine_effect.play(Tetris.clearLine_effect_path, false);
                  
                  // Shift all rows above down
                 linesCleared++;

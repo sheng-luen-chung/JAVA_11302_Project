@@ -17,20 +17,20 @@ public class mode extends JPanel{
     						   				 "Classic",
     						   				 new BClassic(),
     						   				 Tetris.TOTAL_SIZE_X / 2 - 140,
-    						   				 Tetris.TOTAL_SIZE_Y / 2 - 50);
+    						   				 Tetris.TOTAL_SIZE_Y / 2 + 50);
     	// GravityButton buttons
     	gravityButton = Tetris.setAndPutButton(this,
     						   				 "20G Mode",
     						   				 new BGravity(),
     						   				 Tetris.TOTAL_SIZE_X / 2 - 140,
-    						   				 Tetris.TOTAL_SIZE_Y / 2 + 30);
+    						   				 Tetris.TOTAL_SIZE_Y / 2 + 130);
     	
     	// Gap buttons
     	gapButton = Tetris.setAndPutButton(this,
-    									   "Gap",
+    									   "Battle",
     									   new BGap(),
     									   Tetris.TOTAL_SIZE_X / 2 - 140,
-    									   Tetris.TOTAL_SIZE_Y / 2 + 110);
+    									   Tetris.TOTAL_SIZE_Y / 2 + 210);
     }
     
     public void stopPanel() {
@@ -47,18 +47,27 @@ public class mode extends JPanel{
     
     private class BClassic implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+            Tetris.menu_bgMusic.stop();
+            Tetris.click_effect = new MusicPlayer();
+            Tetris.click_effect.play(Tetris.click_effect_path, false);
             Tetris.setPage(Tetris.PAGE_CLASSIC);
         }
     }
     
     private class BGravity implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+            Tetris.menu_bgMusic.stop();
+            Tetris.click_effect = new MusicPlayer();
+            Tetris.click_effect.play(Tetris.click_effect_path, false);
             Tetris.setPage(Tetris.PAGE_GRAVITY);
         }
     }
     
     private class BGap implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+            Tetris.menu_bgMusic.stop();
+            Tetris.click_effect = new MusicPlayer();
+            Tetris.click_effect.play(Tetris.click_effect_path, false);
             Tetris.setPage(Tetris.PAGE_GAP);
         }
     }

@@ -16,14 +16,12 @@ public class ingame extends JPanel{
     public void startPanel() {
     	setBackground(Color.BLACK);
         p1 = new Player(300,60);
-        g1 = new Grid(300,60,0);
+        g1 = new Grid(300,60);
         pause = false;
         
         timer = new Timer(15, new gravity());
         timer.start();
         blinkTimer = new Timer(500, new blink());
-        Tetris.bgMusic = new MusicPlayer();
-        Tetris.bgMusic.play(Tetris.bgMusic_path, true);
         
         setLayout(null);
         pauseButton = Tetris.setAndPutButton(this,
@@ -36,7 +34,6 @@ public class ingame extends JPanel{
     	Tetris.score = g1.getScore();
     	timer.stop();
     	blinkTimer.stop();
-    	Tetris.bgMusic.stop();
     	
     	remove(continueButton);
     	remove(menuButton);
@@ -154,18 +151,24 @@ public class ingame extends JPanel{
     
     private class BPause implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+        Tetris.click_effect = new MusicPlayer();
+        Tetris.click_effect.play(Tetris.click_effect_path, false);
         	pauseGame();
         }
     }
     
     private class BContinue implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-        	continueGame();
+        Tetris.click_effect = new MusicPlayer();
+        Tetris.click_effect.play(Tetris.click_effect_path, false);
+        continueGame();
         }
     }
     
     private class BMenu implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+        Tetris.click_effect = new MusicPlayer();
+        Tetris.click_effect.play(Tetris.click_effect_path, false);
         	Tetris.setPage(Tetris.PAGE_MENU);
         }
     }
