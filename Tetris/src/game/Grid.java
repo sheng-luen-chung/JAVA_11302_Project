@@ -83,10 +83,6 @@ package game;
              }
 
              if (isFull && normalBlock) {
-            	 //start playing music
-                 Tetris.clearLine_effect = new MusicPlayer();
-                 Tetris.clearLine_effect.play(Tetris.clearLine_effect_path, false);
-                 
                  // clear effects
                  ClearEffects[y-linesCleared].setTimer20();
                  
@@ -102,6 +98,11 @@ package game;
                 // Recheck current row since it's now filled with the above row
                 y++;
              }
+          }
+          //start playing music
+          for(int i = 0; i < (linesCleared+1) / 2; i++) {
+              Tetris.clearLine_effect = new MusicPlayer();
+              Tetris.clearLine_effect.play(Tetris.clearLine_effect_path, false);
           }
           lines_cleared += linesCleared;
           return linesCleared;

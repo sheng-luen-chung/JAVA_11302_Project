@@ -108,15 +108,13 @@ package game;
     //	 instance methods
       public void spawn7bag() {
     	  int[] bag = {1, 2, 3, 4, 5, 6, 7};
-    	  for(int i=bag.length-1; i>0; i--) {
-    		  int j = rand.nextInt(i);
-    		  int temp = bag[i];
-    		  bag[i] = bag[j];
-    		  bag[j] = temp;
-    	  }
     	  //bag[] to nextShape[]
     	  for(int i=0; i<bag.length; i++) {
-    		  nextS[i+1] = bag[i];
+    		  int r = rand.nextInt(bag.length-i);
+    		  nextS[i+1] = bag[r];
+    		  for(int j=r; j<bag.length-1; j++) {
+    			  bag[j] = bag[j+1];
+    		  }
     	  }
     	  if(nextS[0] == 0) {
     		  for(int i=0; i<nextS.length-1; i++) {
