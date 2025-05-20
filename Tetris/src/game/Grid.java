@@ -8,6 +8,7 @@ package game;
 	    private static final int GRID_ROWS = 20;
 	    private static final int BLOCK_SIZE = 30;
 	    private int Xoffset, Yoffset;
+	    private int Xshock = 0, Yshock = 0;
 	    private int[][] BGarr;
 	    private int action = 0;
 	    private int score = 0;
@@ -22,45 +23,68 @@ package game;
 	    private int level = 0;
 	    private int attack = 0;
 	    private boolean B2B;
+	    private boolean winner = true;
+	    private ClearEffects[] ClearEffects;
 	    
      // constructors
       public Grid(int x, int y)     //default constructor
       {
     	 Xoffset = x;
     	 Yoffset = y;
+    	 
+    	 ClearEffects = new ClearEffects[GRID_ROWS];
+    	 for(int yy = 0; yy < GRID_ROWS; yy++) {
+    		 ClearEffects[yy] = new ClearEffects(Xoffset + 15,
+    				 							 Yoffset + 15 + yy * BLOCK_SIZE);
+    	 }
+    	 
          BGarr = new int[10][20];
       }
 
     // accessor methods
+      public int getXO(){ return Xoffset;}
+      public int getYO(){ return Yoffset;}
+      public int getXS(){ return Xshock;}
+      public int getYS(){ return Yshock;}
+      public int getA(){ return attack;}
       public int getLinesC(){ return lines_cleared;}
       public int getScore(){ return score;}
       public int[][] getBGarr(){ return BGarr;}
       public boolean getB2B(){ return B2B;}
+      public boolean getWin(){ return winner;}
       
    // modifier methods
-      public void setLinesC(int lc){ lines_cleared = lc;}
-      public void setScore(int s){ score = s;}
-      public void setBGarr(int x, int y, int arr){ BGarr[x][y] = arr;} 
+      public void setXO(int xo){Xoffset = xo;}
+      public void setYO(int yo){Xoffset = yo;}
+      public void setXS(int xs){Xshock = xs;}
+      public void setYS(int ys){Yshock = ys;}
+      public void setA(int a){attack = a;}
+      public void setLinesC(int lc){lines_cleared = lc;}
+      public void setScore(int s){score = s;}
+      public void setBGarr(int x, int y, int arr){BGarr[x][y] = arr;} 
       public void setB2B(boolean b){ B2B = b;}
+      public void setWin(boolean w){ winner = w;}
       
     //	 instance methods
       public int clearFullLines() {
           int linesCleared = 0;
           for (int y = GRID_ROWS - 1; y >= 0; y--) {
              boolean isFull = true;
-
+             boolean normalBlock = false;
              // Check if the row is full
              for (int x = 0; x < GRID_COLS; x++) {
                 if (BGarr[x][y] == 0) {
                    isFull = false;
                    break;
                 }
+                if (BGarr[x][y] > 0 && BGarr[x][y] < 8) {
+                	normalBlock = true;
+                }
              }
 
-             if (isFull) {
-            	 //start playing music
-                 Tetris.claerLine_effect = new MusicPlayer();
-                 Tetris.claerLine_effect.play(Tetris.claerLine_effect_path, false);
+             if (isFull && normalBlock) {
+                 // clear effects
+                 ClearEffects[y-linesCleared].setTimer20();
                  
                  // Shift all rows above down
                 linesCleared++;
@@ -74,6 +98,11 @@ package game;
                 // Recheck current row since it's now filled with the above row
                 y++;
              }
+          }
+          //start playing music
+          for(int i = 0; i < (linesCleared+1) / 2; i++) {
+              Tetris.clearLine_effect = new MusicPlayer();
+              Tetris.clearLine_effect.play(Tetris.clearLine_effect_path, false);
           }
           lines_cleared += linesCleared;
           return linesCleared;
@@ -91,18 +120,21 @@ package game;
 	      		  break;
 	      	  case "2,0":				//Double
 	      		  action = 2;
+	      		  attack += 1;
 	      		  SS = 300;
 	      		  B2B_buffer = false;
 	      		  break;
 	      	  case "3,0":				//Triple
 	      		  action = 3;
+	      		  attack += 2;
 	      		  SS = 500;
 	      		  B2B_buffer = false;
 	      		  break;
 	      	  case "4,0":				//Quadruple
 	      		  action = 4;
+	      		  attack += 4;
 	      		  SS = 800;
-	      		  if(B2B) BS = 800/2;	//Back to Back *1.5
+	      		  if(B2B){ BS = 800/2; attack++;}	//Back to Back *1.5
 	      		  B2B_buffer = true;
 	      		  //clearAll();//for test all cleared
 	      		  break;
@@ -118,34 +150,39 @@ package game;
 	      		  
 	      	  case "1,1":				//Mini T-Spin Single
 	      		  action = 7;
+	      		  attack += 1;
 	      		  SS = 200;
-	      		  if(B2B) BS = 200/2;	//Back to Back *1.5
+	      		  if(B2B){ BS = 200/2; attack++;}	//Back to Back *1.5
 	      		  B2B_buffer = true;
 	      		  break;
 	      	  case "1,2":				//T-Spin Single
 	      		  action = 8;
+	      		  attack += 2;
 	      		  SS = 800;
-	      		  if(B2B) BS = 800/2;	//Back to Back *1.5
+	      		  if(B2B){ BS = 800/2; attack++;}	//Back to Back *1.5
 	      		  B2B_buffer = true;
 	      		  break;
 	      		  
 	      	  case "2,1":				//Mini T-Spin Double
 	      		  action = 9;
+	      		  attack += 2;
 	      		  SS = 1200;
-	      		  if(B2B) BS = 1200/2;	//Back to Back *1.5
+	      		  if(B2B){ BS = 1200/2; attack++;}	//Back to Back *1.5
 	      		  B2B_buffer = true;
 	      		  break;
 	      	  case "2,2":				//T-Spin Double
 	      		  action = 10;
+	      		  attack += 3;
 	      		  SS = 1200;
-	      		  if(B2B) BS = 1200/2;	//Back to Back *1.5
+	      		  if(B2B){ BS = 1200/2; attack++;}	//Back to Back *1.5
 	      		  B2B_buffer = true;
 	      		  break;
 	      		  
 	      	  case "3,2":				//T-Spin Triple
 	      		  action = 11;
+	      		  attack += 6;
 	      		  SS = 1600;
-	      		  if(B2B) BS = 1600/2;	//Back to Back *1.5
+	      		  if(B2B){ BS = 1600/2; attack++;}	//Back to Back *1.5
 	      		  B2B_buffer = true;
 	      		  break;
 	      	  default:
@@ -177,6 +214,8 @@ package game;
 	      if(linesCleared > 0) {	//Combo Score
 	    	  CS = 50 * combo;
 	    	  combo++;
+	    	  if(combo/2 <= 5)attack += combo/2;
+	    	  else attack += 5;
 	      }
 	      else combo = 0;
 	      
@@ -194,12 +233,19 @@ package game;
           return true;
       }
       
-      public void clearAll() {
+      public void clearAll() {	// for test
           for (int y = GRID_ROWS - 1; y >= 0; y--) {
               for (int x = 0; x < GRID_COLS; x++) {
                  BGarr[x][y]  = 0;
               }
            }
+      }
+      public void clearEffectssTimerDecrease() {
+    	  for(int y = 0; y < GRID_ROWS; y++) {
+      		  if(ClearEffects[y].getT() > 0) {
+      			  ClearEffects[y].setT( ClearEffects[y].getT() - 1);
+      		  }
+      	  }
       }
       
       private void switchColor(Graphics g, int c, int r) {
@@ -218,11 +264,15 @@ package game;
 	          	g.setColor(new Color(0, 0, 255, r)); break;	// J, BLUE
 	          case 7:
 	          	g.setColor(new Color(255, 200, 0, r)); break;	// L, ORANGE
+	          case 8:
+			    g.setColor(new Color(64, 64, 64, r)); break;	// GarbageLines
     	  }
       }
       
       public void draw(Graphics g) {
     	  int drawX, drawY;
+    	  Xoffset += Xshock;
+    	  Yoffset += Yshock;
     	  //edge
     	  g.setColor(Color.LIGHT_GRAY);
 	      g.fillRect(Xoffset-10,
@@ -262,7 +312,7 @@ package game;
           }
           
           g.setColor(Color.WHITE);
-          drawX = Xoffset + 10 + GRID_COLS * BLOCK_SIZE;
+          drawX = Xoffset + 15 + GRID_COLS * BLOCK_SIZE;
           //Score:
           drawY = Yoffset + 0 * BLOCK_SIZE;
           g.setFont(new Font("Arial", Font.BOLD, 20));
@@ -354,5 +404,12 @@ package game;
                   g.drawString("+" + CS * (level+1), drawX+5, drawY+40);
               }
           }
+          Xoffset -= Xshock;
+    	  Yoffset -= Yshock;
+    	  
+    	  //clear effects
+    	  for(int y = 0; y < GRID_ROWS; y++) {
+    		  ClearEffects[y].draw(g);
+    	  }
       }
    }
