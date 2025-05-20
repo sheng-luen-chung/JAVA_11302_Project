@@ -40,8 +40,8 @@ public class menu extends JPanel{
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(Color.orange);
-        g.setFont(new Font("Arial", Font.BOLD, 80));
-        g.drawString("Tetris", Tetris.TOTAL_SIZE_X / 2 -130, Tetris.TOTAL_SIZE_Y / 2-80);
+        g.setFont(new Font("Arial", Font.BOLD, 40));
+        g.drawString("Tetris", 14 * Tetris.BLOCK_SIZE, Tetris.TOTAL_SIZE_Y / 2);
     }
     
     private class BStart implements ActionListener {

@@ -1,15 +1,14 @@
-package game;
+package src;
 
    import java.awt.*;
    import java.util.Random;
-   
+
    public class Player
    {
 	    private static final int GRID_COLS = 10;
 	    private static final int GRID_ROWS = 20;
 	    private static final int BLOCK_SIZE = 30;
 	    private int Xoffset, Yoffset;
-	    private int Xshock = 0, Yshock = 0;
 	    private Point[] currentShape;
 	    private Point[] nextShape;
 	    private Point[] holdShape;
@@ -46,7 +45,6 @@ package game;
     	  dropFarmesSet = 48;
     	  lockDelaySet = 30;
     	  AREset = 20;
-    	  
     	  dropFarmes = dropFarmesSet;
     	  lockDelay = lockDelaySet;
     	  ARE = AREset;
@@ -55,10 +53,6 @@ package game;
       }
 
     // accessor methods
-      public int getXO(){ return Xoffset;}
-      public int getyO(){ return Yoffset;}
-      public int getXS(){ return Xshock;}
-      public int getYS(){ return Yshock;}
       public int getX(){ return currentX;}
       public int getY(){ return currentY;}
       public int getS(){ return currentS;}
@@ -79,10 +73,6 @@ package game;
       public boolean getLK(){ return lastKick;}
       
    // modifier methods
-      public void setXO(int xo){Xoffset = xo;}
-      public void setYO(int yo){Xoffset = yo;}
-      public void setXS(int xs){Xshock = xs;}
-      public void setYS(int ys){Yshock = ys;}
       public void setX(int x){currentX = x;} 
       public void setY(int y){currentY = y;} 
       public void setS(int s){currentS = s;}
@@ -108,13 +98,15 @@ package game;
     //	 instance methods
       public void spawn7bag() {
     	  int[] bag = {1, 2, 3, 4, 5, 6, 7};
+    	  for(int i=bag.length-1; i>0; i--) {
+    		  int j = rand.nextInt(i);
+    		  int temp = bag[i];
+    		  bag[i] = bag[j];
+    		  bag[j] = temp;
+    	  }
     	  //bag[] to nextShape[]
     	  for(int i=0; i<bag.length; i++) {
-    		  int r = rand.nextInt(bag.length-i);
-    		  nextS[i+1] = bag[r];
-    		  for(int j=r; j<bag.length-1; j++) {
-    			  bag[j] = bag[j+1];
-    		  }
+    		  nextS[i+1] = bag[i];
     	  }
     	  if(nextS[0] == 0) {
     		  for(int i=0; i<nextS.length-1; i++) {
@@ -124,9 +116,10 @@ package game;
       }
       
       public void spawnNewShape() {
+
     	  //current shape set
           currentX = GRID_COLS / 2 - 2;
-          currentY = -2;
+          currentY = 0;
           currentD = 0;
           lockDelay = lockDelaySet;
           ARE = AREset;
@@ -212,15 +205,11 @@ package game;
 	          	g.setColor(new Color(0, 0, 255, r)); break;	// J, BLUE
 	          case 7:
 	          	g.setColor(new Color(255, 200, 0, r)); break;	// L, ORANGE
-	          case 8:
-		        g.setColor(new Color(128, 128, 128, r)); break;	// GarbageLines
     	  }
       }
       
       public void draw(Graphics g) {
     	  int drawX, drawY;
-    	  Xoffset += Xshock;
-    	  Yoffset += Yshock;
           for (Point p : currentShape) {
               drawX = Xoffset + (currentX + p.x) * BLOCK_SIZE;
               drawY = Yoffset + (currentY + p.y) * BLOCK_SIZE;
@@ -229,9 +218,18 @@ package game;
               g.setColor(Color.BLACK);
               g.drawRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
           }
-          
+         
+          int previewX = (GRID_COLS) * BLOCK_SIZE;
+          int previewY = 120; // Y-coordinate to move it lower
+          g.setColor(Color.WHITE);
+          g.setFont(new Font("Arial", Font.BOLD, 20));
+          g.drawString("Next:", previewX, previewY - 10); // Label just above the preview
+
+          // Draw preview box border
+          g.drawRect(previewX, previewY, 5 * BLOCK_SIZE, 4 * BLOCK_SIZE);
+         
           for (Point p : nextShape) {
-              drawX = Xoffset + (11 + p.x) * BLOCK_SIZE + 15;
+              drawX = Xoffset + (11 + p.x) * BLOCK_SIZE;
               drawY = Yoffset + (5 + p.y) * BLOCK_SIZE - (BLOCK_SIZE / 2);
         	  switch(nextS[0]) {
     	  	  case 1:
@@ -243,6 +241,7 @@ package game;
     	  		  break;
         	  }
               switchColor(g, nextS[0], 255);
+
               g.fillRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
               g.setColor(Color.BLACK);
               g.drawRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
@@ -250,7 +249,7 @@ package game;
           
           if(hold) {
           for (Point p : holdShape) {
-              drawX = Xoffset + (11 + p.x) * BLOCK_SIZE + 15;
+              drawX = Xoffset + (11 + p.x) * BLOCK_SIZE;
               drawY = Yoffset + (9 + p.y) * BLOCK_SIZE - (BLOCK_SIZE / 2);
         	  switch(holdS) {
         	  	  case 1:
@@ -267,14 +266,10 @@ package game;
               g.drawRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
           }
           }
-          Xoffset -= Xshock;
-    	  Yoffset -= Yshock;
       }
       
       public void drawShadow(Graphics g, int y) {
     	  int drawX, drawY;
-    	  Xoffset += Xshock;
-    	  Yoffset += Yshock;
           for (Point p : currentShape) {
               drawX = Xoffset + (currentX + p.x) * BLOCK_SIZE;
               drawY = Yoffset + (currentY + p.y + y) * BLOCK_SIZE;
@@ -283,7 +278,5 @@ package game;
               g.setColor(Color.BLACK);
               g.drawRect(drawX, drawY, BLOCK_SIZE, BLOCK_SIZE);
           }
-          Xoffset -= Xshock;
-    	  Yoffset -= Yshock;
       }
    }
