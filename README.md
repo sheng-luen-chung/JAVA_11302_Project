@@ -16,9 +16,9 @@ B11007111 胡予肴 B11007131 潘永牧
 - 20 Gravity (單人困難模式)
 - Gap (雙人對戰生存模式)
 - Purge (雙人對戰攻擊模式)
-- Survive (雙人合作生存模式)
+- Survive (雙人合作生存模式) 
 ### 3.操作說明
--![控制](<a href="https://ibb.co/ZRzkCwQQ"><img src="https://i.ibb.co/ZRzkCwQQ/2025-05-20-124255.png" alt="2025-05-20-124255" border="0"></a>)
+- a href="https://ibb.co/ZRzkCwQQ"><img src="https://i.ibb.co/ZRzkCwQQ/2025-05-20-124255.png" alt="2025-05-20-124255" border="0"></a>
 ### 4.分數表
 -
 ## 更新日誌
