@@ -21,7 +21,8 @@ B11007111 胡予肴 B11007131 潘永牧
 <img src="https://github.com/user-attachments/assets/76e788c3-8064-4cb9-a39a-405740eab5c3" width="300">
 
 ### 4.分數 與 攻擊行數
-![分數表](https://github.com/user-attachments/assets/5d635836-ad39-495f-bb65-2a1962ae359d)
+<img src="https://github.com/user-attachments/assets/5d635836-ad39-495f-bb65-2a1962ae359d" width="300">
+
 ## 更新日誌
 ### (week 1)  
 #### v1.0  
