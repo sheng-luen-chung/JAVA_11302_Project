@@ -14,8 +14,8 @@ B11007111 胡予肴 B11007131 潘永牧
 ### 2.遊戲模式
 - classic (單人經典模式)
 - 20 Gravity (單人困難模式)
-- Gap (雙人對戰生存模式)
-- Purge (雙人對戰攻擊模式)
+- Gap (雙人對戰攻擊模式)
+- Purge (雙人對戰困難模式)
 - Survive (雙人合作生存模式) 
 ### 3.操作說明
 <img src="https://github.com/user-attachments/assets/76e788c3-8064-4cb9-a39a-405740eab5c3" width="300">
