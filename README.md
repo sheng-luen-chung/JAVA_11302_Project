@@ -1,6 +1,7 @@
 # JAVA_11302_Tetris
 B11007111 胡予肴 B11007131 潘永牧  
-遊戲影片連結：https://youtu.be/44LgBPtJe8g
+遊戲影片連結：
+<iframe width="560" height="315" src="https://youtu.be/44LgBPtJe8g" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 ## 簡介
 本遊戲為經典遊戲俄羅斯方塊的延伸版本，加入多種進階玩法，遊戲中也支援 T-Spin、Back To Back、Combo、全清……等高端技巧判定。本遊戲還設計了雙人對戰模式、合作模式與20G高速模式，適合喜愛俄羅斯方塊的玩家挑戰自我或與好友同樂，並搭配了豐富的效果、音效與震動畫面，打造出完整且富娛樂性的方塊消除遊戲體驗。  
 ## 遊戲說明
