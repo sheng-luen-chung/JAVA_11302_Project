@@ -543,11 +543,11 @@ class TST3 {
     Start --> Select_Mode
 
     subgraph Game_Modes
-        Select_Mode --> Classic_Mode
-        Select_Mode --> Purge_Mode
-        Select_Mode --> Survive_Mode
-        Select_Mode --> 20_Gravity_Mode
-        Select_Mode --> Gap_Mode
+        Select_Mode --> Classic_Game
+        Select_Mode --> Purge_Game
+        Select_Mode --> Survive_Game
+        Select_Mode --> 20_Gravity_Game
+        Select_Mode --> Gap_Game
     end
 
     subgraph Classic
@@ -557,7 +557,7 @@ class TST3 {
     end
     subgraph 20_Gravity
         20_Gravity_Game --> Game_Over
-        20_Gravity_Game --> Restar
+        20_Gravity_Game --> Restart
         20_Gravity_Game --> Pause
     end
     subgraph Gap
