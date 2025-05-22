@@ -1,4 +1,29 @@
-# JAVA_11302_Project  
+# JAVA_11302_Tetris
+B11007111 胡予肴 B11007131 潘永牧  
+  遊戲影片連結：https://youtu.be/44LgBPtJe8g
+
+## 簡介
+本遊戲為經典遊戲俄羅斯方塊的延伸版本，加入多種進階玩法，遊戲中也支援 T-Spin、Back To Back、Combo、全清……等高端技巧判定。本遊戲還設計了雙人對戰模式、合作模式與20G高速模式，適合喜愛俄羅斯方塊的玩家挑戰自我或與好友同樂，並搭配了豐富的效果、音效與震動畫面，打造出完整且富娛樂性的方塊消除遊戲體驗。  
+## 遊戲說明
+### 1.遊戲流程
+- 螢幕上方不斷掉落不同形狀的方塊  
+- 玩家要在方塊落下過程中移動、旋轉方塊，讓它們排列在底部  
+- 當一行方塊排滿時，該行就會消除
+- 玩家可通過消除方塊或高端的操作來得分
+- 方塊若堆疊到螢幕頂端，遊戲結束
+- 盡可能在遊戲結束前得到最多分
+### 2.遊戲模式
+- classic (單人經典模式)
+- 20 Gravity (單人困難模式)
+- Gap (雙人對戰攻擊模式)
+- Purge (雙人對戰困難模式)
+- Survive (雙人合作生存模式) 
+### 3.操作說明
+<img src="https://github.com/user-attachments/assets/76e788c3-8064-4cb9-a39a-405740eab5c3" width="300">
+
+### 4.分數 與 攻擊行數
+<img src="https://github.com/user-attachments/assets/5d635836-ad39-495f-bb65-2a1962ae359d" width="500">
+
 ## 更新日誌
 ### (week 1)  
 #### v1.0  
@@ -119,4 +144,482 @@
 #### v3.02  
 1.優化7-bag產生器  
 2.消行的消除音效改為n行會產生(n+1)/2次，而不是n次  
--Maple
+-Maple  
+## 分工表
+| 成員        | 負責內容                                                                                                                                                                                                        |
+| :-------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **lilmu** | - 基底程式與操作功能 (v1.0-v1.1)<br>- 操作鍵配置<br>- Drop 修復與背景陣列<br>- 音效與背景音樂加入 (v1.10, v3.0)<br>- 程式合併 (v1.6, v3.0)                                                                                                    |
+| **Maple** | - 旋轉、踢牆、SRS、7-bag 隨機器 (含優化)<br>- 預覽塊、暫留塊、陰影塊<br>- 消除、計分、T-Spin、Combo、Back to Back、全清<br>- Level、Lines、速度控制、20G模式<br>- 鎖定延遲與特效、震動、垃圾行<br>- 多人對戰、合作模式、暫停功能、指示頁面<br>- 架構改寫、多頁面管理、UI優化<br>- 程式合併、音效細項優化、7-bag優化 |
+
+## ChatGPT 協作紀錄摘要
+-製作陽春的Tetris程式
+-寫撥放音樂的類別
+-繪製出UML類別圖
+-繪製出序列圖
+-協助查詢部分遊戲資料
+-給一些Panel頁面控制的參考方法
+-設計一些特定的初版遊戲參數(攻擊點、Level up下落速度改多少之類)
+-協助註解程式
+
+## UML 類別圖
+```mermaid
+classDiagram
+JPanel <|-- menu
+ActionListener <|.. menu
+class menu {
+  +startPanel()
+  +stopPanel()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+JPanel <|-- classic
+ActionListener <|.. classic
+class classic {
+  +BK
+  +p1
+  +g1
+  +pause
+  +startPanel()
+  +stopPanel()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +drawPause()
+  +pauseGame()
+  +continueGame()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+class Grid {
+  +B2B
+  +getXO()
+  +getYO()
+  +getXS()
+  +getYS()
+  +getA()
+  +getLinesC()
+  +getScore()
+  +getB2B()
+  +getWin()
+  +setXO()
+  +setYO()
+  +setXS()
+  +setYS()
+  +setA()
+  +setLinesC()
+  +setScore()
+  +setBGarr()
+  +setB2B()
+  +setWin()
+  +clearFullLines()
+  +calcuateScore()
+  +checkAllEmpty()
+  +clearAll()
+  +clearEffectssTimerDecrease()
+  +switchColor()
+  +draw()
+}
+JPanel <|-- MTS
+ActionListener <|.. MTS
+class MTS {
+  +p1
+  +g1
+  +controlTimer
+  +startPanel()
+  +stopPanel()
+  +initial()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+JPanel <|-- gravity
+ActionListener <|.. gravity
+class gravity {
+  +BK
+  +p1
+  +g1
+  +pause
+  +startPanel()
+  +stopPanel()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +drawPause()
+  +pauseGame()
+  +continueGame()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+class ClearEffects {
+  +timer
+  +getX()
+  +getY()
+  +getT()
+  +setX()
+  +setY()
+  +setT()
+  +setTimer20()
+  +draw()
+}
+JPanel <|-- mode
+ActionListener <|.. mode
+class mode {
+  +startPanel()
+  +stopPanel()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+JPanel <|-- instructions
+ActionListener <|.. instructions
+class instructions {
+  +startPanel()
+  +stopPanel()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+JPanel <|-- gameover
+ActionListener <|.. gameover
+class gameover {
+  +startPanel()
+  +stopPanel()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+}
+JPanel <|-- gap
+ActionListener <|.. gap
+class gap {
+  +BK
+  +pause
+  +attackTimer
+  +cooldownTimer
+  +sendGarbageTo1
+  +sendGarbageTo2
+  +startPanel()
+  +stopPanel()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +drawPause()
+  +pauseGame()
+  +continueGame()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+class MusicPlayer {
+  +clip
+  +play()
+  +stop()
+  +pause()
+  +resume()
+}
+JPanel <|-- MTST1
+ActionListener <|.. MTST1
+class MTST1 {
+  +p1
+  +g1
+  +controlTimer
+  +startPanel()
+  +stopPanel()
+  +initial()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+JPanel <|-- Tetris
+class Tetris {
+  +keyPressed()
+  +keyReleased()
+  +createPages()
+  +mouseEntered()
+  +mouseExited()
+  +mousePressed()
+}
+JPanel <|-- TST2
+ActionListener <|.. TST2
+class TST2 {
+  +p1
+  +g1
+  +controlTimer
+  +startPanel()
+  +stopPanel()
+  +initial()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+JPanel <|-- TST1
+ActionListener <|.. TST1
+class TST1 {
+  +p1
+  +g1
+  +controlTimer
+  +startPanel()
+  +stopPanel()
+  +initial()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+JPanel <|-- purge
+ActionListener <|.. purge
+class purge {
+  +BK
+  +pause
+  +attackTimer
+  +cooldownTimer
+  +sendGarbageTo1
+  +sendGarbageTo2
+  +startPanel()
+  +stopPanel()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +drawPause()
+  +pauseGame()
+  +continueGame()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+JPanel <|-- survive
+ActionListener <|.. survive
+class survive {
+  +BK
+  +pause
+  +sendGarbageTimer
+  +sendGarbageTimerSet
+  +sendGarbageLinesSet
+  +sendCount
+  +sendGarbageTo1
+  +sendGarbageTo2
+  +startPanel()
+  +stopPanel()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +drawPause()
+  +pauseGame()
+  +continueGame()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+JPanel <|-- TS
+ActionListener <|.. TS
+class TS {
+  +p1
+  +g1
+  +controlTimer
+  +startPanel()
+  +stopPanel()
+  +initial()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+JPanel <|-- MTST2
+ActionListener <|.. MTST2
+class MTST2 {
+  +p1
+  +g1
+  +controlTimer
+  +controlTimer2
+  +controlTimer3
+  +startPanel()
+  +stopPanel()
+  +initial()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+class Player {
+  +holdS
+  +hold
+  +Tspin
+  +speedUP
+  +lastKick
+  +getXO()
+  +getyO()
+  +getXS()
+  +getYS()
+  +getX()
+  +getY()
+  +getS()
+  +getD()
+  +getDF()
+  +getDFS()
+  +getLD()
+  +getLDS()
+  +getARE()
+  +getARES()
+  +getTspin()
+  +getSpeedUP()
+  +getLK()
+  +setXO()
+  +setYO()
+  +setXS()
+  +setYS()
+  +setX()
+  +setY()
+  +setS()
+  +setD()
+  +setDF()
+  +setDFS()
+  +setLD()
+  +setLDS()
+  +setARE()
+  +setARES()
+  +setShape()
+  +setTspin()
+  +setSpeedUP()
+  +setLK()
+  +spawn7bag()
+  +spawnNewShape()
+  +holdCurrentShape()
+  +rotate()
+  +switchColor()
+  +draw()
+  +drawShadow()
+}
+JPanel <|-- TST3
+ActionListener <|.. TST3
+class TST3 {
+  +p1
+  +g1
+  +controlTimer
+  +controlTimer2
+  +startPanel()
+  +stopPanel()
+  +initial()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+```
+
+## 流程圖
+
+```mermaid
+ flowchart TD
+    Execute(Tetris.jar)
+    Execute --> Menu
+    Menu --> Instructions
+    Menu --> Exit
+    Instructions --> Menu
+    Menu --> Start
+
+    Start --> Select_Mode
+subgraph Mode
+    Select_Mode --> Classic_Game
+    Select_Mode --> Purge_Game
+    Select_Mode --> Survive_Game
+    Select_Mode --> 20_Gravity_Game
+    Select_Mode --> Gap_Game
+end
+    Classic_Game --> Game_Over
+    Classic_Game --> Restart
+    Classic_Game --> Pause
+
+    20_Gravity_Game --> Game_Over
+    20_Gravity_Game --> Restart
+    20_Gravity_Game --> Pause
+
+    Gap_Game --> Game_Over
+    Gap_Game --> Restart
+    Gap_Game --> Pause
+
+    Purge_Game --> Game_Over
+    Purge_Game --> Restart
+    Purge_Game --> Pause
+
+    Survive_Game --> Restart
+    Survive_Game --> Game_Over        
+    Survive_Game --> Pause
+subgraph  InGame_Menu
+    Pause --> Game_Over
+    Pause --> Restart
+    Pause --> Continue
+end
+    Continue --> Classic_Game 
+    Continue --> Purge_Game
+    Continue --> Survive_Game
+    Continue --> 20_Gravity_Game
+    Continue --> Gap_Game
+
+    Game_Over --> Menu
+
+    Restart --> Classic_Game 
+    Restart --> Purge_Game
+    Restart --> Survive_Game
+    Restart --> 20_Gravity_Game
+    Restart --> Gap_Game
+```
+
+## 序列圖
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Menu
+    participant Instructions
+    participant Mode
+    participant Game
+    participant Player
+    participant Grid
+    participant MusicPlayer
+    participant GameOver
+
+    User->>Menu: launch Tetris.java
+    Menu->>Instructions: request help
+    Menu->>Mode: select game mode
+    Mode->>Game: start selected mode (classic/purge/survive/TS/TST1/etc.)
+    Game->>Player: initialize player
+    Game->>Grid: generate initial blocks
+    Game->>MusicPlayer: play background music
+    Player->>Grid: move/drop blocks
+    Grid-->>Game: update status
+    Game->>GameOver: trigger when condition met
+    GameOver-->>User: show final score and menu option
+
+```
