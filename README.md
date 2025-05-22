@@ -1,5 +1,6 @@
 # JAVA_11302_Tetris
-B11007111 胡予肴(Maple) B11007131 潘永牧(lil  mu)
+B11007111 胡予肴(Maple)  
+B11007131 潘永牧(lilmu)  
   遊戲影片連結：https://youtu.be/44LgBPtJe8g
 
 ## 簡介
