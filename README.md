@@ -542,37 +542,41 @@ class TST3 {
 
     Start --> Select_Mode
 
-    subgraph Game_Modes
-        Select_Mode --> Classic_Game
-        Select_Mode --> Purge_Game
-        Select_Mode --> Survive_Game
-        Select_Mode --> 20_Gravity_Game
-        Select_Mode --> Gap_Game
-    end
+    Select_Mode --> Classic_Game
+    Select_Mode --> Purge_Game
+    Select_Mode --> Survive_Game
+    Select_Mode --> 20_Gravity_Game
+    Select_Mode --> Gap_Game
 
     Classic_Game --> Game_Over
     Classic_Game --> Restart
     Classic_Game --> Pause
+
     20_Gravity_Game --> Game_Over
     20_Gravity_Game --> Restart
     20_Gravity_Game --> Pause
+
     Gap_Game --> Game_Over
     Gap_Game --> Restart
     Gap_Game --> Pause
+
     Purge_Game --> Game_Over
     Purge_Game --> Restart
     Purge_Game --> Pause
+
     Survive_Game --> Restart
     Survive_Game --> Game_Over        
     Survive_Game --> Pause
 
     Pause --> Game_Over
     Pause --> Restart
-    Pause --> Classic_Game 
-    Pause --> Purge_Game
-    Pause --> Survive_Game
-    Pause --> 20_Gravity_Game
-    Pause --> Gap_Game
+    Paude --> Continue
+
+    Continue --> Classic_Game 
+    Continue --> Purge_Game
+    Continue --> Survive_Game
+    Continue --> 20_Gravity_Game
+    Continue --> Gap_Game
 
     Game_Over --> Menu
 
