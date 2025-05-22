@@ -532,7 +532,7 @@ class TST3 {
 ## 流程圖
 
 ```mermaid
-graph flowchart
+flowchart TD
     Tetris[Tetris.java] --> Menu[menu.java]
     Tetris --> Music[MusicPlayer.java]
     Menu --> Instructions[instructions.java]
