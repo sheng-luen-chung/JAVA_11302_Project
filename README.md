@@ -531,42 +531,7 @@ class TST3 {
 
 ## 流程圖
 
-```mermaid
-flowchart TD
-JPanel --> menu
-ActionListener ..> menu
-JPanel --> classic
-ActionListener ..> classic
-JPanel --> MTS
-ActionListener ..> MTS
-JPanel --> gravity
-ActionListener ..> gravity
-JPanel --> mode
-ActionListener ..> mode
-JPanel --> instructions
-ActionListener ..> instructions
-JPanel --> gameover
-ActionListener ..> gameover
-JPanel --> gap
-ActionListener ..> gap
-JPanel --> MTST1
-ActionListener ..> MTST1
-JPanel --> Tetris
-JPanel --> TST2
-ActionListener ..> TST2
-JPanel --> TST1
-ActionListener ..> TST1
-JPanel --> purge
-ActionListener ..> purge
-JPanel --> survive
-ActionListener ..> survive
-JPanel --> TS
-ActionListener ..> TS
-JPanel --> MTST2
-ActionListener ..> MTST2
-JPanel --> TST3
-ActionListener ..> TST3
-```
+<pre> Tetris.java | v menu.java --> instructions.java | v mode.java | |------------------------------| | | v v classic.java purge.java | | v v Player.java Player.java | | v v Grid.java Grid.java | | | | | v | ClearEffects.java | |---> gravity.java | |---> gap.java | v gameover.java Other Game Modes: mode.java | |---> survive.java |---> MTST1.java, MTST2.java |---> TST1.java, TST2.java, TST3.java |---> TS.java Audio: Tetris.java | v MusicPlayer.java Support: - ClearEffects.java: Visual cleanup during gameplay - Grid.java: Core board logic </pre>
 
 ## 序列圖
 
