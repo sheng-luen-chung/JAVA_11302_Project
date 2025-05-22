@@ -537,7 +537,7 @@ class TST3 {
     Execute --> Menu
     Menu --> Instructions
     Menu --> Exit
-
+    Instructions --> Menu
     Menu --> Start
 
     Start --> Select_Mode
