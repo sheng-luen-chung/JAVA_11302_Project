@@ -152,7 +152,7 @@ B11007111 胡予肴 B11007131 潘永牧
 | **Maple** | - 旋轉、踢牆、SRS、7-bag 隨機器 (含優化)<br>- 預覽塊、暫留塊、陰影塊<br>- 消除、計分、T-Spin、Combo、Back to Back、全清<br>- Level、Lines、速度控制、20G模式<br>- 鎖定延遲與特效、震動、垃圾行<br>- 多人對戰、合作模式、暫停功能、指示頁面<br>- 架構改寫、多頁面管理、UI優化<br>- 程式合併、音效細項優化、7-bag優化 |  
 ## ChatGPT 協作紀錄摘要
 
-##UML
+## UML 類別圖
 ```mermaid
 classDiagram
 JPanel <|-- menu
@@ -527,4 +527,65 @@ class TST3 {
   +actionPerformed()
   +actionPerformed()
 }
+```
+
+## 流程圖
+
+```mermaid
+flowchart TD
+JPanel --> menu
+ActionListener ..> menu
+JPanel --> classic
+ActionListener ..> classic
+JPanel --> MTS
+ActionListener ..> MTS
+JPanel --> gravity
+ActionListener ..> gravity
+JPanel --> mode
+ActionListener ..> mode
+JPanel --> instructions
+ActionListener ..> instructions
+JPanel --> gameover
+ActionListener ..> gameover
+JPanel --> gap
+ActionListener ..> gap
+JPanel --> MTST1
+ActionListener ..> MTST1
+JPanel --> Tetris
+JPanel --> TST2
+ActionListener ..> TST2
+JPanel --> TST1
+ActionListener ..> TST1
+JPanel --> purge
+ActionListener ..> purge
+JPanel --> survive
+ActionListener ..> survive
+JPanel --> TS
+ActionListener ..> TS
+JPanel --> MTST2
+ActionListener ..> MTST2
+JPanel --> TST3
+ActionListener ..> TST3
+```
+
+## 序列圖
+
+```mermaid
+sequenceDiagram
+participant menu
+participant classic
+participant MTS
+participant gravity
+participant mode
+participant instructions
+participant gameover
+participant gap
+participant MTST1
+participant TST2
+participant TST1
+participant purge
+participant survive
+participant TS
+participant MTST2
+participant TST3
 ```
