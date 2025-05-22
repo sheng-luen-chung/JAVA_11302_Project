@@ -534,31 +534,36 @@ class TST3 {
 ```mermaid
     flowchart TD
     Execute(Tetris.jar)
+    Execute --> Menu
 
-    Execute --> Start
-    Execute --> Instructions
-    Execute --> Exit
-    Start --> Menu
+    Menu --> Start
+    Menu --> Instructions
+    Meue --> Exit
 
-    Menu --> Classic_Mode
-    Menu --> Purge_Mode
-    Menu --> Survive_Mode
-    Menu --> 20_Gravity_Mode
-    Menu --> Gap_Mode
+    Start --> Select_Mode
 
-    Classic_Mode --> Gameplay Loop - Classic
-    Purge_Mode --> Gameplay Loop - Purge
-    Survive_Mode --> Gameplay Loop - Survive
-    20_Gravity_Mode --> Gameplay Loop - 20_Gravity
-    Gap_Mode --> Gameplay Loop - Gap
+    Select_Mode --> Classic_Mode
+    Select_Mode --> Purge_Mode
+    Select_Mode --> Survive_Mode
+    Select_Mode --> 20_Gravity_Mode
+    Select_Mode --> Gap_Mode
 
-    Gameplay Loop - Classic --> GameOver
-    Gameplay Loop - Purge --> GameOver
-    Gameplay Loop - Survive --> GameOver
-    Gameplay Loop - 20_Gravity --> GameOver
-    Gameplay Loop - Gap --> GameOver
+    Classic_Mode --> Classic_Game
+    Purge_Mode --> Purge_Game
+    Survive_Mode --> Survive_Game
+    20_Gravity_Mode --> 20_Gravity_Game
+    Gap_Mode --> Gap_Game
 
-    GameOver --> Menu
+    Classic_Game --> Menu
+    Purge_Game --> Menu
+    Survive_Game --> Menu
+    20_Gravity_Game --> Menu
+    Gap_Game --> Menu
+    Classic_Game --> Classic_Game 
+    Purge_Game --> Purge_Game
+    Survive_Game --> Survive_Game
+    20_Gravity_Game --> 20_Gravity_Game
+    Gap_Game --> Gap_Game
 ```
 
 ## 序列圖
