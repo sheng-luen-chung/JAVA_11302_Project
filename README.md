@@ -27,7 +27,7 @@ B11007111 胡予肴 B11007131 潘永牧
 ### 下載完整repo後開啟Terminal執行以下指令
 ```
 cd Tetris
-java -jar Tetris.jar
+java -jar TetrisGame.jar
 ```
 ## 更新日誌
 ### (week 1)  
