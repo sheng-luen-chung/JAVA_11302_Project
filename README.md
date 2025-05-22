@@ -24,6 +24,11 @@ B11007111 胡予肴 B11007131 潘永牧
 ### 4.分數 與 攻擊行數
 <img src="https://github.com/user-attachments/assets/5d635836-ad39-495f-bb65-2a1962ae359d" width="500">
 
+### 下載完整repo後開啟Terminal執行以下指令
+```
+cd Tetris
+java -jar Tetris.jar
+```
 ## 更新日誌
 ### (week 1)  
 #### v1.0  
