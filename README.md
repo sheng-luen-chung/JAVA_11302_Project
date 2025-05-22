@@ -552,22 +552,24 @@ class TST3 {
 
     subgraph Gameplay
         Classic_Game --> Game_Over
-        Purge_Game --> Game_Over
-        Survive_Game --> Game_Over
-        20_Gravity_Game --> Game_Over
-        Gap_Game --> Game_Over
-
         Classic_Game --> Restart
-        Purge_Game --> Restart
-        Survive_Game --> Restart
-        20_Gravity_Game --> Restart
-        Gap_Game --> Restart
-
         Classic_Game --> Pause
-        Purge_Game --> Pause
-        Survive_Game --> Pause
+
+        20_Gravity_Game --> Game_Over
+        20_Gravity_Game --> Restar
         20_Gravity_Game --> Pause
+
+        Gap_Game --> Game_Over
+        Gap_Game --> Restart
         Gap_Game --> Pause
+
+        Purge_Game --> Game_Over
+        Purge_Game --> Restart
+        Purge_Game --> Pause
+       
+        Survive_Game --> Restart
+        Survive_Game --> Game_Over        
+        Survive_Game --> Pause
     end
 
         Pause --> Game_Over
