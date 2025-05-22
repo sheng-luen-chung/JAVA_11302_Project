@@ -532,44 +532,31 @@ class TST3 {
 ## 流程圖
 
 ```mermaid
-flowchart TD
-    Tetris[Tetris.java] --> Menu[menu.java]
-    Tetris --> Music[MusicPlayer.java]
-    Menu --> Instructions[instructions.java]
-    Menu --> Mode[mode.java]
-    Mode --> Classic[classic.java]
-    Mode --> Purge[purge.java]
-    Mode --> Survive[survive.java]
-    Mode --> MTST1[MTST1.java]
-    Mode --> MTST2[MTST2.java]
-    Mode --> TST1[TST1.java]
-    Mode --> TST2[TST2.java]
-    Mode --> TST3[TST3.java]
-    Mode --> TS[TS.java]
+    flowchart TD
+    Start([Game Starts - Tetris.java])
+    Start --> Menu[Main Menu]
+    Menu --> Instructions[View Instructions]
+    Menu --> ModeSelect[Select Game Mode]
 
-    Classic --> PlayerC[Player.java]
-    Classic --> GridC[Grid.java]
-    Classic --> Gravity[gravity.java]
-    Classic --> Gap[gap.java]
-    Classic --> Clear[ClearEffects.java]
-    Classic --> GameOverC[gameover.java]
+    ModeSelect --> ClassicMode[Classic Mode]
+    ModeSelect --> PurgeMode[Purge Mode]
+    ModeSelect --> SurviveMode[Survive Mode]
+    ModeSelect --> TSMode[TS / TST1 / TST2 / TST3]
+    ModeSelect --> MTSTMode[MTST1 / MTST2]
 
-    Purge --> PlayerP[Player.java]
-    Purge --> GridP[Grid.java]
-    Purge --> ClearP[ClearEffects.java]
-    Purge --> GravityP[gravity.java]
-    Purge --> GapP[gap.java]
-    Purge --> GameOverP[gameover.java]
+    ClassicMode --> PlayClassic[Gameplay Loop - Classic]
+    PurgeMode --> PlayPurge[Gameplay Loop - Purge]
+    SurviveMode --> PlaySurvive[Gameplay Loop - Survive]
+    TSMode --> PlayTS[Gameplay Loop - TS Variants]
+    MTSTMode --> PlayMTST[Gameplay Loop - MTST Variants]
 
-    Survive --> PlayerS[Player.java]
-    Survive --> GridS[Grid.java]
+    PlayClassic --> GameOver[Game Over Screen]
+    PlayPurge --> GameOver
+    PlaySurvive --> GameOver
+    PlayTS --> GameOver
+    PlayMTST --> GameOver
 
-    MTST1 --> PlayerMT1[Player.java]
-    MTST2 --> PlayerMT2[Player.java]
-    TST1 --> PlayerT1[Player.java]
-    TST2 --> PlayerT2[Player.java]
-    TST3 --> PlayerT3[Player.java]
-    TS --> PlayerTS[Player.java]
+    GameOver --> Menu
 ```
 
 ## 序列圖
