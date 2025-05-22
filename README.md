@@ -591,20 +591,26 @@ end
 
 ```mermaid
 sequenceDiagram
-participant menu
-participant classic
-participant MTS
-participant gravity
-participant mode
-participant instructions
-participant gameover
-participant gap
-participant MTST1
-participant TST2
-participant TST1
-participant purge
-participant survive
-participant TS
-participant MTST2
-participant TST3
+    participant User
+    participant Menu
+    participant Instructions
+    participant Mode
+    participant Game
+    participant Player
+    participant Grid
+    participant MusicPlayer
+    participant GameOver
+
+    User->>Menu: launch Tetris.java
+    Menu->>Instructions: request help
+    Menu->>Mode: select game mode
+    Mode->>Game: start selected mode (classic/purge/survive/TS/TST1/etc.)
+    Game->>Player: initialize player
+    Game->>Grid: generate initial blocks
+    Game->>MusicPlayer: play background music
+    Player->>Grid: move/drop blocks
+    Grid-->>Game: update status
+    Game->>GameOver: trigger when condition met
+    GameOver-->>User: show final score and menu option
+
 ```
