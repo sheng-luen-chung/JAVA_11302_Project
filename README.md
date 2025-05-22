@@ -567,11 +567,11 @@ class TST3 {
     Survive_Game --> Restart
     Survive_Game --> Game_Over        
     Survive_Game --> Pause
-
+subgraph  
     Pause --> Game_Over
     Pause --> Restart
     Pause --> Continue
-
+end
     Continue --> Classic_Game 
     Continue --> Purge_Game
     Continue --> Survive_Game
