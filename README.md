@@ -554,16 +554,37 @@ class TST3 {
     20_Gravity_Mode --> 20_Gravity_Game
     Gap_Mode --> Gap_Game
 
-    Classic_Game --> Menu
-    Purge_Game --> Menu
-    Survive_Game --> Menu
-    20_Gravity_Game --> Menu
-    Gap_Game --> Menu
-    Classic_Game --> Classic_Game 
-    Purge_Game --> Purge_Game
-    Survive_Game --> Survive_Game
-    20_Gravity_Game --> 20_Gravity_Game
-    Gap_Game --> Gap_Game
+    Classic_Game --> Game_Over
+    Purge_Game --> Game_Over
+    Survive_Game --> Game_Over
+    20_Gravity_Game --> Game_Over
+    Gap_Game --> Game_Over
+    Classic_Game --> Restart
+    Purge_Game --> Restart
+    Survive_Game --> Restart
+    20_Gravity_Game --> Restart
+    Gap_Game --> Restart
+    Classic_Game --> Pause
+    Purge_Game --> Pause
+    Survive_Game --> Pause
+    20_Gravity_Game --> Pause
+    Gap_Game --> Pause
+
+    Pause --> Game_Over
+    Pause --> Restart
+    Pause --> Classic_Game 
+    Pause --> Purge_Game
+    Pause --> Survive_Game
+    Pause --> 20_Gravity_Game
+    Pause --> Gap_Game 
+
+    Game_Over --> Menu
+
+    Restart --> Classic_Game 
+    Restart --> Purge_Game
+    Restart --> Survive_Game
+    Restart --> 20_Gravity_Game
+    Restart --> Gap_Game
 ```
 
 ## 序列圖
