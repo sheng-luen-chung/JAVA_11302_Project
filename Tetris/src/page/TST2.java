@@ -5,6 +5,15 @@ import java.awt.*;
 import java.awt.event.*;
 import game.*;
 
+/**
+ * 顯示 T轉消兩行 示範畫面，並且可以切換到其他指示畫面。
+ * 為整個指示和消行示範的第6頁。
+ * <p>
+ * 此面板會在 Tetris 主畫面中被切換至 TST2 時啟動。
+ * 
+ * @author Maple
+ * @version 3.02
+ */
 public class TST2 extends JPanel{
 	private JButton ReturnButton, NextButton, BackButton;
 	private Timer reTimer, timer;
@@ -13,6 +22,9 @@ public class TST2 extends JPanel{
     private final int page = 6;
     private int controlTimer;
     
+    /**
+     * 初始化面板。
+     */
     public void startPanel() {
     	Tetris.cardLayout.show(Tetris.mainPanel, "TST2");
     	setBackground(Color.BLACK);
@@ -44,11 +56,18 @@ public class TST2 extends JPanel{
 				    					    -50,
 				    					    Tetris.TOTAL_SIZE_Y - 70);
     }  
+    
+    /**
+     * 停止面板。
+     */
     public void stopPanel() {
     	reTimer.stop();
     	timer.stop();
     }
     
+    /**
+     * 初始化示範遊戲的數值。
+     */
     private void initial() {
     	p1 = new Player(300,90);
         g1 = new Grid(300,90);
@@ -91,6 +110,11 @@ public class TST2 extends JPanel{
         p1.rotate(0);
     }
     
+    /**
+     * 在這個頁面的程式循環，但不支援玩家控制。
+     *
+     * @param g 畫圖用的 Graphics 物件
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -111,6 +135,10 @@ public class TST2 extends JPanel{
         repaint();
     }
     
+    /**
+     * 定時呼叫的動作監聽器，用來處理方塊重力下落的邏輯。
+     * 也包含這個示範中的自動控制器
+     */
     private class gravity_timer implements ActionListener{
     	public void actionPerformed(ActionEvent e){
     		Tetris.gravity_drop(p1, g1);
@@ -124,24 +152,38 @@ public class TST2 extends JPanel{
         }  
     }
     
+    /**
+     * 重新執行和初始化這個示範的畫面。
+     */
     private class reShow implements ActionListener{
     	public void actionPerformed(ActionEvent e){
     		initial();
         } 
     }
 
+    /**
+     * 點擊 Return 按鈕的事件處理類別，回到主選單。
+     */
     private class BReturn implements ActionListener {
         public void actionPerformed(ActionEvent e) {
         	Tetris.setPage(Tetris.PAGE_MENU);
         }
     }
     
+    /**
+     * 點擊 Next 按鈕的事件處理類別，切到下一頁。
+     * 如果沒有下一頁則到第一頁。
+     */
     private class BNext implements ActionListener {
         public void actionPerformed(ActionEvent e) {
         	Tetris.setPage(Tetris.PAGE_TST3);
         }
     }
     
+    /**
+     * 點擊 Back 按鈕的事件處理類別，切到上一頁。
+     * 如果沒有上一頁則到最後一頁。
+     */
     private class BBack implements ActionListener {
         public void actionPerformed(ActionEvent e) {
         	Tetris.setPage(Tetris.PAGE_TST1);

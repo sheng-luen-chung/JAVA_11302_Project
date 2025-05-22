@@ -3,6 +3,16 @@ package game;
    import java.awt.*;
    import java.util.Random;
    
+   		/**
+    * 控制方塊的物件。
+    * <p>
+    * 包含方塊的生成（使用 7-bag 隨機機制）、旋轉、預覽方塊、儲存方塊（Hold 機制）、
+    * 方塊下落計時、鎖定延遲（Lock Delay）與出現時間（ARE），並支援繪製目前與影子方塊。
+    * </p>
+    *
+    * @author Maple、lilmu
+    * @version 3.02
+    */
    public class Player
    {
 	    private static final int GRID_COLS = 10;
@@ -106,7 +116,11 @@ package game;
       public void setLK(boolean Lk){lastKick = Lk;}
       
     //	 instance methods
-      public void spawn7bag() {
+      	/**
+       * 產生一組新的 7-bag 隨機順序，並填入 `nextS` 中作為即將出現的方塊順序。
+       * 若 `nextS[0]` 為空（0），則會自動將新順序推入前方(第一次創建才會發生)。
+       */
+    public void spawn7bag() {
     	  int[] bag = {1, 2, 3, 4, 5, 6, 7};
     	  //bag[] to nextShape[]
     	  for(int i=0; i<bag.length; i++) {
@@ -123,6 +137,15 @@ package game;
     	  }
       }
       
+    	/**
+     * 根據目前狀態生成新的方塊。
+     * <ul>
+     *   <li>若使用者剛使用 Hold，則從 Hold 區取出方塊。</li>
+     *   <li>否則從 next queue 中取出。</li>
+     *   <li>同時處理 ARE（出現延遲）、Lock Delay（鎖定延遲）等變數重設。</li>
+     *   <li>若 next Shape 中僅剩一個方塊，則自動生成下一組 7-bag。</li>
+     * </ul>
+     */
       public void spawnNewShape() {
     	  //current shape set
           currentX = GRID_COLS / 2 - 2;
@@ -150,6 +173,17 @@ package game;
           }
       }
       
+      	/**
+       * 將目前的方塊儲存至 Hold 區。
+       * <p>
+       * 若之前尚未使用 Hold，則：
+       * <ul>
+       *   <li>儲存目前方塊至 Hold 區</li>
+       *   <li>立刻生成新的方塊以補位</li>
+       *   <li>如果Hold區有方塊就不再能使用</li>
+       * </ul>
+       * 若已使用 Hold，則此方法不執行任何動作。
+       */
       public void holdCurrentShape() {
     	  //hold shape set
     	  if(!hold) {
@@ -160,6 +194,16 @@ package game;
     	  }
       }
       
+      	/**
+       * 旋轉目前的方塊。
+       *
+       * @param dir 旋轉方向：0 表示逆時針（左轉），非 0 表示順時針（右轉）
+       * <p>
+       * 根據方塊種類設定旋轉軸（pivot）後，計算所有方塊的新座標。
+       * 支援 I, O 以及其他 5 種標準方塊。
+       * <p>
+       * 完成後更新方向指標（`currentD`）與當前形狀（`currentShape`）。
+       */
       public void rotate(int dir) {
     	  double pivot_x;
     	  double pivot_y;
@@ -196,6 +240,13 @@ package game;
           setShape(rotated);
       }
       
+      	/**
+       * 根據方塊類型設定顏色。
+       *
+       * @param g 繪圖物件 Graphics
+       * @param c 方塊代號（1~7 為標準方塊，8 為垃圾行）
+       * @param r 顏色透明度（alpha 值，0~255）
+       */
       private void switchColor(Graphics g, int c, int r) {
     	  switch (c) {
 	          case 1:
@@ -217,6 +268,15 @@ package game;
     	  }
       }
       
+      	/**
+       * 繪製目前方塊、下一個方塊、以及（若有）儲存方塊於畫面。
+       *
+       * @param g Swing 提供的繪圖元件 Graphics，用於繪製方塊。
+       * <p>
+       * 顯示目前方塊於遊戲場中央，
+       * 下一個方塊於右側提示欄位，
+       * 儲存方塊（如已使用 Hold）則也繪製在右側。
+       */
       public void draw(Graphics g) {
     	  int drawX, drawY;
     	  Xoffset += Xshock;
@@ -271,6 +331,14 @@ package game;
     	  Yoffset -= Yshock;
       }
       
+      	/**
+       * 繪製目前方塊的影子（Ghost Piece），用以預覽落地位置。
+       *
+       * @param g 繪圖元件
+       * @param y 與目前 Y 座標的距離，用以將影子方塊繪製於正確落點
+       * <p>
+       * 使用半透明顏色表示，並保持與目前方塊一致外觀。
+       */
       public void drawShadow(Graphics g, int y) {
     	  int drawX, drawY;
     	  Xoffset += Xshock;

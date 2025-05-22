@@ -6,7 +6,27 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
 
-
+/**
+ * Tetris 主類別，負責初始化遊戲主框架與邏輯控制。
+ * 此類別同時負責鍵盤監聽、頁面切換、音樂播放、方塊放置與清除行處理。
+ * 遊戲透過 CardLayout 管理多個頁面。
+ * 
+ * final定值定義了
+ * 1.單一方塊的像素大小
+ * 2.整體畫面寬度
+ * 3.整體畫面高度
+ * 4.遊戲網格的欄數
+ * 5.遊戲網格的列數
+ * 6.各種頁面常數，對應 CardLayout 的控制
+ * 7.CardLayout 管理的主面板
+ * 8.mainPanel 儲存所有頁面的容器面板
+ * 9.踢牆的測試位移表
+ * 10.震動特效的震動幅度值(x和y值分開)
+ * 11.音檔的路徑
+ * 
+ * @author Maple、lilmu
+ * @version 3.02
+ */
 public class Tetris extends JPanel{
 	public static final int BLOCK_SIZE = 30;
 	public static final int TOTAL_SIZE_X = 36 * BLOCK_SIZE;
@@ -140,6 +160,9 @@ public class Tetris extends JPanel{
     public static final String rotate_effect_path = "resources/rotate_effect.wav";
     
 //---------------------------------------------------------------------------------------//
+    /**
+     * 建構子 - 初始化畫面大小、鍵盤監聽器、背景音樂與頁面。
+     */
     public Tetris() {
         setPreferredSize(new Dimension(TOTAL_SIZE_X, TOTAL_SIZE_Y));
         setFocusable(true); 
@@ -197,6 +220,10 @@ public class Tetris extends JPanel{
         setPage(PAGE_MENU);
     }
     
+    /**
+     * 初始化所有頁面，並加入到主面板（mainPanel）中。
+     * 使用 CardLayout 管理頁面切換。
+     */
     private void createPages() {
         menuPanel = new menu();
         mainPanel.add(menuPanel, "MENU");
@@ -237,6 +264,19 @@ public class Tetris extends JPanel{
 	    setLayout(new CardLayout());
     }
     
+    /**
+     * 放置方塊至網格中，處理鎖定後的邏輯：
+     * <ul>
+     *     <li>播放音效</li>
+     *     <li>檢查是否達成 T-Spin</li>
+     *     <li>清除滿行</li>
+     *     <li>更新得分與震動效果</li>
+     *     <li>生成新方塊</li>
+     * </ul>
+     *
+     * @param p 控制方塊的玩家物件
+     * @param g 對應的遊戲網格
+     */
     public static void putShape(Player p, Grid g) {
          putShape_effect = new MusicPlayer();
          putShape_effect.play(putShape_effect_path, false);
@@ -265,6 +305,13 @@ public class Tetris extends JPanel{
 	      p.spawnNewShape();
     }
     
+    /**
+     * 檢測玩家是否執行了 T-Spin。
+     * 
+     * @param p 玩家物件
+     * @param g 遊戲網格
+     * @return 0 = 無 T-Spin，1 = Mini T-Spin，2 = 正式 T-Spin
+     */
     public static int detect_T_spin(Player p, Grid g) {	//return 0=none, 1=Mini T-Spin, 2=T-Spin
     	int x=0;
     	int y=0;
@@ -308,6 +355,14 @@ public class Tetris extends JPanel{
     	else return 0;
     }
     
+    /**
+     * 嘗試移動玩家的方塊。若移動無效則還原，並在下移時根據落地情況自動放置方塊。
+     * 
+     * @param p 玩家物件
+     * @param g 遊戲網格
+     * @param dx 水平移動量
+     * @param dy 垂直移動量
+     */
     public static void moveBlock(Player p, Grid g, int dx, int dy) {
         p.setX(p.getX() + dx);
         p.setY(p.getY() + dy);
@@ -324,6 +379,12 @@ public class Tetris extends JPanel{
         }
     }
 
+    /**
+     * 執行硬下落，直到碰到底部或其他方塊並放置。
+     * 
+     * @param p 玩家物件
+     * @param g 遊戲網格
+     */
     public static void hard_drop(Player p, Grid g) {
     	int addScore = 0;
         while (true) {
@@ -340,6 +401,14 @@ public class Tetris extends JPanel{
         g.setScore(g.getScore() + addScore);
     }
 
+    /**
+     * 嘗試旋轉方塊，並根據旋轉結果使用踢牆表（wall kick table）進行修正。
+     * 成功旋轉時播放旋轉音效，並檢查是否為 T-Spin。
+     * 
+     * @param p 玩家物件
+     * @param g 遊戲網格
+     * @param dir 旋轉方向（0=順時針，非0=逆時針）
+     */
     public static void rotate_and_check(Player p, Grid g, int dir) {
         Point[] backupS = p.getShape();  //before rotation
         int backupX = p.getX();
@@ -393,6 +462,13 @@ public class Tetris extends JPanel{
         if(kick_count == 4) p.setLK(true);
     }
     
+    /**
+     * 處理重力掉落邏輯（DF/A.R.E. 控制），
+     * 包含落地計時、震動效果變化、和失敗條件判定。
+     * 
+     * @param p 玩家物件
+     * @param g 遊戲網格
+     */
     public static void gravity_drop(Player p, Grid g) {
     	if(p.getARE() > 0) p.setARE(p.getARE() - 1);
     	else if(p.getDF() >= 1) p.setDF(p.getDF() - 1);
@@ -454,6 +530,13 @@ public class Tetris extends JPanel{
 		g.clearEffectssTimerDecrease();
     }
     
+    /**
+     * 計算影子方塊的落點，並在畫面上繪製其陰影。
+     * 
+     * @param g Graphics 畫布
+     * @param p 玩家物件
+     * @param gr 遊戲網格
+     */
     public static void findShadowAndDraw(Graphics g, Player p, Grid gr) {	
     	int testY = 0;
     	while (true) {
@@ -468,6 +551,13 @@ public class Tetris extends JPanel{
     	p.drawShadow(g, testY);
     }
     
+    /**
+     * 驗證玩家目前控制的方塊是否處於合法位置。
+     * 
+     * @param p 玩家物件
+     * @param g 遊戲網格
+     * @return 若位置合法則回傳 true，否則 false
+     */
     public static boolean isValidPosition(Player p, Grid g) {
         for (Point po : p.getShape()) {
             int x = p.getX() + po.x;
@@ -484,6 +574,15 @@ public class Tetris extends JPanel{
         return true;
     }
     
+    /**
+     * 在網格底部產生垃圾行，並根據情況隨機留空一列。
+     * 
+     * @param p 玩家物件
+     * @param g 遊戲網格
+     * @param l 要產生的垃圾行數
+     * @param empty 是否包含一個空洞列
+     * @return 剩餘待產生的垃圾行數
+     */
     public static int spawnGarbageLines(Player p, Grid g, int l, boolean empty) {
     	Random rand = new Random();
     	// if top not empty
@@ -511,6 +610,14 @@ public class Tetris extends JPanel{
   	    return l-1;
     }
     
+    /**
+     * 清除網格中指定數量的垃圾行，並向下堆疊非垃圾行。
+     * 
+     * @param p 玩家物件
+     * @param g 遊戲網格
+     * @param l 要清除的垃圾行數
+     * @return 實際清除的垃圾行數
+     */
     public static int clearGarbageLines(Player p, Grid g, int l) {
     	int clearedLine=0;
     	boolean isGarbageLine = false;
@@ -547,6 +654,13 @@ public class Tetris extends JPanel{
   	    return clearedLine;
     }
     
+    /**
+     * 切換目前的遊戲畫面（Panel）。
+     * 停止當前頁面的執行，並啟動目標頁面。
+     * 同時更新頁面狀態與鍵盤輸入狀態。
+     *
+     * @param p 欲切換至的頁面常數（例如 PAGE_MENU）
+     */
     public static void setPage(int p) {
     	switch(gamePage) {
     		case PAGE_MENU: menuPanel.stopPanel(); break;
@@ -596,6 +710,10 @@ public class Tetris extends JPanel{
     	resetKey();
     }
     
+    /**
+     * 重置所有自定義的鍵盤輸入狀態。
+     * 通常在頁面切換時使用。
+     */
     private static void resetKey() {
     	Key_A = false;
     	Key_D = false;
@@ -615,16 +733,39 @@ public class Tetris extends JPanel{
     	Key_NUM_9 = false;
     }
     
+    /**
+     * 設定消行震動效果的水平方向震動值。
+     *
+     * @param p 玩家物件
+     * @param g 遊戲網格
+     */
     public static void setClearLineShock(Player p, Grid g) {
     	p.setXS(clearLineShock[0]);
     	g.setXS(clearLineShock[0]);
     }
+    
+    /**
+     * 設定放置方塊時的垂直震動值。
+     *
+     * @param p 玩家物件
+     * @param g 遊戲網格
+     */
     public static void setPutShock(Player p, Grid g) {
     	p.setYS(putShock[0]);
     	g.setYS(putShock[0]);
     }
     
     // Method to create buttons
+    /**
+     * 建立按鈕並加入指定面板。
+     *
+     * @param panel 要加入按鈕的 JPanel
+     * @param text 按鈕顯示文字
+     * @param e 按鈕按下時的事件處理器
+     * @param x 按鈕的 x 座標
+     * @param y 按鈕的 y 座標
+     * @return 建立後的 JButton 物件
+     */
     public static JButton setAndPutButton(JPanel panel, String text, ActionListener e, int x, int y) {
     	JButton B;
     	B = Tetris.createButton(text); // Create Start button
@@ -634,6 +775,13 @@ public class Tetris extends JPanel{
 		return B;
     }
     
+    /**
+     * 建立具有特殊外觀與互動效果的 JButton。
+     * 含滑鼠懸停變色、點擊音效等效果。
+     *
+     * @param text 按鈕顯示文字
+     * @return 完整配置後的 JButton 物件
+     */
     public static JButton createButton(final String text) {
         final JButton button = new JButton("<html><div style='border:2px solid white; padding:5px; color:white;'>" + text + "</div></html>");
         button.setFont(new Font("Arial", Font.BOLD, 32));
@@ -664,6 +812,11 @@ public class Tetris extends JPanel{
         return button;
     }
 
+    /**
+     * Java 程式的進入點。建立主視窗與 Tetris 畫面，並顯示出來。
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         JFrame frame = new JFrame("Tetris");
         Tetris tetrisPanel = new Tetris();

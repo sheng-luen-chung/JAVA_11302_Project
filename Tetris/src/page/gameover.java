@@ -5,8 +5,20 @@ import java.awt.*;
 import java.awt.event.*;
 import game.*;
 
+/**
+ * 顯示遊戲結束畫面的面板類別，當任一種模式的遊戲結束時切換至此面板。
+ * <p>
+ * 此面板會在 Tetris 主畫面中被切換至 GAMEOVER 時啟動。
+ * 
+ * @author Maple、lilmu
+ * @version 3.02
+ */
 public class gameover extends JPanel{
 	private JButton restartButton, menuButton;
+	
+    /**
+     * 初始化面板、音效。
+     */
     public void startPanel() {
     	Tetris.cardLayout.show(Tetris.mainPanel, "GAMEOVER");
     	setBackground(Color.BLACK);
@@ -28,10 +40,19 @@ public class gameover extends JPanel{
     					 	  			    Tetris.TOTAL_SIZE_X / 2 - 150,
     					 	  			    Tetris.TOTAL_SIZE_Y / 2 + 180);
     }
+    
+    /**
+     * 停止面板。
+     */
     public void stopPanel() {
-    	setBackground(Color.BLACK);
     }
     
+    /**
+     * 根據遊戲模式顯示不同的分數資訊與結算畫面，
+     * 包括單人模式分數、多玩家比分、勝利者與遊戲模式標示。
+     *
+     * @param g 繪圖所需的 Graphics 物件
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -103,11 +124,19 @@ public class gameover extends JPanel{
         }
     }
     
+    /**
+     * 點擊 Restart 按鈕的事件處理類別。
+     * 根據先前的模式（overReturn）回到對應的遊戲頁面。
+     */
     private class BRestart implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             Tetris.setPage(Tetris.overReturn);
         }
     }
+    
+    /**
+     * 點擊 Menu 按鈕的事件處理類別，返回主選單畫面。
+     */
     private class BMenu implements ActionListener {
         public void actionPerformed(ActionEvent e) {
         	Tetris.menu_bgMusic = new MusicPlayer();

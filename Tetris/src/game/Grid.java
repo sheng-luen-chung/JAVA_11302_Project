@@ -2,7 +2,13 @@ package game;
 
    import java.awt.*;
    
-   public class Grid
+   /**
+ * 負責管理整個遊戲場地（方塊網格）的類別。
+ * 包含顯示與資料結構邏輯，處理背景陣列、行消除、分數計算、特效顯示等功能。
+ * @author Maple、lilmu
+ * @version 3.02
+ */
+public class Grid
    {
 	    private static final int GRID_COLS = 10;
 	    private static final int GRID_ROWS = 20;
@@ -66,7 +72,13 @@ package game;
       public void setWin(boolean w){ winner = w;}
       
     //	 instance methods
-      public int clearFullLines() {
+      /**
+     * 嘗試消除所有已滿的行，並下移其上方的內容。
+     * 同時觸發清除特效並播放音效。
+     *
+     * @return 此次成功消除的行數
+     */
+    public int clearFullLines() {
           int linesCleared = 0;
           for (int y = GRID_ROWS - 1; y >= 0; y--) {
              boolean isFull = true;
@@ -108,7 +120,13 @@ package game;
           return linesCleared;
        }
        
-      public void calcuateScore(int linesCleared, int T_spin) {
+    	/**
+     * 根據清除行數與 T-Spin 狀態計算並更新得分、攻擊值與連擊。
+     *
+     * @param linesCleared 本次清除的行數
+     * @param T_spin T-Spin 的種類（0: 無, 1: Mini T旋, 2: 完全的T旋）
+     */
+    public void calcuateScore(int linesCleared, int T_spin) {
     	  String addScoreCase = linesCleared + "," + T_spin;
     	  boolean B2B_buffer = B2B;
     	  BS = 0;
@@ -224,7 +242,12 @@ package game;
 	      level = lines_cleared / 10;
       }
       
-      public boolean checkAllEmpty() {
+    	/**
+     * 檢查場地是否已經完全清空。
+     *
+     * @return 如果所有格子都是空的，回傳 true
+     */
+    public boolean checkAllEmpty() {
           for (int y = GRID_ROWS - 1; y >= 0; y--) {
               for (int x = 0; x < GRID_COLS; x++) {
                  if (BGarr[x][y] != 0)  return false;
@@ -233,14 +256,21 @@ package game;
           return true;
       }
       
-      public void clearAll() {	// for test
+    	/**
+     * 清空所有格子內容（用於測試）。
+     */
+    public void clearAll() {	// for test
           for (int y = GRID_ROWS - 1; y >= 0; y--) {
               for (int x = 0; x < GRID_COLS; x++) {
                  BGarr[x][y]  = 0;
               }
            }
       }
-      public void clearEffectssTimerDecrease() {
+    
+      /**
+     * 對每一列的消除動畫特效進行倒數。
+     */
+    public void clearEffectssTimerDecrease() {
     	  for(int y = 0; y < GRID_ROWS; y++) {
       		  if(ClearEffects[y].getT() > 0) {
       			  ClearEffects[y].setT( ClearEffects[y].getT() - 1);
@@ -248,6 +278,13 @@ package game;
       	  }
       }
       
+    	/**
+     * 根據數字代碼設定對應的繪圖顏色與透明度。
+     *
+     * @param g 繪圖物件
+     * @param c 方塊代碼
+     * @param r 透明度（0-255）
+     */
       private void switchColor(Graphics g, int c, int r) {
     	  switch (c) {
 	          case 1:
@@ -269,6 +306,11 @@ package game;
     	  }
       }
       
+      	/**
+       * 繪製整個場地，包括邊框、背景、格線、方塊與分數等資訊。
+       *
+       * @param g 繪圖物件
+       */
       public void draw(Graphics g) {
     	  int drawX, drawY;
     	  Xoffset += Xshock;

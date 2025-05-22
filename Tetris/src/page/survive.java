@@ -5,6 +5,17 @@ import java.awt.*;
 import java.awt.event.*;
 import game.*;
 
+/**
+ * survive的遊戲面板類別。
+ * 此模式中，兩名玩家由完全實心的垃圾行規則進行合作，垃圾行需要獲得攻擊點後立即消除。
+ * 消除垃圾行的同時隊友可以同時被消除一半數量的垃圾行(捨位)。
+ * 由上方回合到計時結束來向兩名玩家發送垃圾行，會隨回合數增加而降低間隔及增加產生行數。
+ * <p>
+ * 此面板會在 Tetris 主畫面中被切換至 SURVIVE 時啟動。
+ * 
+ * @author Maple
+ * @version 3.02
+ */
 public class survive extends JPanel{
 	private JButton pauseButton, continueButton, restartButton, menuButton;
 	private Timer timer, blinkTimer;
@@ -19,6 +30,9 @@ public class survive extends JPanel{
     private int sendGarbageTo1;
     private int sendGarbageTo2;
     
+    /**
+     * 初始化面板、玩家、網格、計時器與背景音樂。
+     */
     public void startPanel() {
     	Tetris.cardLayout.show(Tetris.mainPanel, "SURVIVE");
     	setBackground(Color.BLACK);
@@ -52,6 +66,10 @@ public class survive extends JPanel{
 				   							 Tetris.TOTAL_SIZE_X - 185,
 				   							 0);
     }  
+    
+    /**
+     * 停止面板，儲存分數與結束計時器與背景音樂。
+     */
     public void stopPanel() {
     	Tetris.score1 = g1.getScore();
     	Tetris.lines1 = g1.getLinesC();
@@ -66,6 +84,11 @@ public class survive extends JPanel{
     	Tetris.menu_bgMusic.stop();
     }
     
+    /**
+     * 在這個頁面的程式循環，並依據按鍵更新遊戲邏輯與控制。
+     *
+     * @param g 畫圖用的 Graphics 物件
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -118,6 +141,10 @@ public class survive extends JPanel{
         repaint();
     }
     
+    /**
+     * 定時呼叫的動作監聽器，用來處理方塊重力下落的邏輯。
+     * 也處理合作模式中回合、發送垃圾行的系統。
+     */
     private class gravity_timer implements ActionListener{
     	public void actionPerformed(ActionEvent e){
     		Tetris.gravity_drop(p1, g1);
@@ -161,6 +188,9 @@ public class survive extends JPanel{
         }  
     }
     
+    /**
+     * 閃爍效果的計時器，用於顯示 PAUSE 文字閃爍。
+     */
     private class blink implements ActionListener{
     	public void actionPerformed(ActionEvent e){
             BK = !BK;
@@ -168,6 +198,11 @@ public class survive extends JPanel{
         } 
     }
     
+    /**
+     * 繪製暫停時的畫面。
+     *
+     * @param g 畫圖用的 Graphics 物件
+     */
     private void drawPause(Graphics g) {
     	g.setColor(Color.BLACK);
     	g.fillRect(Tetris.TOTAL_SIZE_X / 2 - 155,
@@ -192,6 +227,9 @@ public class survive extends JPanel{
     	}
     }
     
+    /**
+     * 進入暫停狀態，停止遊戲計時器與顯示選項按鈕。
+     */
     private void pauseGame() {
     	pause = true;
     	timer.stop();
@@ -220,6 +258,9 @@ public class survive extends JPanel{
 			    							Tetris.TOTAL_SIZE_Y / 2 + 80);
     }
     
+    /**
+     * 結束暫停狀態，恢復遊戲與隱藏選項按鈕。
+     */
     private void continueGame() {
     	pause = false;
     	timer.start();
@@ -236,18 +277,27 @@ public class survive extends JPanel{
     	remove(menuButton);
     }
     
+    /**
+     * 點擊 Pause 按鈕的事件處理類別，暫停遊戲。
+     */
     private class BPause implements ActionListener {
         public void actionPerformed(ActionEvent e) {
         	pauseGame();
         }
     }
     
+    /**
+     * 點擊 Continue 按鈕的事件處理類別，在暫停時繼續遊戲。
+     */
     private class BContinue implements ActionListener {
         public void actionPerformed(ActionEvent e) {
         	continueGame();
         }
     }
     
+    /**
+     * 點擊 Restart 按鈕的事件處理類別，重新啟動該頁面。
+     */
     private class BRestart implements ActionListener {
         public void actionPerformed(ActionEvent e) {
         	remove(continueButton);
@@ -257,6 +307,9 @@ public class survive extends JPanel{
         }
     }
     
+    /**
+     * 點擊 Menu 按鈕的事件處理類別，返回主選單畫面。
+     */
     private class BMenu implements ActionListener {
         public void actionPerformed(ActionEvent e) {
         	remove(continueButton);

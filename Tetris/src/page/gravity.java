@@ -5,6 +5,14 @@ import java.awt.*;
 import java.awt.event.*;
 import game.*;
 
+/**
+ * gravity的遊戲面板類別。
+ * 此模式中，單一玩家會隨著Level上升而被增加掉落速度。
+ * <p>
+ * 此面板會在 Tetris 主畫面中被切換至 GRAVITY 時啟動。
+ * @author Maple
+ * @version 3.02
+ */
 public class gravity extends JPanel{
 	private JButton pauseButton, continueButton, restartButton, menuButton;
 	private Timer timer, blinkTimer;
@@ -13,6 +21,9 @@ public class gravity extends JPanel{
     private Grid g1;
     private boolean pause;
     
+    /**
+     * 初始化面板、玩家、網格、計時器與背景音樂。
+     */
     public void startPanel() {
     	Tetris.cardLayout.show(Tetris.mainPanel, "GRAVITY");
     	setBackground(Color.BLACK);
@@ -36,6 +47,10 @@ public class gravity extends JPanel{
 				   							 0);
         p1.setDFS(0.05);
     }  
+    
+    /**
+     * 停止面板，儲存分數與結束計時器與背景音樂。
+     */
     public void stopPanel() {
     	Tetris.score1 = g1.getScore();
     	Tetris.lines1 = g1.getLinesC();
@@ -46,6 +61,11 @@ public class gravity extends JPanel{
     	Tetris.TWG_bgMusic.stop();
     }
     
+    /**
+     * 在這個頁面的程式循環，並依據按鍵更新遊戲邏輯與控制。
+     *
+     * @param g 畫圖用的 Graphics 物件
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -78,12 +98,18 @@ public class gravity extends JPanel{
         repaint();
     }
     
+    /**
+     * 定時呼叫的動作監聽器，用來處理方塊重力下落的邏輯。
+     */
     private class gravity_timer implements ActionListener{
     	public void actionPerformed(ActionEvent e){
     		Tetris.gravity_drop(p1, g1);
         }  
     }
     
+    /**
+     * 閃爍效果的計時器，用於顯示 PAUSE 文字閃爍。
+     */
     private class blink implements ActionListener{
     	public void actionPerformed(ActionEvent e){
             BK = !BK;
@@ -91,6 +117,11 @@ public class gravity extends JPanel{
         } 
     }
     
+    /**
+     * 繪製暫停時的畫面。
+     *
+     * @param g 畫圖用的 Graphics 物件
+     */
     private void drawPause(Graphics g) {
     	g.setColor(Color.BLACK);
     	g.fillRect(Tetris.TOTAL_SIZE_X / 2 - 155,
@@ -115,7 +146,9 @@ public class gravity extends JPanel{
     	}
     }
     
-    
+    /**
+     * 進入暫停狀態，停止遊戲計時器與顯示選項按鈕。
+     */
     private void pauseGame() {
     	pause = true;
     	timer.stop();
@@ -144,6 +177,9 @@ public class gravity extends JPanel{
 			    							Tetris.TOTAL_SIZE_Y / 2 + 80);
     }
     
+    /**
+     * 結束暫停狀態，恢復遊戲與隱藏選項按鈕。
+     */
     private void continueGame() {
     	pause = false;
     	timer.start();
@@ -160,18 +196,27 @@ public class gravity extends JPanel{
     	remove(menuButton);
     }
     
+    /**
+     * 點擊 Pause 按鈕的事件處理類別，暫停遊戲。
+     */
     private class BPause implements ActionListener {
         public void actionPerformed(ActionEvent e) {
         	pauseGame();
         }
     }
     
+    /**
+     * 點擊 Continue 按鈕的事件處理類別，在暫停時繼續遊戲。
+     */
     private class BContinue implements ActionListener {
         public void actionPerformed(ActionEvent e) {
         	continueGame();
         }
     }
     
+    /**
+     * 點擊 Restart 按鈕的事件處理類別，重新啟動該頁面。
+     */
     private class BRestart implements ActionListener {
         public void actionPerformed(ActionEvent e) {
         	remove(continueButton);
@@ -181,6 +226,9 @@ public class gravity extends JPanel{
         }
     }
     
+    /**
+     * 點擊 Menu 按鈕的事件處理類別，返回主選單畫面。
+     */
     private class BMenu implements ActionListener {
         public void actionPerformed(ActionEvent e) {
         	remove(continueButton);

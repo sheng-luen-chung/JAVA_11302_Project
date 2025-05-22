@@ -5,6 +5,15 @@ import java.awt.*;
 import java.awt.event.*;
 import game.*;
 
+/**
+ * 顯示遊戲指示的畫面，包含如何控制、分數與攻擊點如何計算，並且可以切換到消行示範畫面。
+ * 為整個指示和消行示範的第0頁。
+ * <p>
+ * 此面板會在 Tetris 主畫面中被切換至 INSTRUCTIONS 時啟動。
+ * 
+ * @author Maple
+ * @version 3.02
+ */
 public class instructions extends JPanel{ 
 	private JButton ReturnButton, NextButton, BackButton;
 	private final int page = 0;
@@ -127,6 +136,9 @@ public class instructions extends JPanel{
 								 "+10",
 								 };
 	
+    /**
+     * 初始化面板。
+     */
     public void startPanel() {
     	Tetris.cardLayout.show(Tetris.mainPanel, "INSTRUCTIONS");
     	setBackground(Color.BLACK);
@@ -152,9 +164,17 @@ public class instructions extends JPanel{
 				    					    Tetris.TOTAL_SIZE_Y - 70);
     }
     
+    /**
+     * 停止面板。
+     */
     public void stopPanel() {
     }
     
+    /**
+     * 顯示玩家控制、分數與攻擊點計算的資訊。
+     *
+     * @param g 畫圖用的 Graphics 物件
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -208,18 +228,29 @@ public class instructions extends JPanel{
         g.fillOval(150 + page*15, Tetris.TOTAL_SIZE_Y - 30, 10, 10);
     }
     
+    /**
+     * 點擊 Return 按鈕的事件處理類別，回到主選單。
+     */
     private class BReturn implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             Tetris.setPage(Tetris.PAGE_MENU);
         }
     }
     
+    /**
+     * 點擊 Next 按鈕的事件處理類別，切到下一頁。
+     * 如果沒有下一頁則到第一頁。
+     */
     private class BNext implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             Tetris.setPage(Tetris.PAGE_MTS);
         }
     }
     
+    /**
+     * 點擊 Back 按鈕的事件處理類別，切到上一頁。
+     * 如果沒有上一頁則到最後一頁。
+     */
     private class BBack implements ActionListener {
         public void actionPerformed(ActionEvent e) {
         	Tetris.setPage(Tetris.PAGE_TST3);
