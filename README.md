@@ -570,7 +570,7 @@ class TST3 {
 
     Pause --> Game_Over
     Pause --> Restart
-    Paude --> Continue
+    Pause --> Continue
 
     Continue --> Classic_Game 
     Continue --> Purge_Game
