@@ -152,3 +152,379 @@ B11007111 胡予肴 B11007131 潘永牧
 | **Maple** | - 旋轉、踢牆、SRS、7-bag 隨機器 (含優化)<br>- 預覽塊、暫留塊、陰影塊<br>- 消除、計分、T-Spin、Combo、Back to Back、全清<br>- Level、Lines、速度控制、20G模式<br>- 鎖定延遲與特效、震動、垃圾行<br>- 多人對戰、合作模式、暫停功能、指示頁面<br>- 架構改寫、多頁面管理、UI優化<br>- 程式合併、音效細項優化、7-bag優化 |  
 ## ChatGPT 協作紀錄摘要
 
+##UML
+```mermaid
+classDiagram
+JPanel <|-- menu
+ActionListener <|.. menu
+class menu {
+  +startPanel()
+  +stopPanel()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+JPanel <|-- classic
+ActionListener <|.. classic
+class classic {
+  +BK
+  +p1
+  +g1
+  +pause
+  +startPanel()
+  +stopPanel()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +drawPause()
+  +pauseGame()
+  +continueGame()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+class Grid {
+  +B2B
+  +getXO()
+  +getYO()
+  +getXS()
+  +getYS()
+  +getA()
+  +getLinesC()
+  +getScore()
+  +getB2B()
+  +getWin()
+  +setXO()
+  +setYO()
+  +setXS()
+  +setYS()
+  +setA()
+  +setLinesC()
+  +setScore()
+  +setBGarr()
+  +setB2B()
+  +setWin()
+  +clearFullLines()
+  +calcuateScore()
+  +checkAllEmpty()
+  +clearAll()
+  +clearEffectssTimerDecrease()
+  +switchColor()
+  +draw()
+}
+JPanel <|-- MTS
+ActionListener <|.. MTS
+class MTS {
+  +p1
+  +g1
+  +controlTimer
+  +startPanel()
+  +stopPanel()
+  +initial()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+JPanel <|-- gravity
+ActionListener <|.. gravity
+class gravity {
+  +BK
+  +p1
+  +g1
+  +pause
+  +startPanel()
+  +stopPanel()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +drawPause()
+  +pauseGame()
+  +continueGame()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+class ClearEffects {
+  +timer
+  +getX()
+  +getY()
+  +getT()
+  +setX()
+  +setY()
+  +setT()
+  +setTimer20()
+  +draw()
+}
+JPanel <|-- mode
+ActionListener <|.. mode
+class mode {
+  +startPanel()
+  +stopPanel()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+JPanel <|-- instructions
+ActionListener <|.. instructions
+class instructions {
+  +startPanel()
+  +stopPanel()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+JPanel <|-- gameover
+ActionListener <|.. gameover
+class gameover {
+  +startPanel()
+  +stopPanel()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+}
+JPanel <|-- gap
+ActionListener <|.. gap
+class gap {
+  +BK
+  +pause
+  +attackTimer
+  +cooldownTimer
+  +sendGarbageTo1
+  +sendGarbageTo2
+  +startPanel()
+  +stopPanel()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +drawPause()
+  +pauseGame()
+  +continueGame()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+class MusicPlayer {
+  +clip
+  +play()
+  +stop()
+  +pause()
+  +resume()
+}
+JPanel <|-- MTST1
+ActionListener <|.. MTST1
+class MTST1 {
+  +p1
+  +g1
+  +controlTimer
+  +startPanel()
+  +stopPanel()
+  +initial()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+JPanel <|-- Tetris
+class Tetris {
+  +keyPressed()
+  +keyReleased()
+  +createPages()
+  +mouseEntered()
+  +mouseExited()
+  +mousePressed()
+}
+JPanel <|-- TST2
+ActionListener <|.. TST2
+class TST2 {
+  +p1
+  +g1
+  +controlTimer
+  +startPanel()
+  +stopPanel()
+  +initial()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+JPanel <|-- TST1
+ActionListener <|.. TST1
+class TST1 {
+  +p1
+  +g1
+  +controlTimer
+  +startPanel()
+  +stopPanel()
+  +initial()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+JPanel <|-- purge
+ActionListener <|.. purge
+class purge {
+  +BK
+  +pause
+  +attackTimer
+  +cooldownTimer
+  +sendGarbageTo1
+  +sendGarbageTo2
+  +startPanel()
+  +stopPanel()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +drawPause()
+  +pauseGame()
+  +continueGame()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+JPanel <|-- survive
+ActionListener <|.. survive
+class survive {
+  +BK
+  +pause
+  +sendGarbageTimer
+  +sendGarbageTimerSet
+  +sendGarbageLinesSet
+  +sendCount
+  +sendGarbageTo1
+  +sendGarbageTo2
+  +startPanel()
+  +stopPanel()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +drawPause()
+  +pauseGame()
+  +continueGame()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+JPanel <|-- TS
+ActionListener <|.. TS
+class TS {
+  +p1
+  +g1
+  +controlTimer
+  +startPanel()
+  +stopPanel()
+  +initial()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+JPanel <|-- MTST2
+ActionListener <|.. MTST2
+class MTST2 {
+  +p1
+  +g1
+  +controlTimer
+  +controlTimer2
+  +controlTimer3
+  +startPanel()
+  +stopPanel()
+  +initial()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+class Player {
+  +holdS
+  +hold
+  +Tspin
+  +speedUP
+  +lastKick
+  +getXO()
+  +getyO()
+  +getXS()
+  +getYS()
+  +getX()
+  +getY()
+  +getS()
+  +getD()
+  +getDF()
+  +getDFS()
+  +getLD()
+  +getLDS()
+  +getARE()
+  +getARES()
+  +getTspin()
+  +getSpeedUP()
+  +getLK()
+  +setXO()
+  +setYO()
+  +setXS()
+  +setYS()
+  +setX()
+  +setY()
+  +setS()
+  +setD()
+  +setDF()
+  +setDFS()
+  +setLD()
+  +setLDS()
+  +setARE()
+  +setARES()
+  +setShape()
+  +setTspin()
+  +setSpeedUP()
+  +setLK()
+  +spawn7bag()
+  +spawnNewShape()
+  +holdCurrentShape()
+  +rotate()
+  +switchColor()
+  +draw()
+  +drawShadow()
+}
+JPanel <|-- TST3
+ActionListener <|.. TST3
+class TST3 {
+  +p1
+  +g1
+  +controlTimer
+  +controlTimer2
+  +startPanel()
+  +stopPanel()
+  +initial()
+  +paintComponent()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+  +actionPerformed()
+}
+```
