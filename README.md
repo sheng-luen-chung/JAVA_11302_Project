@@ -541,13 +541,13 @@ class TST3 {
     Menu --> Start
 
     Start --> Select_Mode
-
+subgraph 
     Select_Mode --> Classic_Game
     Select_Mode --> Purge_Game
     Select_Mode --> Survive_Game
     Select_Mode --> 20_Gravity_Game
     Select_Mode --> Gap_Game
-
+end
     Classic_Game --> Game_Over
     Classic_Game --> Restart
     Classic_Game --> Pause
