@@ -535,10 +535,10 @@ class TST3 {
     flowchart TD
     Execute(Tetris.jar)
     Execute --> Menu
+    Menu --> Instructions
+    Menu --> Exit
 
     Menu --> Start
-    Menu --> Instructions
-    Meue --> Exit
 
     Start --> Select_Mode
 
