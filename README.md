@@ -533,28 +533,30 @@ class TST3 {
 
 ```mermaid
     flowchart TD
-    Start([Game Starts - Tetris.java])
-    Start --> Menu[Main Menu]
-    Menu --> Instructions[View Instructions]
-    Menu --> ModeSelect[Select Game Mode]
+    Execute(Tetris.jar)
 
-    ModeSelect --> ClassicMode[Classic Mode]
-    ModeSelect --> PurgeMode[Purge Mode]
-    ModeSelect --> SurviveMode[Survive Mode]
-    ModeSelect --> TSMode[TS / TST1 / TST2 / TST3]
-    ModeSelect --> MTSTMode[MTST1 / MTST2]
+    Execute --> Start
+    Execute --> Instructions
+    Execute --> Exit
+    Start --> Menu
 
-    ClassicMode --> PlayClassic[Gameplay Loop - Classic]
-    PurgeMode --> PlayPurge[Gameplay Loop - Purge]
-    SurviveMode --> PlaySurvive[Gameplay Loop - Survive]
-    TSMode --> PlayTS[Gameplay Loop - TS Variants]
-    MTSTMode --> PlayMTST[Gameplay Loop - MTST Variants]
+    Menu --> Classic_Mode
+    Menu --> Purge_Mode
+    Menu --> Survive_Mode
+    Menu --> 20_Gravity_Mode
+    Menu --> Gap_Mode
 
-    PlayClassic --> GameOver[Game Over Screen]
-    PlayPurge --> GameOver
-    PlaySurvive --> GameOver
-    PlayTS --> GameOver
-    PlayMTST --> GameOver
+    Classic_Mode --> Gameplay Loop - Classic
+    Purge_Mode --> Gameplay Loop - Purge
+    Survive_Mode --> Gameplay Loop - Survive
+    20_Gravity_Mode --> Gameplay Loop - 20_Gravity
+    Gap_Mode --> Gameplay Loop - Gap
+
+    Gameplay Loop - Classic --> GameOver
+    Gameplay Loop - Purge --> GameOver
+    Gameplay Loop - Survive --> GameOver
+    Gameplay Loop - 20_Gravity --> GameOver
+    Gameplay Loop - Gap --> GameOver
 
     GameOver --> Menu
 ```
