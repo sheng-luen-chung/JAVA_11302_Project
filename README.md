@@ -532,7 +532,7 @@ class TST3 {
 ## 流程圖
 
 ```mermaid
-    flowchart TD
+ flowchart TD
     Execute(Tetris.jar)
     Execute --> Menu
     Menu --> Instructions
@@ -542,33 +542,39 @@ class TST3 {
 
     Start --> Select_Mode
 
-    Select_Mode --> Classic_Mode
-    Select_Mode --> Purge_Mode
-    Select_Mode --> Survive_Mode
-    Select_Mode --> 20_Gravity_Mode
-    Select_Mode --> Gap_Mode
+    subgraph Game_Modes
+        Select_Mode --> Classic_Mode
+        Select_Mode --> Purge_Mode
+        Select_Mode --> Survive_Mode
+        Select_Mode --> 20_Gravity_Mode
+        Select_Mode --> Gap_Mode
+    end
 
-    Classic_Mode --> Classic_Game
-    Purge_Mode --> Purge_Game
-    Survive_Mode --> Survive_Game
-    20_Gravity_Mode --> 20_Gravity_Game
-    Gap_Mode --> Gap_Game
+    subgraph Gameplay_Loop
+        Classic_Mode --> Classic_Game
+        Purge_Mode --> Purge_Game
+        Survive_Mode --> Survive_Game
+        20_Gravity_Mode --> 20_Gravity_Game
+        Gap_Mode --> Gap_Game
 
-    Classic_Game --> Game_Over
-    Purge_Game --> Game_Over
-    Survive_Game --> Game_Over
-    20_Gravity_Game --> Game_Over
-    Gap_Game --> Game_Over
-    Classic_Game --> Restart
-    Purge_Game --> Restart
-    Survive_Game --> Restart
-    20_Gravity_Game --> Restart
-    Gap_Game --> Restart
-    Classic_Game --> Pause
-    Purge_Game --> Pause
-    Survive_Game --> Pause
-    20_Gravity_Game --> Pause
-    Gap_Game --> Pause
+        Classic_Game --> Game_Over
+        Purge_Game --> Game_Over
+        Survive_Game --> Game_Over
+        20_Gravity_Game --> Game_Over
+        Gap_Game --> Game_Over
+
+        Classic_Game --> Restart
+        Purge_Game --> Restart
+        Survive_Game --> Restart
+        20_Gravity_Game --> Restart
+        Gap_Game --> Restart
+
+        Classic_Game --> Pause
+        Purge_Game --> Pause
+        Survive_Game --> Pause
+        20_Gravity_Game --> Pause
+        Gap_Game --> Pause
+    end
 
     Pause --> Game_Over
     Pause --> Restart
