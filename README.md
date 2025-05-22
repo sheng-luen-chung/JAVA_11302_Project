@@ -541,7 +541,7 @@ class TST3 {
     Menu --> Start
 
     Start --> Select_Mode
-subgraph 
+subgraph Mode
     Select_Mode --> Classic_Game
     Select_Mode --> Purge_Game
     Select_Mode --> Survive_Game
@@ -567,7 +567,7 @@ end
     Survive_Game --> Restart
     Survive_Game --> Game_Over        
     Survive_Game --> Pause
-subgraph  
+subgraph  InGame_Menu
     Pause --> Game_Over
     Pause --> Restart
     Pause --> Continue
